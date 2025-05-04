@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ExternalLink, Github, Code } from 'lucide-react';
+import { ExternalLink, Github, Code, Globe } from 'lucide-react';
 
 type Project = {
   id: number;
@@ -9,73 +9,96 @@ type Project = {
   technologies: string[];
   liveLink?: string;
   githubLink?: string;
-  category: 'web' | 'mobile' | 'other';
+  websiteLink?: string; // Add optional website link
+  category: 'Web' | 'Machine Learning' | 'Systems';
 };
 
 const projects: Project[] = [
   {
     id: 1,
-    title: "Smart Task Manager",
-    description: "A productivity app built with React that uses machine learning to prioritize tasks based on user behavior and deadlines.",
-    image: "https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-    technologies: ["React", "Node.js", "MongoDB", "TensorFlow.js"],
-    liveLink: "https://example.com",
-    githubLink: "https://github.com",
-    category: "web"
+    title: "SafeSocial – AI-Powered Chrome Extension",
+    description: "A Chrome extension that uses real-time in-browser computer vision to filter explicit and adult content from social media feeds. Achieves high accuracy with minimal performance overhead, designed for seamless UX and privacy.",
+    image: "/assets/banner.png",
+    technologies: ["TensorFlow.js", "JavaScript", "Chrome Extension APIs", "Computer Vision", "Mixpanel"],
+    liveLink: "https://youtu.be/slG7xXj4rG4",
+    githubLink: undefined, // Code not available
+    websiteLink: "https://chromewebstore.google.com/detail/safe-social/jdacdndepggbdjbknoncakkgbbhfoccm", // Example website link
+    category: 'Web'
   },
   {
     id: 2,
-    title: "Eco Route Finder",
-    description: "An app that finds the most eco-friendly routes for travel by calculating carbon emissions for different transportation methods.",
+    title: "Leland Coaching Models – ML for Talent Discovery",
+    description: "Built machine learning models to recommend coach candidates based on profile embeddings and heuristics. Developed ensemble models and an LLM-assisted neural network achieving 89% F1 and 99% recall.",
     image: "https://images.pexels.com/photos/1089438/pexels-photo-1089438.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-    technologies: ["React Native", "Google Maps API", "Firebase"],
-    liveLink: "https://example.com",
-    githubLink: "https://github.com",
-    category: "mobile"
+    technologies: ["Python", "Pandas", "Scikit-learn", "TensorFlow", "HuggingFace"],
+    liveLink: "https://example.com", // TODO
+    githubLink: undefined,
+    category: "Machine Learning"
   },
   {
     id: 3,
-    title: "Virtual Study Buddy",
-    description: "A platform connecting students for virtual study sessions with integrated tools for collaboration and knowledge sharing.",
+    title: "Manifold Alignment Research – MASH & SPUD",
+    description: "Invented and benchmarked novel manifold alignment algorithms (SPUD, MASH) for cross-domain structure discovery. Published multiple papers and developed robust experiment pipelines.",
     image: "https://images.pexels.com/photos/7439143/pexels-photo-7439143.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-    technologies: ["Next.js", "Socket.io", "PostgreSQL", "WebRTC"],
+    technologies: ["Python", "NumPy", "Matplotlib", "Scikit-learn", "Jupyter"],
     liveLink: "https://example.com",
-    githubLink: "https://github.com",
-    category: "web"
+    githubLink: "https://github.com/rustadadam/mashspud",
+    category: "Web"
   },
   {
     id: 4,
-    title: "Data Visualization Tool",
-    description: "A tool for creating interactive data visualizations from various data sources with export capabilities.",
+    title: "Audiobook Generation Pipeline",
+    description: "Developed an automated pipeline that converts books and articles to audiobooks using AWS Polly. Integrated transcription, voice synthesis, and file delivery using serverless computing.",
     image: "https://images.pexels.com/photos/669615/pexels-photo-669615.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-    technologies: ["D3.js", "React", "Node.js", "Express"],
+    technologies: ["AWS Lambda", "Polly", "Python", "Boto3", "Docker"],
     liveLink: "https://example.com",
-    githubLink: "https://github.com",
-    category: "web"
+    githubLink: "https://github.com/rustadadam/book-to-audio",
+    category: "Web"
   },
   {
     id: 5,
-    title: "Algorithmic Trading Simulator",
-    description: "A platform for simulating and testing algorithmic trading strategies using historical market data.",
+    title: "Peer-to-Peer Chess Platform",
+    description: "A real-time multiplayer chess app built with WebRTC and Firebase, enabling client-to-client gameplay with secure connection handling and move validation.",
     image: "https://images.pexels.com/photos/6801874/pexels-photo-6801874.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-    technologies: ["Python", "Pandas", "Django", "Docker"],
-    githubLink: "https://github.com",
-    category: "other"
+    technologies: ["JavaScript", "WebRTC", "Firebase", "HTML/CSS"],
+    liveLink: "https://example.com",
+    githubLink: "https://github.com/rustadadam/chess-webrtc",
+    category: "Web"
   },
   {
     id: 6,
-    title: "Augmented Reality Campus Tour",
-    description: "A mobile app using AR to provide an interactive tour of the university campus with historical information.",
+    title: "Algorithmic Trading Simulator",
+    description: "Simulates stock trading strategies using historical data. Implements backtesting frameworks for evaluating strategies including momentum, mean-reversion, and ML-based methods.",
     image: "https://images.pexels.com/photos/2228574/pexels-photo-2228574.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-    technologies: ["Unity", "ARCore", "C#", "Blender"],
+    technologies: ["Python", "Pandas", "Django", "Docker"],
     liveLink: "https://example.com",
     githubLink: "https://github.com",
-    category: "mobile"
+    category: "Web"
+  },
+  {
+    id: 7,
+    title: "Twin Autoencoders for Embedding Extension",
+    description: "Developed and published a method to extend aligned embeddings using twin autoencoders. Applied to graph alignment and data fusion tasks with robust quantitative evaluations.",
+    image: "https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    technologies: ["PyTorch", "NumPy", "Matplotlib", "Jupyter", "MLFlow"],
+    liveLink: "https://example.com",
+    githubLink: "https://github.com/rustadadam/mashspud",
+    category: "Web"
+  },
+  {
+    id: 8,
+    title: "BYU Course Alignment Tool",
+    description: "Built an internal tool to map courses and projects across departments for better curriculum planning. Includes dynamic filtering, data visualization, and export features.",
+    image: "https://images.pexels.com/photos/256502/pexels-photo-256502.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    technologies: ["React", "D3.js", "Node.js", "Express"],
+    liveLink: "https://example.com",
+    githubLink: "https://github.com",
+    category: "Web"
   }
 ];
 
 const Projects: React.FC = () => {
-  const [activeCategory, setActiveCategory] = useState<'all' | 'web' | 'mobile' | 'other'>('all');
+  const [activeCategory, setActiveCategory] = useState<'all' | 'Web' | 'Machine Learning' | 'Systems'>('all');
   
   const filteredProjects = activeCategory === 'all' 
     ? projects 
@@ -106,9 +129,9 @@ const Projects: React.FC = () => {
               All Projects
             </button>
             <button
-              onClick={() => setActiveCategory('web')}
+              onClick={() => setActiveCategory('Web')}
               className={`px-6 py-2 rounded-full text-sm ${
-                activeCategory === 'web'
+                activeCategory === 'Web'
                   ? 'bg-blue-600 text-white'
                   : 'bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-700'
               } transition duration-300`}
@@ -116,24 +139,24 @@ const Projects: React.FC = () => {
               Web
             </button>
             <button
-              onClick={() => setActiveCategory('mobile')}
+              onClick={() => setActiveCategory('Machine Learning')}
               className={`px-6 py-2 rounded-full text-sm ${
-                activeCategory === 'mobile'
+                activeCategory === 'Machine Learning'
                   ? 'bg-blue-600 text-white'
                   : 'bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-700'
               } transition duration-300`}
             >
-              Mobile
+              Machine Learning
             </button>
             <button
-              onClick={() => setActiveCategory('other')}
+              onClick={() => setActiveCategory('Systems')}
               className={`px-6 py-2 rounded-full text-sm ${
-                activeCategory === 'other'
+                activeCategory === 'Systems'
                   ? 'bg-blue-600 text-white'
                   : 'bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-700'
               } transition duration-300`}
             >
-              Other
+              Systems
             </button>
           </div>
         </div>
@@ -182,7 +205,17 @@ const Projects: React.FC = () => {
                       <ExternalLink size={16} className="mr-1" /> Live Demo
                     </a>
                   )}
-                  {project.githubLink && (
+                  {project.websiteLink && (
+                    <a
+                      href={project.websiteLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center text-sm text-green-700 dark:text-green-300 hover:text-green-900 dark:hover:text-green-100"
+                    >
+                      <Globe size={16} className="mr-1" /> Website
+                    </a>
+                  )}
+                  {project.githubLink ? (
                     <a
                       href={project.githubLink}
                       target="_blank"
@@ -191,6 +224,10 @@ const Projects: React.FC = () => {
                     >
                       <Github size={16} className="mr-1" /> Code
                     </a>
+                  ) : (
+                    <span className="flex items-center text-sm text-gray-400 dark:text-gray-500 cursor-not-allowed">
+                      <Github size={16} className="mr-1" /> Code not available
+                    </span>
                   )}
                 </div>
               </div>
