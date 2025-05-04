@@ -1,5 +1,5 @@
 import React from 'react';
-import { Code, Server, Database, PenTool } from 'lucide-react';
+import { Code, Server, Database, PenTool, Globe } from 'lucide-react';
 
 type SkillCategory = {
   id: string;
@@ -25,14 +25,14 @@ const skillCategories: SkillCategory[] = [
         name: 'JavaScript/TypeScript',
         projects: [
           {
-            name: 'Smart Task Manager',
+            name: 'SafeSocial – AI-Powered Chrome Extension',
             link: '#projects',
-            description: 'A React-based productivity app with ML integration'
+            description: 'Chrome extension using JavaScript, TensorFlow.js, and Chrome Extension APIs for real-time content filtering.'
           },
           {
-            name: 'Virtual Study Buddy',
+            name: 'Peer-to-Peer Chess Platform',
             link: '#projects',
-            description: 'Real-time collaboration platform'
+            description: 'Real-time multiplayer chess app using JavaScript, WebRTC, and Firebase.'
           }
         ]
       },
@@ -40,9 +40,24 @@ const skillCategories: SkillCategory[] = [
         name: 'Python',
         projects: [
           {
+            name: 'Leland Coaching Models',
+            link: '#projects',
+            description: 'ML models for talent discovery using Python, Pandas, Scikit-learn, TensorFlow, HuggingFace.'
+          },
+          {
+            name: 'Manifold Alignment Research – MASH & SPUD',
+            link: '#projects',
+            description: 'Novel manifold alignment algorithms and experiment pipelines in Python.'
+          },
+          {
             name: 'Algorithmic Trading Simulator',
             link: '#projects',
-            description: 'Platform for testing trading strategies'
+            description: 'Stock trading simulator and backtesting framework using Python, Pandas, Django.'
+          },
+          {
+            name: 'Audiobook Generation Pipeline',
+            link: '#projects',
+            description: 'Automated pipeline for audiobook generation using Python, AWS Lambda, Polly, Boto3.'
           }
         ]
       }
@@ -54,12 +69,12 @@ const skillCategories: SkillCategory[] = [
     icon: <Code className="w-6 h-6 text-blue-500 dark:text-blue-400" />,
     skills: [
       {
-        name: 'React & Next.js',
+        name: 'React',
         projects: [
           {
-            name: 'Data Visualization Tool',
+            name: 'BYU Course Alignment Tool',
             link: '#projects',
-            description: 'Interactive data visualization platform'
+            description: 'Internal tool for mapping courses and projects, built with React and D3.js.'
           }
         ]
       },
@@ -69,7 +84,7 @@ const skillCategories: SkillCategory[] = [
           {
             name: 'Personal Portfolio',
             link: '#',
-            description: 'This responsive portfolio website'
+            description: 'This responsive portfolio website using Tailwind CSS.'
           }
         ]
       }
@@ -77,26 +92,36 @@ const skillCategories: SkillCategory[] = [
   },
   {
     id: 'backend',
-    name: 'Backend Development',
+    name: 'Backend & Systems',
     icon: <Server className="w-6 h-6 text-green-500 dark:text-green-400" />,
     skills: [
       {
         name: 'Node.js & Express',
         projects: [
           {
-            name: 'Smart Task Manager API',
+            name: 'BYU Course Alignment Tool',
             link: '#projects',
-            description: 'RESTful API for task management'
+            description: 'Backend API for course mapping using Node.js and Express.'
           }
         ]
       },
       {
-        name: 'MongoDB & SQL',
+        name: 'Django',
         projects: [
           {
-            name: 'Virtual Study Buddy',
+            name: 'Algorithmic Trading Simulator',
             link: '#projects',
-            description: 'Database design and implementation'
+            description: 'Backtesting and trading simulation backend using Django.'
+          }
+        ]
+      },
+      {
+        name: 'AWS Lambda & Polly',
+        projects: [
+          {
+            name: 'Audiobook Generation Pipeline',
+            link: '#projects',
+            description: 'Serverless audiobook generation pipeline using AWS Lambda and Polly.'
           }
         ]
       }
@@ -108,22 +133,47 @@ const skillCategories: SkillCategory[] = [
     icon: <PenTool className="w-6 h-6 text-orange-500 dark:text-orange-400" />,
     skills: [
       {
-        name: 'Git & GitHub',
-        projects: [
-          {
-            name: 'Open Source Contributions',
-            link: 'https://github.com/rustadadam',
-            description: 'Various contributions to open source projects'
-          }
-        ]
-      },
-      {
-        name: 'Docker & AWS',
+        name: 'Docker',
         projects: [
           {
             name: 'Algorithmic Trading Simulator',
             link: '#projects',
-            description: 'Containerized deployment on AWS'
+            description: 'Containerized deployment and reproducible environments using Docker.'
+          },
+          {
+            name: 'Audiobook Generation Pipeline',
+            link: '#projects',
+            description: 'Containerized serverless pipeline using Docker.'
+          }
+        ]
+      },
+      {
+        name: 'ML & Data Science',
+        projects: [
+          {
+            name: 'Leland Coaching Models',
+            link: '#projects',
+            description: 'ML models using TensorFlow, Scikit-learn, HuggingFace.'
+          },
+          {
+            name: 'Manifold Alignment Research – MASH & SPUD',
+            link: '#projects',
+            description: 'Research and benchmarking of manifold alignment algorithms.'
+          },
+          {
+            name: 'Twin Autoencoders for Embedding Extension',
+            link: '#projects',
+            description: 'Embedding extension using PyTorch, MLFlow, and Jupyter.'
+          }
+        ]
+      },
+      {
+        name: 'Firebase & WebRTC',
+        projects: [
+          {
+            name: 'Peer-to-Peer Chess Platform',
+            link: '#projects',
+            description: 'Real-time multiplayer chess using Firebase and WebRTC.'
           }
         ]
       }

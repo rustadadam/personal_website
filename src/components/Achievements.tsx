@@ -46,7 +46,7 @@ const achievements: Achievement[] = [
   {
     id: 5,
     date: "Dec 2024",
-    title: "Research Publication at ICMLA",
+    title: "Academic Publication at ICMLA",
     description:
       "Published Graph Integration for Diffusion‑Based Manifold Alignment at ICMLA. Introduced novel techniques for improved cross‑domain data alignment.",
     type: "award",
@@ -54,7 +54,7 @@ const achievements: Achievement[] = [
   {
     id: 6,
     date: "Dec 2024",
-    title: "Research Publication at IEEE",
+    title: "Academic Publication at IEEE",
     description:
       "Published Random Forest‑Supervised Manifold Alignment at IEEE Big Data. Demonstrated enhanced performance of manifold alignment in high‑dimensional settings.",
     type: "award",
@@ -70,7 +70,7 @@ const achievements: Achievement[] = [
   {
     id: 8,
     date: "Mar 2025",
-    title: "Research Publication at SampTA",
+    title: "Academic Publication at SampTA",
     description:
       "Published Enabling Out‑of‑Sample Extension in Semi‑Supervised Manifold Alignment at SampTA. Presented a twin autoencoder approach for real‑world data extension.",
     type: "award",
