@@ -45,23 +45,23 @@ const achievements: Achievement[] = [
   },
   {
     id: 5,
-    date: "2024",
-    title: "Computer Science Research Publication",
+    date: "Dec 2024",
+    title: "Research Publication at ICMLA",
     description:
       "Published Graph Integration for Diffusion‑Based Manifold Alignment at ICMLA. Introduced novel techniques for improved cross‑domain data alignment.",
     type: "award",
   },
   {
     id: 6,
-    date: "2024",
-    title: "Machine Learning Research Publication",
+    date: "Dec 2024",
+    title: "Research Publication at IEEE",
     description:
       "Published Random Forest‑Supervised Manifold Alignment at IEEE Big Data. Demonstrated enhanced performance of manifold alignment in high‑dimensional settings.",
     type: "award",
   },
   {
     id: 7,
-    date: "2025",
+    date: "Feb 2025",
     title: "AWS Academy Graduate",
     description:
       "Completed AWS Academy Machine Learning Foundations certification. Validated foundational expertise in cloud computing and AWS ML services.",
@@ -69,8 +69,8 @@ const achievements: Achievement[] = [
   },
   {
     id: 8,
-    date: "2025",
-    title: "Machine Learning Research Publication",
+    date: "Mar 2025",
+    title: "Research Publication at SampTA",
     description:
       "Published Enabling Out‑of‑Sample Extension in Semi‑Supervised Manifold Alignment at SampTA. Presented a twin autoencoder approach for real‑world data extension.",
     type: "award",

@@ -5,7 +5,7 @@ const Hero: React.FC = () => {
   return (
     <section
       id="home"
-      className="min-h-screen flex flex-col justify-center relative bg-gradient-to-br from-blue-100 to-white dark:from-gray-900 dark:to-gray-800 pt-16"
+      className="min-h-screen flex flex-col justify-center relative bg-gradient-to-br from-blue-100 via-white to-blue-200 dark:from-gray-900 dark:via-gray-800 dark:to-blue-900 pt-16"
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center">
         <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6 tracking-tight">

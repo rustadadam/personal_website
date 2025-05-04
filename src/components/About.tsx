@@ -12,16 +12,22 @@ const About: React.FC = () => {
         </div>
         
         <div className="flex flex-col lg:flex-row items-center gap-12">
-          <div className="lg:w-1/2">
+          <div className="lg:w-1/2 flex justify-center">
             <div className="relative">
-              <div className="w-64 h-64 sm:w-80 sm:h-80 rounded-full overflow-hidden border-8 border-gray-200 dark:border-gray-700 mx-auto">
+              <div
+                className="w-96 h-96 sm:w-[28rem] sm:h-[28rem] rounded-full overflow-hidden mx-auto"
+                style={{
+                  transform: 'translateY(-20px)',
+                  // Only bottom right shadow, brighter blue to match achievements section
+                  boxShadow: '10px 10px 40px 10px rgba(59, 100, 246, 0.35)'
+                }}
+              >
                 <img
                   src="/assets/profile.jpg"
                   alt="Adam Rustad"
                   className="w-full h-full object-cover"
                 />
               </div>
-              <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-blue-600 dark:bg-blue-400 rounded-full -z-10"></div>
             </div>
           </div>
           
