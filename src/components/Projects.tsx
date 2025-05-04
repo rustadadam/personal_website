@@ -27,73 +27,56 @@ const projects: Project[] = [
   },
   {
     id: 2,
-    title: "Leland Coaching Models – ML for Talent Discovery",
-    description: "Built machine learning models to recommend coach candidates based on profile embeddings and heuristics. Developed ensemble models and an LLM-assisted neural network achieving 89% F1 and 99% recall.",
-    image: "https://images.pexels.com/photos/1089438/pexels-photo-1089438.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    title: "Leland Coaching Models",
+    description: "Built machine learning models to recommend coach candidates based on profile embeddings and heuristics. Developed ensemble models and an LLM-assisted neural network achieving 89% F1 and 99% recall for Leland Coaching.",
+    image: "/assets/ai-neural-network-brain.jpg",
     technologies: ["Python", "Pandas", "Scikit-learn", "TensorFlow", "HuggingFace"],
-    liveLink: "https://example.com", // TODO
+    liveLink: undefined, // TODO
     githubLink: undefined,
+    websiteLink: "https://www.joinleland.com/", 
     category: "Machine Learning"
   },
   {
     id: 3,
     title: "Manifold Alignment Research – MASH & SPUD",
     description: "Invented and benchmarked novel manifold alignment algorithms (SPUD, MASH) for cross-domain structure discovery. Published multiple papers and developed robust experiment pipelines.",
-    image: "https://images.pexels.com/photos/7439143/pexels-photo-7439143.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-    technologies: ["Python", "NumPy", "Matplotlib", "Scikit-learn", "Jupyter"],
-    liveLink: "https://example.com",
+    image: "/assets/roasted-potatoes-with-herbs.jpg",
+    technologies: ["Python", "MATLAB", "Scikit-learn", "Jupyter", "Data Science"],
+    liveLink: undefined, // TODO
     githubLink: "https://github.com/rustadadam/mashspud",
-    category: "Web"
+    websiteLink: "https://scholar.google.com/citations?user=ajI1Nl8AAAAJ&hl=en",
+    category: "Machine Learning"
   },
   {
     id: 4,
-    title: "Audiobook Generation Pipeline",
-    description: "Developed an automated pipeline that converts books and articles to audiobooks using AWS Polly. Integrated transcription, voice synthesis, and file delivery using serverless computing.",
-    image: "https://images.pexels.com/photos/669615/pexels-photo-669615.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-    technologies: ["AWS Lambda", "Polly", "Python", "Boto3", "Docker"],
-    liveLink: "https://example.com",
-    githubLink: "https://github.com/rustadadam/book-to-audio",
+    title: "Text to Audio Conversion Pipeline",
+    description: "Developed an automated pipeline that converts text to audiobooks with a single click of a button. Implemented via AWS and Google Cloud services. Uses several machine learning models.",
+    image: "/assets/SoundScribe.png",
+    technologies: ["AWS", "Google Cloud", "Python", "Boto3", "NLP"],
+    liveLink: undefined, //TODO
+    githubLink: "https://github.com/rustadadam/SoundScribe",
     category: "Web"
   },
   {
     id: 5,
-    title: "Peer-to-Peer Chess Platform",
-    description: "A real-time multiplayer chess app built with WebRTC and Firebase, enabling client-to-client gameplay with secure connection handling and move validation.",
-    image: "https://images.pexels.com/photos/6801874/pexels-photo-6801874.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-    technologies: ["JavaScript", "WebRTC", "Firebase", "HTML/CSS"],
-    liveLink: "https://example.com",
-    githubLink: "https://github.com/rustadadam/chess-webrtc",
-    category: "Web"
+    title: "Client-to-Client Chess Platform",
+    description: "A real-time multiplayer chess app built with Java and Websocket, enabling client-to-client gameplay with secure connection handling and move validation.",
+    image: "/assets/ches.png",
+    technologies: ["Java", "Websocket", "SQL"],
+    liveLink: undefined, // TODO
+    githubLink: "https://github.com/rustadadam/chess",
+    category: "Systems"
   },
   {
     id: 6,
-    title: "Algorithmic Trading Simulator",
-    description: "Simulates stock trading strategies using historical data. Implements backtesting frameworks for evaluating strategies including momentum, mean-reversion, and ML-based methods.",
-    image: "https://images.pexels.com/photos/2228574/pexels-photo-2228574.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-    technologies: ["Python", "Pandas", "Django", "Docker"],
-    liveLink: "https://example.com",
-    githubLink: "https://github.com",
-    category: "Web"
-  },
-  {
-    id: 7,
     title: "Twin Autoencoders for Embedding Extension",
     description: "Developed and published a method to extend aligned embeddings using twin autoencoders. Applied to graph alignment and data fusion tasks with robust quantitative evaluations.",
-    image: "https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-    technologies: ["PyTorch", "NumPy", "Matplotlib", "Jupyter", "MLFlow"],
-    liveLink: "https://example.com",
-    githubLink: "https://github.com/rustadadam/mashspud",
-    category: "Web"
-  },
-  {
-    id: 8,
-    title: "BYU Course Alignment Tool",
-    description: "Built an internal tool to map courses and projects across departments for better curriculum planning. Includes dynamic filtering, data visualization, and export features.",
-    image: "https://images.pexels.com/photos/256502/pexels-photo-256502.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-    technologies: ["React", "D3.js", "Node.js", "Express"],
-    liveLink: "https://example.com",
-    githubLink: "https://github.com",
-    category: "Web"
+    image: "/assets/quantum-chip-technology.jpg",
+    technologies: ["PyTorch", "Joblib", "Matplotlib", "Jupyter", "TensorFlow"],
+    liveLink: undefined, // TODO
+    githubLink: "https://github.com/JakeSRhodesLab/TwinAE-MA",
+    websiteLink: "https://scholar.google.com/citations?user=ajI1Nl8AAAAJ&hl=en",
+    category: "Machine Learning"
   }
 ];
 
