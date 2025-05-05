@@ -28,11 +28,16 @@ const skillCategories: SkillCategory[] = [
             name: 'SafeSocial – AI-Powered Chrome Extension',
             link: '#projects',
             description: 'Chrome extension using JavaScript, TensorFlow.js, and Chrome Extension APIs for real-time content filtering.'
-          },
+          }
+        ]
+      },
+      {
+        name: 'Java',
+        projects: [
           {
-            name: 'Peer-to-Peer Chess Platform',
+            name: 'Client-to-Client Chess Platform',
             link: '#projects',
-            description: 'Real-time multiplayer chess app using JavaScript, WebRTC, and Firebase.'
+            description: 'Real-time multiplayer chess app using JavaScript, Websocket, and SQL.'
           }
         ]
       },
@@ -47,81 +52,12 @@ const skillCategories: SkillCategory[] = [
           {
             name: 'Manifold Alignment Research – MASH & SPUD',
             link: '#projects',
-            description: 'Novel manifold alignment algorithms and experiment pipelines in Python.'
-          },
-          {
-            name: 'Algorithmic Trading Simulator',
-            link: '#projects',
-            description: 'Stock trading simulator and backtesting framework using Python, Pandas, Django.'
+            description: 'Novel manifold alignment algorithms and experiment pipelines in Python and MATLAB.'
           },
           {
             name: 'Audiobook Generation Pipeline',
             link: '#projects',
-            description: 'Automated pipeline for audiobook generation using Python, AWS Lambda, Polly, Boto3.'
-          }
-        ]
-      }
-    ]
-  },
-  {
-    id: 'frontend',
-    name: 'Frontend Development',
-    icon: <Code className="w-6 h-6 text-blue-500 dark:text-blue-400" />,
-    skills: [
-      {
-        name: 'React',
-        projects: [
-          {
-            name: 'BYU Course Alignment Tool',
-            link: '#projects',
-            description: 'Internal tool for mapping courses and projects, built with React and D3.js.'
-          }
-        ]
-      },
-      {
-        name: 'Tailwind CSS',
-        projects: [
-          {
-            name: 'Personal Portfolio',
-            link: '#',
-            description: 'This responsive portfolio website using Tailwind CSS.'
-          }
-        ]
-      }
-    ]
-  },
-  {
-    id: 'backend',
-    name: 'Backend & Systems',
-    icon: <Server className="w-6 h-6 text-green-500 dark:text-green-400" />,
-    skills: [
-      {
-        name: 'Node.js & Express',
-        projects: [
-          {
-            name: 'BYU Course Alignment Tool',
-            link: '#projects',
-            description: 'Backend API for course mapping using Node.js and Express.'
-          }
-        ]
-      },
-      {
-        name: 'Django',
-        projects: [
-          {
-            name: 'Algorithmic Trading Simulator',
-            link: '#projects',
-            description: 'Backtesting and trading simulation backend using Django.'
-          }
-        ]
-      },
-      {
-        name: 'AWS Lambda & Polly',
-        projects: [
-          {
-            name: 'Audiobook Generation Pipeline',
-            link: '#projects',
-            description: 'Serverless audiobook generation pipeline using AWS Lambda and Polly.'
+            description: 'Automated pipeline for audiobook generation using Python, AWS EC2, Boto3, etc.'
           }
         ]
       }
@@ -133,17 +69,12 @@ const skillCategories: SkillCategory[] = [
     icon: <PenTool className="w-6 h-6 text-orange-500 dark:text-orange-400" />,
     skills: [
       {
-        name: 'Docker',
+        name: 'Manifold Alignment',
         projects: [
           {
-            name: 'Algorithmic Trading Simulator',
+            name: 'mashspud',
             link: '#projects',
-            description: 'Containerized deployment and reproducible environments using Docker.'
-          },
-          {
-            name: 'Audiobook Generation Pipeline',
-            link: '#projects',
-            description: 'Containerized serverless pipeline using Docker.'
+            description: 'Created a library implementing SPUD & MASH algorithms for cross-domain data alignment, with reproducible benchmarks.'
           }
         ]
       },
@@ -156,29 +87,78 @@ const skillCategories: SkillCategory[] = [
             description: 'ML models using TensorFlow, Scikit-learn, HuggingFace.'
           },
           {
-            name: 'Manifold Alignment Research – MASH & SPUD',
-            link: '#projects',
-            description: 'Research and benchmarking of manifold alignment algorithms.'
-          },
-          {
             name: 'Twin Autoencoders for Embedding Extension',
             link: '#projects',
-            description: 'Embedding extension using PyTorch, MLFlow, and Jupyter.'
+            description: 'Novel embedding extension using PyTorch and Jupyter.'
           }
         ]
       },
       {
-        name: 'Firebase & WebRTC',
+        name: 'Databases',
         projects: [
           {
             name: 'Peer-to-Peer Chess Platform',
             link: '#projects',
-            description: 'Real-time multiplayer chess using Firebase and WebRTC.'
+            description: 'Real-time multiplayer chess using mySQL to store games and to enable continous access.'
           }
         ]
       }
     ]
-  }
+  },
+  {
+    id: 'devops',
+    name: 'DevOps & Automation',
+    icon: <Code className="w-6 h-6 text-blue-500 dark:text-blue-400" />,
+    skills: [
+      {
+        name: 'Containerization & CI/CD',
+        projects: [
+          {
+            name: 'Audiobook Generation Pipeline',
+            link: '#projects',
+            description: 'Containerized Lambda functions and built code into pipelines for scalable deployments.'
+          }
+        ]
+      },
+      {
+        name: 'Experiment Tracking & Automation',
+        projects: [
+          {
+            name: 'Twin Autoencoders Pipeline',
+            link: '#projects',
+            description: 'Automated training and logging of embedding-extension experiments using Joblib and ssh servers for thousands of experiments.'
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'cloud',
+    name: 'Cloud & API Development',
+    icon: <Code className="w-6 h-6 text-cyan-500 dark:text-cyan-400" />,
+    skills: [
+      {
+        name: 'Scalable Server Architecture',
+        projects: [
+          {
+            name: 'Audiobook Generation Pipeline',
+            link: '#projects',
+            description: 'Built a fully automated and cost-efficient architecture that seamlessly scales using AWS Lambda and AWS EC2.'
+          }
+        ]
+      },
+      {
+        name: 'LLM Integration',
+        projects: [
+          {
+            name: 'Leland Coaching Models',
+            link: '#projects',
+            description: 'Used OpenAI API and Google Gemini API to integrate LLMS to read scraped LinkedIn profiles and generate scores.'
+          }
+        ]
+      }
+    ]
+  },
 ];
 
 const Skills: React.FC = () => {
