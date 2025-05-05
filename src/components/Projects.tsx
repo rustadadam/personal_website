@@ -42,7 +42,7 @@ const projects: Project[] = [
     description: "Invented and benchmarked novel manifold alignment algorithms (SPUD, MASH) for cross-domain structure discovery. Published multiple papers and developed robust experiment pipelines.",
     image: "/assets/roasted-potatoes-with-herbs.jpg",
     technologies: ["Python", "MATLAB", "Scikit-learn", "Jupyter", "Data Science"],
-    liveLink: undefined, // TODO
+    liveLink: "https://youtu.be/NrNHT1rozHk", // TODO
     githubLink: "https://github.com/rustadadam/mashspud",
     websiteLink: "https://scholar.google.com/citations?user=ajI1Nl8AAAAJ&hl=en",
     category: "Machine Learning"
