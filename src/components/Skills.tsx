@@ -200,7 +200,9 @@ const Skills: React.FC = () => {
   // Auto-scroll effect for each skills box
   useEffect(() => {
     const frameHandles: number[] = [];
-    scrollRefs.current.forEach((el) => {
+    // Track if a section has started auto-scrolling
+    const started: boolean[] = Array(scrollRefs.current.length).fill(false);
+    scrollRefs.current.forEach((el, idx) => {
       if (!el) return;
       let isUserScrolling = false;
       const scrollSpeed = 0.5; // px per frame, always slow
@@ -222,17 +224,19 @@ const Skills: React.FC = () => {
         if (!lastTimestamp) lastTimestamp = timestamp || 0;
         lastTimestamp = timestamp || 0;
         if (!isUserScrolling) {
-          // Always scroll at a fixed rate, regardless of frame rate
           el.scrollTop += scrollSpeed;
-          // Reset at the exact pixel where the duplicate starts
           if (el.scrollTop >= contentHeight) {
             el.scrollTop = el.scrollTop - contentHeight;
           }
         }
         frame = requestAnimationFrame(autoScroll);
       };
-      frame = requestAnimationFrame(autoScroll);
-      frameHandles.push(frame);
+      // Always start auto-scroll immediately, even if not interacted with
+      if (!started[idx]) {
+        started[idx] = true;
+        frame = requestAnimationFrame(autoScroll);
+        frameHandles.push(frame);
+      }
     });
     return () => {
       scrollRefs.current.forEach((el) => {
