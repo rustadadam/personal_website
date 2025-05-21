@@ -94,68 +94,83 @@ const Projects: React.FC = () => {
     : projects.filter(project => project.category === activeCategory);
 
   return (
-    <section id="projects" className="py-20 bg-white dark:bg-gray-900">
+    <section id="projects" className="py-20 bg-gray-50 dark:bg-gray-800">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div 
           ref={ref}
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-20"
         >
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+          <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-gray-900 dark:text-white mb-4 font-[Poppins,sans-serif]">
             My Projects
           </h2>
-          <div className="w-24 h-1 bg-teal-500 dark:bg-teal-400 mx-auto rounded-full mb-8"></div>
-          <p className="text-gray-700 dark:text-gray-300 max-w-2xl mx-auto mb-8">
-            Here are some of the projects I've worked on during my academic journey and personal exploration.
-            Each project represents a unique challenge and learning experience.
+          <div className="w-28 h-1 bg-coral-500 dark:bg-coral-400 mx-auto rounded-full mb-10"></div>
+          <p className="text-lg text-gray-700 dark:text-gray-300 max-w-2xl mx-auto mb-10 font-[Inter,sans-serif]">
+            Here are some of the projects I've worked on during my academic journey and personal exploration. Each project represents a unique challenge and learning experience.
           </p>
-          
           <div className="flex flex-wrap justify-center gap-4 mb-8">
             {['all', 'Web', 'Machine Learning', 'Systems'].map((category) => (
               <motion.button
                 key={category}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                whileHover={{ scale: 1.07 }}
+                whileTap={{ scale: 0.97 }}
                 onClick={() => setActiveCategory(category as any)}
-                className={`px-6 py-2 rounded-full text-sm ${
-                  activeCategory === category
-                    ? 'bg-teal-500 text-white'
-                    : 'bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-700'
-                } transition duration-300`}
+                className={`px-7 py-2 rounded-full text-base font-semibold shadow-sm transition duration-300 border-2 focus:outline-none focus:ring-2 focus:ring-coral-400/60 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-gray-900
+                  ${activeCategory === category
+                    ? 'bg-coral-500 text-white border-coral-500 shadow-lg'
+                    : 'bg-white dark:bg-gray-900 text-teal-700 dark:text-teal-300 border-teal-300 hover:bg-teal-50 dark:hover:bg-teal-900/40 hover:text-coral-500'}
+                `}
+                style={{ fontFamily: 'Poppins, Inter, sans-serif' }}
               >
                 {category === 'all' ? 'All Projects' : category}
               </motion.button>
             ))}
           </div>
         </motion.div>
-        
-        <div className="flex overflow-x-auto pb-8 space-x-6">
+        <div className="flex overflow-x-auto pb-8 space-x-8 scrollbar-thin scrollbar-thumb-teal-200 dark:scrollbar-thumb-teal-900 scrollbar-track-transparent">
           {filteredProjects.map((project, index) => (
             <motion.div
               key={project.id}
               initial={{ opacity: 0, x: 50 }}
               animate={inView ? { opacity: 1, x: 0 } : {}}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="flex-none w-[350px] bg-gray-50 dark:bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition duration-300"
+              className="flex-none w-[370px] bg-white dark:bg-gray-900 rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition duration-300 border border-teal-100 dark:border-teal-900/40"
+              style={{ fontFamily: 'Inter, Poppins, sans-serif' }}
             >
-              <div className="h-48 overflow-hidden">
+              <div className="h-52 overflow-hidden rounded-t-3xl">
                 <img
                   src={project.image}
                   alt={project.title}
-                  className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
+                  className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
                 />
               </div>
-              
+
               <div className="p-6">
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                <h3
+                  className="
+                    text-xl sm:text-2xl 
+                    font-extrabold tracking-tight 
+                    text-gray-900 dark:text-white 
+                    mb-2 
+                    font-[Poppins,sans-serif]
+                  "
+                >
                   {project.title}
                 </h3>
-                <p className="text-gray-700 dark:text-gray-300 mb-4">
+                <p
+                  className="
+                    text-base sm:text-lg 
+                    text-gray-700 dark:text-gray-300 
+                    mb-4 
+                    font-[Inter,sans-serif]
+                    max-w-prose
+                  "
+                >
                   {project.description}
                 </p>
-                
+
                 <div className="flex flex-wrap gap-2 mb-6">
                   {project.technologies.map((tech) => (
                     <span
@@ -170,41 +185,41 @@ const Projects: React.FC = () => {
                 <div className="flex gap-4">
                   {project.liveLink && (
                     <motion.a
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
+                      whileHover={{ scale: 1.08 }}
+                      whileTap={{ scale: 0.97 }}
                       href={project.liveLink}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center text-sm text-teal-600 dark:text-teal-400 hover:text-teal-800 dark:hover:text-teal-300"
+                      className="flex items-center text-sm font-semibold text-coral-500 hover:text-coral-600 dark:text-coral-400 dark:hover:text-coral-300 transition-colors"
                     >
-                      <ExternalLink size={16} className="mr-1" /> Live Demo
+                      <ExternalLink size={16} className="mr-1" /> Demo
                     </motion.a>
                   )}
                   {project.websiteLink && (
                     <motion.a
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
+                      whileHover={{ scale: 1.08 }}
+                      whileTap={{ scale: 0.97 }}
                       href={project.websiteLink}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center text-sm text-coral-600 dark:text-coral-400 hover:text-coral-800 dark:hover:text-coral-300"
+                      className="flex items-center text-sm font-semibold text-teal-600 hover:text-teal-800 dark:text-teal-300 dark:hover:text-teal-200 transition-colors"
                     >
                       <Globe size={16} className="mr-1" /> Website
                     </motion.a>
                   )}
                   {project.githubLink ? (
                     <motion.a
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
+                      whileHover={{ scale: 1.08 }}
+                      whileTap={{ scale: 0.97 }}
                       href={project.githubLink}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center text-sm text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+                      className="flex items-center text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-coral-500 dark:hover:text-coral-400 transition-colors"
                     >
                       <Github size={16} className="mr-1" /> Code
                     </motion.a>
                   ) : (
-                    <span className="flex items-center text-sm text-gray-400 dark:text-gray-500 cursor-not-allowed">
+                    <span className="flex items-center text-sm text-gray-300 dark:text-gray-600 cursor-not-allowed font-semibold">
                       <Github size={16} className="mr-1" /> Code not available
                     </span>
                   )}
