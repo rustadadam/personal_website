@@ -21,7 +21,7 @@ const About: React.FC = () => {
           <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">
             About Me
           </h2>
-          <div className="w-24 h-1 bg-teal-500 dark:bg-teal-400 mx-auto rounded-full"></div>
+          <div className="w-24 h-1 bg-coral-500 dark:bg-teal-400 mx-auto rounded-full"></div>
         </motion.div>
         
         <div className="flex flex-col lg:flex-row items-center gap-12">
