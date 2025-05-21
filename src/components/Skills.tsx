@@ -203,7 +203,8 @@ const Skills: React.FC = () => {
     scrollRefs.current.forEach((el) => {
       if (!el) return;
       let isUserScrolling = false;
-      let scrollSpeed = 0.5; // px per frame
+      const scrollSpeed = 0.5; // px per frame, always slow
+      let lastTimestamp: number | null = null;
       const onUserScroll = () => {
         isUserScrolling = true;
         clearTimeout((el as any)._pauseTimeout);
@@ -217,11 +218,15 @@ const Skills: React.FC = () => {
       if (!scrollContent) return;
       const contentHeight = scrollContent.scrollHeight / 2;
       let frame: number;
-      const autoScroll = () => {
+      const autoScroll = (timestamp?: number) => {
+        if (!lastTimestamp) lastTimestamp = timestamp || 0;
+        lastTimestamp = timestamp || 0;
         if (!isUserScrolling) {
+          // Always scroll at a fixed rate, regardless of frame rate
           el.scrollTop += scrollSpeed;
+          // Reset at the exact pixel where the duplicate starts
           if (el.scrollTop >= contentHeight) {
-            el.scrollTop = 0;
+            el.scrollTop = el.scrollTop - contentHeight;
           }
         }
         frame = requestAnimationFrame(autoScroll);
@@ -276,7 +281,7 @@ const Skills: React.FC = () => {
               </div>
               <div
                 ref={el => (scrollRefs.current[categoryIndex] = el)}
-                className="px-7 pb-7 flex flex-col gap-6 overflow-y-auto h-[410px] pr-2 scrollbar-thin scrollbar-thumb-teal-200 dark:scrollbar-thumb-teal-900 scrollbar-track-transparent hide-scrollbar scroll-container"
+                className="px-7 pb-7 flex flex-col gap-6 overflow-y-auto h-[410px] pr-2 hide-scrollbar scroll-container"
               >
                 <div className="scroll-content flex flex-col gap-6">
                   {category.skills.map((skill) => (
