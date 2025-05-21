@@ -135,7 +135,7 @@ const Projects: React.FC = () => {
               key={project.id}
               initial={{ opacity: 0, x: 50 }}
               animate={inView ? { opacity: 1, x: 0, transition: { duration: 1.0, ease: 'easeOut', delay: index * 0.23 } } : {}}
-              exit={{ opacity: 0, x: 50, transition: { duration: 2, ease: 'easeIn' } }}
+              exit={{ opacity: 0, x: 0, transition: { duration: 2, ease: 'easeIn' } }}
               className="flex-none w-[430px] h-[600px] bg-white dark:bg-gray-900 rounded-3xl overflow-hidden border-0 shadow-[0_10px_20px_0_rgba(9,189,255,0.13),0_1.5px_16px_0_rgba(0,0,0,0.06)] dark:shadow-[0_10px_24px_0_rgba(9,189,255,0.18),0_6px_26px_0_rgba(0,0,0,0.10)] transition duration-300 flex flex-col justify-between"
               style={{ fontFamily: 'Inter, Poppins, sans-serif' }}
               layout

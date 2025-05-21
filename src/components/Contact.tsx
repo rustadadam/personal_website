@@ -46,10 +46,10 @@ const Contact: React.FC = () => {
 		<section id="contact" className="py-16 bg-white dark:bg-gray-900 font-[Inter,sans-serif]">
 			<div className="container mx-auto px-4 sm:px-8 lg:px-16">
 				<motion.div
-					initial={{ opacity: 0, y: 30 }}
+					initial={{ opacity: 0, y: 10 }}
 					whileInView={{ opacity: 1, y: 0 }}
 					viewport={{ once: true, amount: 0.2 }}
-					transition={{ duration: 0.7 }}
+					transition={{ duration: 1.9, ease: 'easeOut' }}
 					className="text-center mb-10"
 				>
 					<h2 className="text-4xl sm:text-5xl font-extrabold text-gray-900 dark:text-white mb-4 font-[Poppins,sans-serif] tracking-tight">
@@ -61,21 +61,21 @@ const Contact: React.FC = () => {
 					</p>
 				</motion.div>
 				<motion.div
-					initial={{ opacity: 0, scale: 0.98 }}
-					whileInView={{ opacity: 1, scale: 1 }}
+					initial={{ opacity: 0, scale: 0.97, y: 10 }}
+					whileInView={{ opacity: 1, scale: 1, y: 0 }}
 					viewport={{ once: true, amount: 0.2 }}
-					transition={{ duration: 0.7, delay: 0.1 }}
+					transition={{ duration: 0.9, delay: 0.08, ease: 'easeOut' }}
 					className="max-w-2xl mx-auto bg-white dark:bg-gray-800 p-6 sm:p-8 rounded-3xl shadow-2xl border border-teal-100 dark:border-teal-900/40 mb-0"
 				>
 					<div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
 						{contactMethods.map((method, idx) => {
 							const CardContent = (
 								<motion.div
-									initial={{ opacity: 0, y: 30 }}
+									initial={{ opacity: 0, y: 12 }}
 									whileInView={{ opacity: 1, y: 0 }}
 									viewport={{ once: true, amount: 0.2 }}
-									transition={{ duration: 0.5, delay: 0.1 + idx * 0.08 }}
-									whileHover={method.href ? { scale: 1.025, boxShadow: '0 8px 32px 0 rgba(0,128,128,0.10)' } : {}}
+									transition={{ duration: 0.7, delay: 0.18 + idx * 0.09, ease: 'easeOut' }}
+									whileHover={method.href ? { scale: 1.035, boxShadow: '0 8px 32px 0 rgba(0,128,128,0.13)' } : {}}
 									className="flex items-center gap-4 bg-gradient-to-br from-white via-teal-50 to-teal-100 dark:from-gray-800 dark:via-teal-900/30 dark:to-teal-900 rounded-2xl p-5 shadow-md hover:shadow-xl transition-all duration-200 cursor-pointer"
 									tabIndex={method.href ? 0 : undefined}
 								>
