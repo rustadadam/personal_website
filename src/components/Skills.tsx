@@ -200,20 +200,23 @@ const Skills: React.FC = () => {
   // Auto-scroll effect for each skills box
   useEffect(() => {
     const frameHandles: number[] = [];
-    // Track if a section has started auto-scrolling
-    const started: boolean[] = Array(scrollRefs.current.length).fill(false);
+    const userScrollTimeouts: Array<number | null> = Array(skillCategories.length).fill(null);
+    const isUserScrollingArr: boolean[] = Array(skillCategories.length).fill(false);
+    const onUserScrollArr: Array<(() => void) | null> = Array(skillCategories.length).fill(null);
+    scrollRefs.current.length = skillCategories.length;
     scrollRefs.current.forEach((el, idx) => {
       if (!el) return;
-      let isUserScrolling = false;
-      const scrollSpeed = 0.5; // px per frame, always slow
+      const scrollSpeed = 0.5;
       let lastTimestamp: number | null = null;
+      // Handler for this category
       const onUserScroll = () => {
-        isUserScrolling = true;
-        clearTimeout((el as any)._pauseTimeout);
-        (el as any)._pauseTimeout = setTimeout(() => {
-          isUserScrolling = false;
+        isUserScrollingArr[idx] = true;
+        if (userScrollTimeouts[idx]) clearTimeout(userScrollTimeouts[idx]!);
+        userScrollTimeouts[idx] = setTimeout(() => {
+          isUserScrollingArr[idx] = false;
         }, 1200);
       };
+      onUserScrollArr[idx] = onUserScroll;
       el.addEventListener('wheel', onUserScroll, { passive: true });
       el.addEventListener('touchmove', onUserScroll, { passive: true });
       const scrollContent = el.querySelector('.scroll-content') as HTMLElement;
@@ -223,7 +226,7 @@ const Skills: React.FC = () => {
       const autoScroll = (timestamp?: number) => {
         if (!lastTimestamp) lastTimestamp = timestamp || 0;
         lastTimestamp = timestamp || 0;
-        if (!isUserScrolling) {
+        if (!isUserScrollingArr[idx]) {
           el.scrollTop += scrollSpeed;
           if (el.scrollTop >= contentHeight) {
             el.scrollTop = el.scrollTop - contentHeight;
@@ -231,19 +234,16 @@ const Skills: React.FC = () => {
         }
         frame = requestAnimationFrame(autoScroll);
       };
-      // Always start auto-scroll immediately, even if not interacted with
-      if (!started[idx]) {
-        started[idx] = true;
-        frame = requestAnimationFrame(autoScroll);
-        frameHandles.push(frame);
-      }
+      frame = requestAnimationFrame(autoScroll);
+      frameHandles.push(frame);
     });
     return () => {
-      scrollRefs.current.forEach((el) => {
-        if (el) {
-          el.removeEventListener('wheel', () => {});
-          el.removeEventListener('touchmove', () => {});
+      scrollRefs.current.forEach((el, idx) => {
+        if (el && onUserScrollArr[idx]) {
+          el.removeEventListener('wheel', onUserScrollArr[idx]!);
+          el.removeEventListener('touchmove', onUserScrollArr[idx]!);
         }
+        if (userScrollTimeouts[idx]) clearTimeout(userScrollTimeouts[idx]!);
       });
       frameHandles.forEach((frame) => cancelAnimationFrame(frame));
     };
@@ -269,11 +269,8 @@ const Skills: React.FC = () => {
         </motion.div>
         <div className="flex overflow-x-auto pb-8 space-x-8 scrollbar-thin scrollbar-thumb-teal-200 dark:scrollbar-thumb-teal-900 scrollbar-track-transparent">
           {skillCategories.map((category, categoryIndex) => (
-            <motion.div 
+            <div // removed motion.div for no slide-in animation
               key={category.id}
-              initial={{ opacity: 0, x: 50 }}
-              animate={inView ? { opacity: 1, x: 0 } : {}}
-              transition={{ duration: 0.5, delay: categoryIndex * 0.1 }}
               className="flex-none w-[520px] h-[500px] bg-white dark:bg-gray-900 rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition duration-300 border border-teal-100 dark:border-teal-900/40"
               style={{ fontFamily: 'Inter, Poppins, sans-serif' }}
             >
@@ -297,7 +294,7 @@ const Skills: React.FC = () => {
                   ))}
                 </div>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>
