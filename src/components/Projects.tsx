@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ExternalLink, Github, Code, Globe, ChevronDown, ChevronUp } from 'lucide-react';
+import { ExternalLink, Github, Globe } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 
@@ -84,7 +84,6 @@ const projects: Project[] = [
 
 const Projects: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<'all' | 'Web' | 'Machine Learning' | 'Systems'>('all');
-  const [expandedSection, setExpandedSection] = useState(false);
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
@@ -93,8 +92,6 @@ const Projects: React.FC = () => {
   const filteredProjects = activeCategory === 'all' 
     ? projects 
     : projects.filter(project => project.category === activeCategory);
-
-  const visibleProjects = expandedSection ? filteredProjects : filteredProjects.slice(0, 3);
 
   return (
     <section id="projects" className="py-20 bg-white dark:bg-gray-900">
@@ -112,6 +109,7 @@ const Projects: React.FC = () => {
           <div className="w-24 h-1 bg-teal-500 dark:bg-teal-400 mx-auto rounded-full mb-8"></div>
           <p className="text-gray-700 dark:text-gray-300 max-w-2xl mx-auto mb-8">
             Here are some of the projects I've worked on during my academic journey and personal exploration.
+            Each project represents a unique challenge and learning experience.
           </p>
           
           <div className="flex flex-wrap justify-center gap-4 mb-8">
@@ -134,7 +132,7 @@ const Projects: React.FC = () => {
         </motion.div>
         
         <div className="flex overflow-x-auto pb-8 space-x-6">
-          {visibleProjects.map((project, index) => (
+          {filteredProjects.map((project, index) => (
             <motion.div
               key={project.id}
               initial={{ opacity: 0, x: 50 }}
@@ -154,12 +152,12 @@ const Projects: React.FC = () => {
                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
                   {project.title}
                 </h3>
-                <p className="text-gray-700 dark:text-gray-300 mb-4 line-clamp-3">
+                <p className="text-gray-700 dark:text-gray-300 mb-4">
                   {project.description}
                 </p>
                 
                 <div className="flex flex-wrap gap-2 mb-6">
-                  {project.technologies.slice(0, 3).map((tech) => (
+                  {project.technologies.map((tech) => (
                     <span
                       key={tech}
                       className="text-xs px-2 py-1 bg-teal-100 dark:bg-teal-900 text-teal-800 dark:text-teal-200 rounded-full"
@@ -167,11 +165,6 @@ const Projects: React.FC = () => {
                       {tech}
                     </span>
                   ))}
-                  {project.technologies.length > 3 && (
-                    <span className="text-xs px-2 py-1 bg-coral-100 dark:bg-coral-900 text-coral-800 dark:text-coral-200 rounded-full">
-                      +{project.technologies.length - 3} more
-                    </span>
-                  )}
                 </div>
                 
                 <div className="flex gap-4">
@@ -187,7 +180,19 @@ const Projects: React.FC = () => {
                       <ExternalLink size={16} className="mr-1" /> Live Demo
                     </motion.a>
                   )}
-                  {project.githubLink && (
+                  {project.websiteLink && (
+                    <motion.a
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      href={project.websiteLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center text-sm text-coral-600 dark:text-coral-400 hover:text-coral-800 dark:hover:text-coral-300"
+                    >
+                      <Globe size={16} className="mr-1" /> Website
+                    </motion.a>
+                  )}
+                  {project.githubLink ? (
                     <motion.a
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
@@ -198,27 +203,16 @@ const Projects: React.FC = () => {
                     >
                       <Github size={16} className="mr-1" /> Code
                     </motion.a>
+                  ) : (
+                    <span className="flex items-center text-sm text-gray-400 dark:text-gray-500 cursor-not-allowed">
+                      <Github size={16} className="mr-1" /> Code not available
+                    </span>
                   )}
                 </div>
               </div>
             </motion.div>
           ))}
         </div>
-
-        {filteredProjects.length > 3 && (
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => setExpandedSection(!expandedSection)}
-            className="mx-auto mt-8 flex items-center gap-2 px-6 py-2 bg-teal-500 text-white rounded-full hover:bg-teal-600 transition-colors"
-          >
-            {expandedSection ? (
-              <>Show Less <ChevronUp size={20} /></>
-            ) : (
-              <>Show More <ChevronDown size={20} /></>
-            )}
-          </motion.button>
-        )}
       </div>
     </section>
   );
