@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useLayoutEffect } from 'react';
 import { Code, Server, Database, PenTool, Globe } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
@@ -193,26 +193,26 @@ const SkillItem: React.FC<{ skill: SkillCategory["skills"][0] }> = ({ skill }) =
 const Skills: React.FC = () => {
   const [ref, inView] = useInView({
     triggerOnce: true,
-    threshold: 0.3, // Show animation later (more of section in view)
+    threshold: 0.3,
   });
-  // Refs for each vertical scroll area
   const scrollRefs = useRef<(HTMLDivElement | null)[]>([]);
-  // Auto-scroll effect for each skills box
-  useEffect(() => {
+
+  // Helper to force effect to re-run when refs are set
+  const refsKey = scrollRefs.current.map(el => (el ? '1' : '0')).join('');
+
+  useLayoutEffect(() => {
     const frameHandles: number[] = [];
     const userScrollTimeouts: Array<number | null> = Array(skillCategories.length).fill(null);
     const isUserScrollingArr: boolean[] = Array(skillCategories.length).fill(false);
     const onUserScrollArr: Array<(() => void) | null> = Array(skillCategories.length).fill(null);
-    scrollRefs.current.length = skillCategories.length;
     scrollRefs.current.forEach((el, idx) => {
       if (!el) return;
       const scrollSpeed = 0.5;
       let lastTimestamp: number | null = null;
-      // Handler for this category
       const onUserScroll = () => {
         isUserScrollingArr[idx] = true;
         if (userScrollTimeouts[idx]) clearTimeout(userScrollTimeouts[idx]!);
-        userScrollTimeouts[idx] = setTimeout(() => {
+        userScrollTimeouts[idx] = window.setTimeout(() => {
           isUserScrollingArr[idx] = false;
         }, 1200);
       };
@@ -229,7 +229,8 @@ const Skills: React.FC = () => {
         if (!isUserScrollingArr[idx]) {
           el.scrollTop += scrollSpeed;
           if (el.scrollTop >= contentHeight) {
-            el.scrollTop = el.scrollTop - contentHeight;
+            // Snap to 0 to avoid any fractional offset
+            el.scrollTop = 0;
           }
         }
         frame = requestAnimationFrame(autoScroll);
@@ -247,7 +248,7 @@ const Skills: React.FC = () => {
       });
       frameHandles.forEach((frame) => cancelAnimationFrame(frame));
     };
-  }, []);
+  }, [refsKey]);
 
   return (
     <section id="skills" className="py-24 bg-gray-50 dark:bg-gray-800 font-[Inter,sans-serif]">
