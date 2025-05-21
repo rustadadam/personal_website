@@ -31,8 +31,9 @@ const About: React.FC = () => {
             className="lg:w-1/2 flex justify-center items-center"
           >
             <div className="relative w-full max-w-[28rem] aspect-square flex items-center justify-center">
+              <div className="absolute inset-0 z-0 rounded-full shadow-[0_16px_96px_0_rgba(80,200,180,0.32),0_4px_32px_0_rgba(255,180,120,0.18)] pointer-events-none"></div>
               <div
-                className="w-full h-full rounded-full overflow-hidden shadow-2xl border-8 border-white dark:border-gray-900"
+                className="relative w-full h-full rounded-full overflow-hidden shadow-2xl border-8 border-white dark:border-gray-900 z-20"
                 style={{
                   boxShadow: '0 8px 48px 0 rgba(20, 184, 166, 0.22), 0 1.5px 8px 0 rgba(255,127,80,0.10)'
                 }}
@@ -45,7 +46,7 @@ const About: React.FC = () => {
                 />
                 <div className="absolute inset-0 rounded-full ring-4 ring-coral-200 dark:ring-teal-800 pointer-events-none animate-pulse-slow"></div>
               </div>
-              <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 bg-white dark:bg-gray-900 px-6 py-2 rounded-full shadow-lg border border-teal-100 dark:border-teal-900/40 text-teal-700 dark:text-teal-300 font-semibold text-lg font-[Poppins,sans-serif]">
+              <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 bg-white dark:bg-gray-900 px-6 py-2 rounded-full shadow-lg border border-teal-100 dark:border-teal-900/40 text-teal-700 dark:text-teal-300 font-semibold text-lg font-[Poppins,sans-serif] z-20">
                 Adam Rustad
               </div>
             </div>
