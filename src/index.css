@@ -1,3 +1,42 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Poppins:wght@400;600;700&display=swap');
+
+body {
+  font-family: 'Inter', 'Poppins', sans-serif;
+}
+
+:root {
+  --color-coral-500: #FF6F61;
+  --color-coral-400: #FF8A75;
+  --color-teal-500: #008080;
+  --color-teal-400: #20B2AA;
+}
+
+/* Tailwind overrides for custom palette */
+.bg-coral-500 { background-color: var(--color-coral-500) !important; }
+.bg-coral-400 { background-color: var(--color-coral-400) !important; }
+.text-coral-500 { color: var(--color-coral-500) !important; }
+.text-coral-400 { color: var(--color-coral-400) !important; }
+.bg-teal-500 { background-color: var(--color-teal-500) !important; }
+.bg-teal-400 { background-color: var(--color-teal-400) !important; }
+.text-teal-500 { color: var(--color-teal-500) !important; }
+.text-teal-400 { color: var(--color-teal-400) !important; }
+
+/* Modern scrollbar for horizontal project cards */
+.scrollbar-thin {
+  scrollbar-width: thin;
+}
+.scrollbar-thumb-teal-200 {
+  scrollbar-color: #99f6e4 #fff;
+}
+.scrollbar-thumb-teal-900 {
+  scrollbar-color: #134e4a #18181b;
+}
+
+/* Smoother transitions for buttons and cards */
+button, .rounded-full, .rounded-3xl, .shadow-xl, .shadow-2xl {
+  transition: all 0.2s cubic-bezier(.4,0,.2,1);
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
