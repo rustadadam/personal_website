@@ -22,7 +22,7 @@ const skillCategories: SkillCategory[] = [
   {
     id: 'languages',
     name: 'Programming Languages',
-    icon: <Code className="w-6 h-6 text-teal-500 dark:text-teal-400" />,
+    icon: <Code className="w-6 h-6 text-teal-300 dark:text-teal-300" />,
     skills: [
       {
         name: 'JavaScript/TypeScript',
@@ -111,7 +111,7 @@ const skillCategories: SkillCategory[] = [
   {
     id: 'devops',
     name: 'DevOps & Automation',
-    icon: <Code className="w-6 h-6 text-teal-500 dark:text-teal-400" />,
+    icon: <Code className="w-6 h-6 text-teal-300 dark:text-teal-300" />,
     skills: [
       {
         name: 'Containerization & CI/CD',
@@ -177,6 +177,53 @@ const skillCategories: SkillCategory[] = [
             name: 'Multi-User Chess Platform',
             link: '#projects',
             description: 'Real-time multiplayer chess using WebSocket to enable real-time communication between clients across a hosted server.'
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'soft-skills',
+    name: 'Soft Skills',
+    icon: <Globe className="w-6 h-6 text-teal-300 dark:text-teal-300" />, // Use Globe for soft skills
+    skills: [
+      {
+        name: 'Public Speaking & Presentation',
+        projects: [
+          {
+            name: 'Academic Presentations',
+            link: 'https://www.linkedin.com/in/adam-rustad-a43a65299',
+            description: 'Presented research at ICMLA, IEEE, GSP, and Red Rock conferences. See LinkedIn for details.'
+          }
+        ]
+      },
+      {
+        name: 'Leadership',
+        projects: [
+          {
+            name: 'Mission Leadership',
+            link: 'https://www.linkedin.com/in/adam-rustad-a43a65299',
+            description: 'Lead and organized the efforts of eighty missionaries to heighten key indicators results.'
+          },
+          {
+            name: 'SafeSocial App',
+            link: '#projects',
+            description: 'Designed and lead several software developers to build the SafeSocial Google extension.'
+          }
+        ]
+      },
+      {
+        name: 'Multi-disciplinary Communication',
+        projects: [
+          {
+            name: 'Twin Autoencoder Pipeline',
+            link: '#projects',
+            description: 'Collaborated with neuroscientists to develop and communicate complex ML pipelines to discover new findings about Alzheimer\'s disease.'
+          },
+          {
+            name: 'Stock Data Forecasting',
+            link: '#projects',
+            description: 'Worked with Black Rock financial to create high-performing portfolios.'
           }
         ]
       }
