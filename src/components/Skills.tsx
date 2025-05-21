@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { Code, Server, Database, PenTool, Globe } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
@@ -168,63 +168,103 @@ const Skills: React.FC = () => {
     triggerOnce: true,
     threshold: 0.1,
   });
+  // Refs for each vertical scroll area
+  const scrollRefs = useRef<(HTMLDivElement | null)[]>([]);
+  // Auto-scroll effect for each skills box
+  useEffect(() => {
+    const frameHandles: number[] = [];
+    scrollRefs.current.forEach((el) => {
+      if (!el) return;
+      let isUserScrolling = false;
+      let scrollSpeed = 0.5; // px per frame
+      // Pause auto-scroll on user scroll
+      const onUserScroll = () => {
+        isUserScrolling = true;
+        clearTimeout((el as any)._pauseTimeout);
+        (el as any)._pauseTimeout = setTimeout(() => {
+          isUserScrolling = false;
+        }, 1200);
+      };
+      el.addEventListener('wheel', onUserScroll, { passive: true });
+      el.addEventListener('touchmove', onUserScroll, { passive: true });
+      // Looping auto-scroll
+      let frame: number;
+      const autoScroll = () => {
+        if (!isUserScrolling && el.scrollHeight > el.clientHeight) {
+          el.scrollTop += scrollSpeed;
+          // Loop to top if at bottom
+          if (el.scrollTop + el.clientHeight >= el.scrollHeight - 1) {
+            el.scrollTop = 0;
+          }
+        }
+        frame = requestAnimationFrame(autoScroll);
+      };
+      frame = requestAnimationFrame(autoScroll);
+      frameHandles.push(frame);
+    });
+    return () => {
+      scrollRefs.current.forEach((el) => {
+        if (el) {
+          el.removeEventListener('wheel', () => {});
+          el.removeEventListener('touchmove', () => {});
+        }
+      });
+      frameHandles.forEach((frame) => cancelAnimationFrame(frame));
+    };
+  }, []);
 
   return (
-    <section id="skills" className="py-20 bg-gray-50 dark:bg-gray-800">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="skills" className="py-24 bg-gray-50 dark:bg-gray-800 font-[Inter,sans-serif]">
+      <div className="container mx-auto px-4 sm:px-8 lg:px-16">
         <motion.div 
           ref={ref}
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-20"
         >
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+          <h2 className="text-4xl sm:text-5xl font-extrabold text-gray-900 dark:text-white mb-4 font-[Poppins,sans-serif] tracking-tight">
             My Skills
           </h2>
-          <div className="w-24 h-1 bg-teal-500 dark:bg-teal-400 mx-auto rounded-full mb-8"></div>
-          <p className="text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">
+          <div className="w-28 h-1 bg-coral-500 dark:bg-teal-400 mx-auto rounded-full mb-10"></div>
+          <p className="text-lg text-gray-700 dark:text-gray-300 max-w-2xl mx-auto font-[Inter,sans-serif]">
             Here are my key skills demonstrated through various projects. Click on any project to see it in action.
           </p>
         </motion.div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="flex overflow-x-auto pb-8 space-x-8 scrollbar-thin scrollbar-thumb-teal-200 dark:scrollbar-thumb-teal-900 scrollbar-track-transparent">
           {skillCategories.map((category, categoryIndex) => (
             <motion.div 
               key={category.id}
-              initial={{ opacity: 0, x: categoryIndex % 2 === 0 ? -50 : 50 }}
+              initial={{ opacity: 0, x: 50 }}
               animate={inView ? { opacity: 1, x: 0 } : {}}
-              transition={{ duration: 0.6, delay: categoryIndex * 0.1 }}
-              className="bg-white dark:bg-gray-900 rounded-lg shadow-xl p-6 transform transition-all duration-300 hover:scale-[1.02]"
+              transition={{ duration: 0.5, delay: categoryIndex * 0.1 }}
+              className="flex-none w-[520px] h-[500px] bg-white dark:bg-gray-900 rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition duration-300 border border-teal-100 dark:border-teal-900/40"
+              style={{ fontFamily: 'Inter, Poppins, sans-serif' }}
             >
-              <div className="flex items-center mb-6">
+              <div className="flex items-center mb-6 px-7 pt-7">
                 {category.icon}
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white ml-3">
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white ml-3 font-[Poppins,sans-serif]">
                   {category.name}
                 </h3>
               </div>
-              
-              <div className="space-y-6">
-                {category.skills.map((skill, skillIndex) => (
-                  <motion.div 
-                    key={skill.name}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={inView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 0.4, delay: (categoryIndex * 0.1) + (skillIndex * 0.1) }}
-                    className="border-l-4 border-teal-500 dark:border-teal-400 pl-4"
-                  >
-                    <h4 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+              <div
+                ref={el => (scrollRefs.current[categoryIndex] = el)}
+                className="px-7 pb-7 flex flex-col gap-6 overflow-y-auto h-[410px] pr-2 scrollbar-thin scrollbar-thumb-teal-200 dark:scrollbar-thumb-teal-900 scrollbar-track-transparent"
+              >
+                {category.skills.map((skill) => (
+                  <div key={skill.name} className="border-l-4 border-teal-400 dark:border-teal-500 pl-4">
+                    <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2 font-[Poppins,sans-serif]">
                       {skill.name}
                     </h4>
                     <div className="space-y-3">
-                      {skill.projects.map((project, projectIndex) => (
+                      {skill.projects.map((project) => (
                         <motion.a
                           key={project.name}
-                          whileHover={{ scale: 1.02 }}
+                          whileHover={{ scale: 1.03 }}
                           href={project.link}
-                          className="block p-3 bg-gray-50 dark:bg-gray-800 rounded-lg hover:bg-teal-50 dark:hover:bg-teal-900/30 transition-colors duration-300"
+                          className="block p-3 bg-teal-50 dark:bg-teal-900/30 rounded-lg hover:bg-coral-50 dark:hover:bg-coral-900/20 transition-colors duration-300 shadow-sm"
                         >
-                          <div className="font-medium text-teal-600 dark:text-teal-400">
+                          <div className="font-medium text-teal-700 dark:text-teal-300">
                             {project.name}
                           </div>
                           <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
@@ -233,7 +273,7 @@ const Skills: React.FC = () => {
                         </motion.a>
                       ))}
                     </div>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
             </motion.div>
