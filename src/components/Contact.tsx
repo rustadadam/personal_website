@@ -43,14 +43,14 @@ const contactMethods = [
 
 const Contact: React.FC = () => {
 	return (
-		<section id="contact" className="py-24 bg-white dark:bg-gray-900 font-[Inter,sans-serif]">
+		<section id="contact" className="py-16 bg-white dark:bg-gray-900 font-[Inter,sans-serif]">
 			<div className="container mx-auto px-4 sm:px-8 lg:px-16">
 				<motion.div
 					initial={{ opacity: 0, y: 30 }}
 					whileInView={{ opacity: 1, y: 0 }}
 					viewport={{ once: true, amount: 0.2 }}
 					transition={{ duration: 0.7 }}
-					className="text-center mb-16"
+					className="text-center mb-10"
 				>
 					<h2 className="text-4xl sm:text-5xl font-extrabold text-gray-900 dark:text-white mb-4 font-[Poppins,sans-serif] tracking-tight">
 						Get In Touch
@@ -65,7 +65,7 @@ const Contact: React.FC = () => {
 					whileInView={{ opacity: 1, scale: 1 }}
 					viewport={{ once: true, amount: 0.2 }}
 					transition={{ duration: 0.7, delay: 0.1 }}
-					className="max-w-2xl mx-auto bg-white dark:bg-gray-800 p-6 sm:p-8 rounded-3xl shadow-2xl border border-teal-100 dark:border-teal-900/40"
+					className="max-w-2xl mx-auto bg-white dark:bg-gray-800 p-6 sm:p-8 rounded-3xl shadow-2xl border border-teal-100 dark:border-teal-900/40 mb-0"
 				>
 					<div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
 						{contactMethods.map((method, idx) => {
