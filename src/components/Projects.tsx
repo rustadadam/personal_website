@@ -62,7 +62,7 @@ const projects: Project[] = [
   {
     id: 5,
     title: "Client-to-Client Chess Platform",
-    description: "A real-time multiplayer chess app built with Java and Websocket, enabling client-to-client gameplay with secure connection handling and move validation.",
+    description: "A real-time multiplayer chess app built with Java and Websocket, enabling client-to-client gameplay with secure connection handling and move validation. Games persist in a SQL database, allowing users to resume play at anytime even if the network fails.",
     image: "/assets/ches.png",
     technologies: ["Java", "Websocket", "SQL"],
     liveLink: undefined,
@@ -136,93 +136,99 @@ const Projects: React.FC = () => {
               initial={{ opacity: 0, x: 50 }}
               animate={inView ? { opacity: 1, x: 0 } : {}}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="flex-none w-[370px] bg-white dark:bg-gray-900 rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition duration-300 border border-teal-100 dark:border-teal-900/40"
+              className="flex-none w-[430px] h-[600px] bg-white dark:bg-gray-900 rounded-3xl overflow-hidden border-0 shadow-[0_10px_20px_0_rgba(9,189,255,0.13),0_1.5px_16px_0_rgba(0,0,0,0.06)] dark:shadow-[0_10px_24px_0_rgba(9,189,255,0.18),0_6px_26px_0_rgba(0,0,0,0.10)] transition duration-300 flex flex-col justify-between"
               style={{ fontFamily: 'Inter, Poppins, sans-serif' }}
             >
-              <div className="h-52 overflow-hidden rounded-t-3xl">
+              <div className="h-64 overflow-hidden rounded-t-3xl flex items-center justify-center bg-gray-100 dark:bg-gray-800">
                 <img
                   src={project.image}
                   alt={project.title}
-                  className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                  className="w-full h-full object-cover object-center transition-transform duration-300 hover:scale-105"
+                  style={{ maxHeight: '16rem', minHeight: '16rem' }}
                 />
               </div>
-
-              <div className="p-6">
-                <h3
-                  className="
-                    text-xl sm:text-2xl 
-                    font-extrabold tracking-tight 
-                    text-gray-900 dark:text-white 
-                    mb-2 
-                    font-[Poppins,sans-serif]
-                  "
-                >
-                  {project.title}
-                </h3>
-                <p
-                  className="
-                    text-base sm:text-lg 
-                    text-gray-700 dark:text-gray-300 
-                    mb-4 
-                    font-[Inter,sans-serif]
-                    max-w-prose
-                  "
-                >
-                  {project.description}
-                </p>
-
-                <div className="flex flex-wrap gap-2 mb-6">
-                  {project.technologies.map((tech) => (
-                    <span
-                      key={tech}
-                      className="text-xs px-2 py-1 bg-teal-100 dark:bg-teal-900 text-teal-800 dark:text-teal-200 rounded-full"
-                    >
-                      {tech}
-                    </span>
-                  ))}
+              <div className="flex-1 flex flex-col justify-between p-6 pb-4">
+                <div>
+                  <h3 className="text-xl sm:text-2xl font-extrabold tracking-tight text-gray-900 dark:text-white mb-2 font-[Poppins,sans-serif]">
+                    {project.title}
+                  </h3>
+                  <p
+                    className="text-sm sm:text-base text-gray-700 dark:text-gray-300 mb-4 font-[Inter,sans-serif] max-w-prose"
+                    style={{
+                      fontSize: '0.98rem',
+                      lineHeight: 1.5,
+                      minHeight: '3.5rem',
+                      maxHeight: '6.5rem',
+                      marginBottom: '1rem',
+                      overflow: 'visible',
+                      display: 'block',
+                      whiteSpace: 'normal',
+                    }}
+                  >
+                    {project.description}
+                  </p>
                 </div>
-                
-                <div className="flex gap-4">
-                  {project.liveLink && (
-                    <motion.a
-                      whileHover={{ scale: 1.08 }}
-                      whileTap={{ scale: 0.97 }}
-                      href={project.liveLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center text-sm font-semibold text-coral-500 hover:text-coral-600 dark:text-coral-400 dark:hover:text-coral-300 transition-colors"
-                    >
-                      <ExternalLink size={16} className="mr-1" /> Demo
-                    </motion.a>
-                  )}
-                  {project.websiteLink && (
-                    <motion.a
-                      whileHover={{ scale: 1.08 }}
-                      whileTap={{ scale: 0.97 }}
-                      href={project.websiteLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center text-sm font-semibold text-teal-600 hover:text-teal-800 dark:text-teal-300 dark:hover:text-teal-200 transition-colors"
-                    >
-                      <Globe size={16} className="mr-1" /> Website
-                    </motion.a>
-                  )}
-                  {project.githubLink ? (
-                    <motion.a
-                      whileHover={{ scale: 1.08 }}
-                      whileTap={{ scale: 0.97 }}
-                      href={project.githubLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-coral-500 dark:hover:text-coral-400 transition-colors"
-                    >
-                      <Github size={16} className="mr-1" /> Code
-                    </motion.a>
-                  ) : (
-                    <span className="flex items-center text-sm text-gray-300 dark:text-gray-600 cursor-not-allowed font-semibold">
-                      <Github size={16} className="mr-1" /> Code not available
-                    </span>
-                  )}
+                <div className="flex flex-col justify-end h-[54px]">
+                  <div className="flex flex-wrap gap-2 mb-3 mt-auto">
+                    {project.technologies.map((tech) => (
+                      <span
+                        key={tech}
+                        className="text-xs px-2 py-1 bg-teal-100 dark:bg-teal-900 text-teal-800 dark:text-teal-200 rounded-full"
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="flex gap-4 pt-2 min-h-[32px]">
+                    {project.liveLink ? (
+                      <motion.a
+                        whileHover={{ scale: 1.08 }}
+                        whileTap={{ scale: 0.97 }}
+                        href={project.liveLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center text-sm font-semibold text-coral-500 hover:text-coral-600 dark:text-coral-400 dark:hover:text-coral-300 transition-colors"
+                      >
+                        <ExternalLink size={16} className="mr-1" /> Demo
+                      </motion.a>
+                    ) : (
+                      <span className="flex items-center text-sm text-gray-300 dark:text-gray-600 cursor-not-allowed font-semibold opacity-60">
+                        <ExternalLink size={16} className="mr-1" /> Demo
+                      </span>
+                    )}
+                    {project.websiteLink ? (
+                      <motion.a
+                        whileHover={{ scale: 1.08 }}
+                        whileTap={{ scale: 0.97 }}
+                        href={project.websiteLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center text-sm font-semibold text-teal-600 hover:text-teal-800 dark:text-teal-300 dark:hover:text-teal-200 transition-colors"
+                      >
+                        <Globe size={16} className="mr-1" /> Website
+                      </motion.a>
+                    ) : (
+                      <span className="flex items-center text-sm text-gray-300 dark:text-gray-600 cursor-not-allowed font-semibold opacity-60">
+                        <Globe size={16} className="mr-1" /> Website
+                      </span>
+                    )}
+                    {project.githubLink ? (
+                      <motion.a
+                        whileHover={{ scale: 1.08 }}
+                        whileTap={{ scale: 0.97 }}
+                        href={project.githubLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-coral-500 dark:hover:text-coral-400 transition-colors"
+                      >
+                        <Github size={16} className="mr-1" /> Code
+                      </motion.a>
+                    ) : (
+                      <span className="flex items-center text-sm text-gray-300 dark:text-gray-600 cursor-not-allowed font-semibold opacity-60">
+                        <Github size={16} className="mr-1" /> Code
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
             </motion.div>
