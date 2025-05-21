@@ -39,7 +39,7 @@ const Header: React.FC = () => {
   };
 
   return (
-    <header className="w-full py-5 px-8 bg-white dark:bg-gray-900 shadow-md rounded-b-2xl flex items-center justify-between font-[Poppins,sans-serif]">
+    <header className="w-full py-5 px-8 bg-white dark:bg-gray-900 shadow-md rounded-b-2xl flex items-center justify-between font-[Poppins,sans-serif] sticky top-0 z-50">
       <div className="text-2xl font-extrabold text-teal-400 tracking-tight">
         Adam Rustad
       </div>
