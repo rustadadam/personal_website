@@ -193,7 +193,7 @@ const SkillItem: React.FC<{ skill: SkillCategory["skills"][0] }> = ({ skill }) =
 const Skills: React.FC = () => {
   const [ref, inView] = useInView({
     triggerOnce: true,
-    threshold: 0.1,
+    threshold: 0.3, // Show animation later (more of section in view)
   });
   // Refs for each vertical scroll area
   const scrollRefs = useRef<(HTMLDivElement | null)[]>([]);

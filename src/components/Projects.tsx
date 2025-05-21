@@ -86,7 +86,7 @@ const Projects: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<'all' | 'Web' | 'Machine Learning' | 'Systems'>('all');
   const [ref, inView] = useInView({
     triggerOnce: true,
-    threshold: 0.1,
+    threshold: 0.3, // Show animation later (more of section in view)
   });
   
   const filteredProjects = activeCategory === 'all' 

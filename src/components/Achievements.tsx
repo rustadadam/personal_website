@@ -98,7 +98,7 @@ const Achievements: React.FC = () => {
   const [showAll, setShowAll] = useState(false);
   const [ref, inView] = useInView({
     triggerOnce: true,
-    threshold: 0.1,
+    threshold: 0.3, // Show animation later (more of section in view)
   });
 
   const visibleAchievements = showAll ? achievements : achievements.slice(0, 4);
