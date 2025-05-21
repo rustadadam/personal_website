@@ -2,6 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import { Code, Server, Database, PenTool, Globe } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
+import './SkillsScrollbar.css'; // Hide vertical scrollbars for skills box
 
 type SkillCategory = {
   id: string;
@@ -163,6 +164,32 @@ const skillCategories: SkillCategory[] = [
   },
 ];
 
+// SkillItem component for rendering each skill
+const SkillItem: React.FC<{ skill: SkillCategory["skills"][0] }> = ({ skill }) => (
+  <div className="border-l-4 border-teal-400 dark:border-teal-500 pl-4">
+    <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2 font-[Poppins,sans-serif]">
+      {skill.name}
+    </h4>
+    <div className="space-y-3">
+      {skill.projects.map((project) => (
+        <motion.a
+          key={project.name}
+          whileHover={{ scale: 1.03 }}
+          href={project.link}
+          className="block p-3 bg-teal-50 dark:bg-teal-900/30 rounded-lg hover:bg-coral-50 dark:hover:bg-coral-900/20 transition-colors duration-300 shadow-sm"
+        >
+          <div className="font-medium text-teal-700 dark:text-teal-300">
+            {project.name}
+          </div>
+          <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+            {project.description}
+          </p>
+        </motion.a>
+      ))}
+    </div>
+  </div>
+);
+
 const Skills: React.FC = () => {
   const [ref, inView] = useInView({
     triggerOnce: true,
@@ -177,7 +204,6 @@ const Skills: React.FC = () => {
       if (!el) return;
       let isUserScrolling = false;
       let scrollSpeed = 0.5; // px per frame
-      // Pause auto-scroll on user scroll
       const onUserScroll = () => {
         isUserScrolling = true;
         clearTimeout((el as any)._pauseTimeout);
@@ -187,13 +213,14 @@ const Skills: React.FC = () => {
       };
       el.addEventListener('wheel', onUserScroll, { passive: true });
       el.addEventListener('touchmove', onUserScroll, { passive: true });
-      // Looping auto-scroll
+      const scrollContent = el.querySelector('.scroll-content') as HTMLElement;
+      if (!scrollContent) return;
+      const contentHeight = scrollContent.scrollHeight / 2;
       let frame: number;
       const autoScroll = () => {
-        if (!isUserScrolling && el.scrollHeight > el.clientHeight) {
+        if (!isUserScrolling) {
           el.scrollTop += scrollSpeed;
-          // Loop to top if at bottom
-          if (el.scrollTop + el.clientHeight >= el.scrollHeight - 1) {
+          if (el.scrollTop >= contentHeight) {
             el.scrollTop = 0;
           }
         }
@@ -249,32 +276,17 @@ const Skills: React.FC = () => {
               </div>
               <div
                 ref={el => (scrollRefs.current[categoryIndex] = el)}
-                className="px-7 pb-7 flex flex-col gap-6 overflow-y-auto h-[410px] pr-2 scrollbar-thin scrollbar-thumb-teal-200 dark:scrollbar-thumb-teal-900 scrollbar-track-transparent"
+                className="px-7 pb-7 flex flex-col gap-6 overflow-y-auto h-[410px] pr-2 scrollbar-thin scrollbar-thumb-teal-200 dark:scrollbar-thumb-teal-900 scrollbar-track-transparent hide-scrollbar scroll-container"
               >
-                {category.skills.map((skill) => (
-                  <div key={skill.name} className="border-l-4 border-teal-400 dark:border-teal-500 pl-4">
-                    <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2 font-[Poppins,sans-serif]">
-                      {skill.name}
-                    </h4>
-                    <div className="space-y-3">
-                      {skill.projects.map((project) => (
-                        <motion.a
-                          key={project.name}
-                          whileHover={{ scale: 1.03 }}
-                          href={project.link}
-                          className="block p-3 bg-teal-50 dark:bg-teal-900/30 rounded-lg hover:bg-coral-50 dark:hover:bg-coral-900/20 transition-colors duration-300 shadow-sm"
-                        >
-                          <div className="font-medium text-teal-700 dark:text-teal-300">
-                            {project.name}
-                          </div>
-                          <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                            {project.description}
-                          </p>
-                        </motion.a>
-                      ))}
-                    </div>
-                  </div>
-                ))}
+                <div className="scroll-content flex flex-col gap-6">
+                  {category.skills.map((skill) => (
+                    <SkillItem key={skill.name} skill={skill} />
+                  ))}
+                  {/* Duplicate for seamless scroll */}
+                  {category.skills.map((skill) => (
+                    <SkillItem key={skill.name + '-duplicate'} skill={skill} />
+                  ))}
+                </div>
               </div>
             </motion.div>
           ))}
