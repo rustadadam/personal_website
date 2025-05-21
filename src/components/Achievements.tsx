@@ -82,15 +82,15 @@ const achievements: Achievement[] = [
 const IconByType: React.FC<{ type: Achievement['type'] }> = ({ type }) => {
   switch (type) {
     case 'education':
-      return <BookOpen className="text-teal-500 dark:text-teal-400" />;
+      return <BookOpen className="text-coral-500 dark:text-teal-400" />;
     case 'award':
       return <Award className="text-coral-500 dark:text-coral-400" />;
     case 'certification':
-      return <Award className="text-green-500 dark:text-green-400" />;
+      return <Award className="text-coral-500 dark:text-green-400" />;
     case 'experience':
-      return <Briefcase className="text-teal-500 dark:text-teal-400" />;
+      return <Briefcase className="text-coral-500 dark:text-teal-400" />;
     default:
-      return <Calendar className="text-gray-500 dark:text-gray-400" />;
+      return <Calendar className="text-coral-500 dark:text-gray-400" />;
   }
 };
 
