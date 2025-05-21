@@ -117,7 +117,7 @@ const skillCategories: SkillCategory[] = [
         name: 'Containerization & CI/CD',
         projects: [
           {
-            name: 'Audiobook Generation Pipeline',
+            name: 'Text to Audiobook',
             link: '#projects',
             description: 'Containerized Lambda functions and built code into pipelines for scalable deployments.'
           }
@@ -130,9 +130,19 @@ const skillCategories: SkillCategory[] = [
             name: 'Twin Autoencoders Pipeline',
             link: '#projects',
             description: 'Automated training and logging of embedding-extension experiments using Joblib and ssh servers for thousands of experiments.'
+          },
+          {
+            name: 'Random Forest-Supervised Manifold Alignment',
+            link: '#projects',
+            description: 'Automated the processing of data and training of supervised experiments in parralel.'
+          },
+          {
+            name: 'Time-Series Data Classification',
+            link: '#projects',
+            description: 'Built pipelines for time-series data classification using classical machine learning methods and clustering.'
           }
         ]
-      }
+      }, 
     ]
   },
   {
@@ -157,6 +167,16 @@ const skillCategories: SkillCategory[] = [
             name: 'Leland Coaching Models',
             link: '#projects',
             description: 'Used OpenAI API and Google Gemini API to integrate LLMS to read scraped LinkedIn profiles and generate scores.'
+          }
+        ]
+      }, 
+      {
+        name: 'Server Interfaces',
+        projects: [
+          {
+            name: 'Multi-User Chess Platform',
+            link: '#projects',
+            description: 'Real-time multiplayer chess using WebSocket to enable real-time communication between clients across a hosted server.'
           }
         ]
       }
