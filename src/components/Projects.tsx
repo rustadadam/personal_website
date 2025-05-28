@@ -136,31 +136,31 @@ const Projects: React.FC = () => {
               initial={{ opacity: 0, x: 50 }}
               animate={inView ? { opacity: 1, x: 0, transition: { duration: 1.0, ease: 'easeOut', delay: index * 0.23 } } : {}}
               exit={{ opacity: 0, x: 0, transition: { duration: 2, ease: 'easeIn' } }}
-              className="flex-none w-[430px] h-[600px] sm:w-[430px] sm:h-[600px] w-[90vw] h-[90vw] max-w-[98vw] max-h-[90vh] bg-white dark:bg-gray-900 rounded-3xl overflow-hidden border-0 shadow-[0_10px_20px_0_rgba(9,189,255,0.13),0_1.5px_16px_0_rgba(0,0,0,0.06)] dark:shadow-[0_10px_24px_0_rgba(9,189,255,0.18),0_6px_26px_0_rgba(0,0,0,0.10)] transition duration-300 flex flex-col justify-between"
+              className="flex-none w-[430px] h-[600px] sm:w-[430px] sm:h-[600px] w-[94vw] h-auto max-w-[98vw] max-h-[90vh] bg-white dark:bg-gray-900 rounded-3xl overflow-hidden border-0 shadow-[0_10px_20px_0_rgba(9,189,255,0.13),0_1.5px_16px_0_rgba(0,0,0,0.06)] dark:shadow-[0_10px_24px_0_rgba(9,189,255,0.18),0_6px_26px_0_rgba(0,0,0,0.10)] transition duration-300 flex flex-col justify-between"
               style={{ fontFamily: 'Inter, Poppins, sans-serif' }}
               layout
             >
-              <div className="h-64 overflow-hidden rounded-t-3xl flex items-center justify-center bg-gray-100 dark:bg-gray-800">
+              <div className="h-64 sm:h-64 h-[48vw] min-h-[180px] max-h-[260px] overflow-hidden rounded-t-3xl flex items-center justify-center bg-gray-100 dark:bg-gray-800">
                 <img
                   src={project.image}
                   alt={project.title}
                   className="w-full h-full object-cover object-center transition-transform duration-300 hover:scale-105"
-                  style={{ maxHeight: '16rem', minHeight: '16rem' }}
+                  style={{ maxHeight: '16rem', minHeight: '10rem' }}
                 />
               </div>
-              <div className="flex-1 flex flex-col justify-between p-6 pb-4">
+              <div className="flex-1 flex flex-col justify-between p-4 sm:p-6 pb-4">
                 <div>
-                  <h3 className="text-xl sm:text-2xl font-extrabold tracking-tight text-gray-900 dark:text-white mb-2 font-[Poppins,sans-serif]">
+                  <h3 className="text-lg sm:text-2xl font-extrabold tracking-tight text-gray-900 dark:text-white mb-2 font-[Poppins,sans-serif]">
                     {project.title}
                   </h3>
                   <p
-                    className="text-sm sm:text-base text-gray-700 dark:text-gray-300 mb-4 font-[Inter,sans-serif] max-w-prose"
+                    className="text-xs sm:text-base text-gray-700 dark:text-gray-300 mb-3 sm:mb-4 font-[Inter,sans-serif] max-w-prose"
                     style={{
                       fontSize: '0.98rem',
                       lineHeight: 1.5,
-                      minHeight: '3.5rem',
+                      minHeight: '2.5rem',
                       maxHeight: '6.5rem',
-                      marginBottom: '1rem',
+                      marginBottom: '0.75rem',
                       overflow: 'visible',
                       display: 'block',
                       whiteSpace: 'normal',
@@ -169,18 +169,18 @@ const Projects: React.FC = () => {
                     {project.description}
                   </p>
                 </div>
-                <div className="flex flex-col justify-end h-[54px]">
-                  <div className="flex flex-wrap gap-2 mb-3 mt-auto">
+                <div className="flex flex-col justify-end min-h-[54px]">
+                  <div className="flex flex-wrap gap-2 mb-2 sm:mb-3 mt-auto">
                     {project.technologies.map((tech) => (
                       <span
                         key={tech}
-                        className="text-xs px-2 py-1 bg-teal-100 dark:bg-teal-900 text-teal-800 dark:text-teal-200 rounded-full"
+                        className="text-[10px] sm:text-xs px-2 py-1 bg-teal-100 dark:bg-teal-900 text-teal-800 dark:text-teal-200 rounded-full"
                       >
                         {tech}
                       </span>
                     ))}
                   </div>
-                  <div className="flex gap-4 pt-2 min-h-[32px]">
+                  <div className="flex flex-wrap gap-3 pt-2 min-h-[32px]">
                     {project.liveLink ? (
                       <motion.a
                         whileHover={{ scale: 1.08 }}
