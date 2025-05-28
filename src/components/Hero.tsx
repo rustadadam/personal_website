@@ -1,5 +1,6 @@
 import React from 'react';
 import { ArrowDown } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const Hero: React.FC = () => {
   return (
@@ -7,7 +8,12 @@ const Hero: React.FC = () => {
       id="home"
       className="min-h-screen flex flex-col justify-center relative bg-gradient-to-br from-white via-white to-teal-200 dark:from-gray-900 dark:via-gray-800 dark:to-teal-900 pt-20 font-[Poppins,Inter,sans-serif]"
     >
-      <div className="container mx-auto px-4 sm:px-8 lg:px-16 flex flex-col items-center text-center">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1.2, ease: 'easeOut' }}
+        className="container mx-auto px-4 sm:px-8 lg:px-16 flex flex-col items-center text-center"
+      >
         <h1 className="mb-7 tracking-tight font-[Poppins,sans-serif]">
           <span className="block text-2xl sm:text-3xl md:text-4xl font-bold text-black dark:text-white">Hi, I'm</span>
           <span className="text-5xl sm:text-6xl md:text-7xl font-extrabold text-coral-500 dark:text-coral-400 block" style={{ fontWeight: 900 }}>
@@ -39,7 +45,7 @@ const Hero: React.FC = () => {
             <ArrowDown className="text-coral-500 dark:text-coral-400" size={36} />
           </a>
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 };
