@@ -339,7 +339,7 @@ const Skills: React.FC = () => {
           {skillCategories.map((category, categoryIndex) => (
             <div // removed motion.div for no slide-in animation
               key={category.id}
-              className="flex-none w-[520px] h-[500px] bg-white dark:bg-gray-900 rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition duration-300 border border-teal-100 dark:border-teal-900/40"
+              className="flex-none w-[520px] h-[500px] sm:w-[520px] sm:h-[500px] w-[90vw] h-[70vw] max-w-[98vw] max-h-[80vh] bg-white dark:bg-gray-900 rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition duration-300 border border-teal-100 dark:border-teal-900/40"
               style={{ fontFamily: 'Inter, Poppins, sans-serif' }}
             >
               <div className="flex items-center mb-6 px-7 pt-7">
