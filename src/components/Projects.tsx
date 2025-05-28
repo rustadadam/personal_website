@@ -169,7 +169,7 @@ const Projects: React.FC = () => {
                     {project.description}
                   </p>
                 </div>
-                <div className="flex flex-col justify-end min-h-[54px]">
+                <div className="flex flex-col justify-end min-h-[54px] mt-3 sm:mt-4">
                   <div className="flex flex-wrap gap-2 mb-2 sm:mb-3 mt-auto">
                     {project.technologies.map((tech) => (
                       <span
