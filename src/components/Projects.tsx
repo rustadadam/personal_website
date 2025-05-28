@@ -21,7 +21,7 @@ const projects: Project[] = [
     title: "SafeSocial – AI-Powered Chrome Extension",
     description: "A Chrome extension that uses real-time in-browser computer vision to filter explicit and adult content from social media feeds. Achieves high accuracy with minimal performance overhead, designed for seamless UX and privacy.",
     image: "/assets/banner.png",
-    technologies: ["TensorFlow.js", "JavaScript", "Chrome Extension APIs", "Computer Vision", "Mixpanel"],
+    technologies: ["TensorFlow.js", "JavaScript", "Google API", "Mixpanel"],
     liveLink: "https://youtu.be/slG7xXj4rG4",
     githubLink: undefined,
     websiteLink: "https://chromewebstore.google.com/detail/safe-social/jdacdndepggbdjbknoncakkgbbhfoccm",
