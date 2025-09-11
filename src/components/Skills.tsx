@@ -1,5 +1,5 @@
 import React, { useRef, useLayoutEffect } from 'react';
-import { Code, Server, Database, PenTool, Globe } from 'lucide-react';
+import { Code, PenTool, Globe } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import './SkillsScrollbar.css'; // Hide vertical scrollbars for skills box
@@ -140,6 +140,26 @@ const skillCategories: SkillCategory[] = [
             name: 'Time-Series Data Classification',
             link: '#projects',
             description: 'Built pipelines for time-series data classification using classical machine learning methods and clustering.'
+          }
+        ]
+      }, 
+      {
+        name: 'Operational Excellence',
+        projects: [
+          {
+            name: 'Serverless Audio Pipeline (SoundScribe Pro)',
+            link: '#projects',
+            description: 'Event‑driven pipeline with queued jobs and retries; optimized cost to save ~$7,050 per book.'
+          },
+          {
+            name: 'Payments & Webhooks',
+            link: '#projects',
+            description: 'Stripe billing, webhooks, and entitlement enforcement in app.'
+          },
+          {
+            name: 'Product Launch & Sales (SoundScribe Pro)',
+            link: '#projects',
+            description: 'Shipped to public, acquired paying users, support and feedback loops.'
           }
         ]
       }, 

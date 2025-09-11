@@ -17,6 +17,17 @@ type Project = {
 
 const projects: Project[] = [
   {
+    id: 0,
+    title: "SoundScribe Pro – AI Audiobook Studio",
+    description: "Launched a production-grade audiobook generation platform used by paying customers. Saves authors about $7,050 per audiobook by automating narration, mastering, and distribution-ready outputs — turning weeks of work into hours.",
+    image: "/assets/SoundScribePro.png",
+    technologies: ["AWS", "Google Cloud", "Python", "NLP", "Web Platform"],
+    liveLink: "https://youtu.be/d8dV8O6ch9c?si=NgbzupTQN0YcLtaU",
+    githubLink: undefined,
+    websiteLink: "https://www.soundscribepro.com",
+    category: "Systems"
+  },
+  {
     id: 1,
     title: "SafeSocial – AI-Powered Chrome Extension",
     description: "A Chrome extension that uses real-time in-browser computer vision to filter explicit and adult content from social media feeds. Achieves high accuracy with minimal performance overhead, designed for seamless UX and privacy.",
@@ -53,7 +64,7 @@ const projects: Project[] = [
     id: 4,
     title: "Text to Audio Conversion Pipeline",
     description: "Developed an automated pipeline that converts text to audiobooks with a single click of a button. Implemented via AWS and Google Cloud services. Uses several machine learning models.",
-    image: "/assets/SoundScribe.png",
+    image: "/assets/girl_audiobook.png",
     technologies: ["AWS", "Google Cloud", "Python", "Boto3", "NLP"],
     liveLink: undefined,
     githubLink: "https://github.com/rustadadam/SoundScribe",
@@ -79,7 +90,7 @@ const projects: Project[] = [
     githubLink: "https://github.com/JakeSRhodesLab/TwinAE-MA",
     websiteLink: "https://scholar.google.com/citations?user=ajI1Nl8AAAAJ&hl=en",
     category: "Machine Learning"
-  }
+  },
 ];
 
 const Projects: React.FC = () => {
@@ -108,7 +119,7 @@ const Projects: React.FC = () => {
           </h2>
           <div className="w-28 h-1 bg-coral-500 dark:bg-coral-400 mx-auto rounded-full mb-10"></div>
           <p className="text-lg text-gray-700 dark:text-gray-300 max-w-2xl mx-auto mb-10 font-[Inter,sans-serif]">
-            Here are some of the projects I've worked on during my academic journey and personal exploration. Each project represents a unique challenge and learning experience.
+            Here’s a selection of projects I’ve built and explored—each one offered new challenges and opportunities to grow as a developer. I hope you find them interesting!
           </p>
           <div className="flex flex-wrap justify-center gap-4 mb-8">
             {['all', 'Web', 'Machine Learning', 'Systems'].map((category) => (

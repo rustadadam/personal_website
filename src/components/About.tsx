@@ -58,43 +58,19 @@ const About: React.FC = () => {
             className="lg:w-1/2 mt-12 lg:mt-0"
           >
             <h3 className="text-2xl sm:text-3xl font-semibold text-gray-900 dark:text-white mb-6 font-[Poppins,sans-serif]">
-              Emerging Software Engineer <span className="text-coral-500 dark:text-teal-400">|</span> Published ML Researcher
+              AI and Software Engineer <span className="text-coral-500 dark:text-teal-400">|</span> Published ML Researcher
             </h3>
             <p className="text-gray-700 dark:text-gray-300 mb-6 leading-relaxed text-lg">
               Welcome! I'm a computer science researcher and developer with a deep passion for building intelligent,
-              human-centered software. With multiple peer-reviewed publications in machine learning and manifold alignment,
-              I combine academic insight with practical coding skills to deliver innovative solutions.
+              human-centered software. With several peer-reviewed publications in machine learning and experience founding multiple software startups,
+              I blend academic expertise with hands-on development skills to deliver impactful, innovative solutions.
             </p>
             <p className="text-gray-700 dark:text-gray-300 mb-10 leading-relaxed text-lg">
               I'm particularly driven by projects that challenge me to bridge the gap between theory and real-world 
-              application—whether that's creating scalable tools, designing thoughtful interfaces, or training models
-              that learn from complex data. Outside of tech, I recharge by hiking, playing chess, experimenting 
+              application—whether that's creating scalable tools, designing thoughtful interfaces, or designing novel AI systems.
+              Outside of tech, I recharge by hiking, playing chess, experimenting 
               with emerging technologies, and spending time with those I love.
             </p>
-            <motion.div 
-              initial={{ opacity: 0, y: 24 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8, delay: 0.5, ease: 'easeOut' }}
-              className="flex flex-wrap gap-3"
-            >
-              {[
-                '🎓 Computer Science',
-                '💻 Software Development',
-                '🧠 Machine Learning',
-                '📈 Data Science',
-                '🛠️ Systems Thinking',
-                '🥾 Outdoor Explorer'
-              ].map((tag) => (
-                <motion.div
-                  key={tag}
-                  whileHover={{ scale: 1.08, backgroundColor: '#fca5a5', color: '#fff' }}
-                  whileTap={{ scale: 0.96 }}
-                  className="px-4 py-2 bg-teal-50 dark:bg-teal-900/30 rounded-full text-teal-700 dark:text-teal-300 font-semibold shadow-sm transition-colors duration-300 cursor-pointer border border-teal-100 dark:border-teal-900/40"
-                >
-                  {tag}
-                </motion.div>
-              ))}
-            </motion.div>
           </motion.div>
         </div>
       </div>

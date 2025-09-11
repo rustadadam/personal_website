@@ -77,6 +77,22 @@ const achievements: Achievement[] = [
       "Published Enabling Out‑of‑Sample Extension in Semi‑Supervised Manifold Alignment at SampTA. Presented a twin autoencoder approach for real‑world data extension.",
     type: "award",
   },
+  {
+    id: 9,
+    date: "June 2025 - Sept 2025",
+    title: "AI Engineer Intern at N of 1 AI",
+    description:
+      "Built agentic AI workflows from the ground up, designing end-to-end pipelines that automated complex tasks and integrated tools for reliable autonomy.",
+    type: "experience",
+  },
+  {
+    id: 10,
+    date: "July 2025",
+    title: "Launched SoundScribe Pro",
+    description:
+      "Released SoundScribe Pro publicly and onboarded real paying users. Platform automates audiobook narration/mastering, saving authors about $7,050 per audiobook with distribution-ready outputs.",
+    type: "experience",
+  },
 ];
 
 const IconByType: React.FC<{ type: Achievement['type'] }> = ({ type }) => {
