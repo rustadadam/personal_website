@@ -21,7 +21,7 @@ const projects: Project[] = [
   {
     id: 0,
     title: "LumiTube – AI-Powered Safe Video Platform for Kids",
-    description: "Co-founded and built a video platform with AI content filtering and customizable parental controls. Features novel ranking algorithms and analytics to personalize content for family values. Raised funding and pitched at Third Thursday and Sandbox.",
+    description: "Co-founded and built a video platform with AI content filtering and customizable parental controls. Features novel ranking algorithms and analytics to personalize content for family values.",
     image: "/assets/lumitube_logo.png",
     technologies: ["Flutter", "AI", "Mobile Development", "Analytics"],
     liveLink: undefined,
