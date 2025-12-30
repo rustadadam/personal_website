@@ -158,7 +158,7 @@ const Achievements: React.FC = () => {
           dividerColor="coral"
         />
         <div className="relative">
-          <div className="absolute left-0 md:left-1/2 transform md:-translate-x-1/2 h-full w-1 bg-teal-200 dark:bg-teal-900"></div>
+          <div className="absolute left-4 md:left-1/2 transform md:-translate-x-1/2 h-full w-1 bg-teal-200 dark:bg-teal-900"></div>
           <div ref={ref} className="space-y-7 md:space-y-5">
             {visibleAchievements.map((achievement, index) => (
               <motion.div
@@ -167,7 +167,7 @@ const Achievements: React.FC = () => {
                 animate={inView ? timelineItem(index, index % 2 === 0).animate : timelineItem(index, index % 2 === 0).initial}
                 className="relative"
               >
-                <div className="absolute left-0 md:left-1/2 transform -translate-x-1/2 -translate-y-4 w-14 h-14 rounded-full bg-white dark:bg-gray-950 border-4 border-teal-400 dark:border-teal-400 z-10 flex items-center justify-center shadow-md">
+                <div className="absolute left-4 md:left-1/2 transform -translate-x-1/2 -translate-y-4 w-14 h-14 rounded-full bg-white dark:bg-gray-950 border-4 border-teal-400 dark:border-teal-400 z-10 flex items-center justify-center shadow-md">
                   <span className="flex items-center justify-center w-full h-full">
                     <IconByType type={achievement.type} />
                   </span>
