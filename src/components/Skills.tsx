@@ -63,6 +63,16 @@ const skillCategories: SkillCategory[] = [
             description: 'Automated pipeline for audiobook generation using Python, AWS EC2, Boto3, etc.'
           }
         ]
+      },
+      {
+        name: 'Flutter/Dart',
+        projects: [
+          {
+            name: 'LumiTube – AI-Powered Video Platform',
+            link: '#projects',
+            description: 'Cross-platform mobile apps (iOS & Android) with video streaming, parental controls, and AI filtering.'
+          }
+        ]
       }
     ]
   },
@@ -84,6 +94,11 @@ const skillCategories: SkillCategory[] = [
       {
         name: 'ML & Data Science',
         projects: [
+          {
+            name: 'LumiTube AI Content Filtering',
+            link: '#projects',
+            description: 'AI models to filter video content with novel ranking algorithms for personalized feeds.'
+          },
           {
             name: 'Leland Coaching Models',
             link: '#projects',
@@ -146,6 +161,11 @@ const skillCategories: SkillCategory[] = [
       {
         name: 'Operational Excellence',
         projects: [
+          {
+            name: 'LumiTube – Fundraising & Growth',
+            link: '#projects',
+            description: 'Co-founded startup, raised funding, networked with investors, and scaled.'
+          },
           {
             name: 'Serverless Audio Pipeline (SoundScribe Pro)',
             link: '#projects',

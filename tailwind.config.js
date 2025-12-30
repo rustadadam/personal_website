@@ -16,6 +16,8 @@ export default {
           'Arial',
           'sans-serif',
         ],
+        heading: ['Poppins', 'Inter', 'sans-serif'],
+        body: ['Inter', 'Poppins', 'sans-serif'],
       },
       animation: {
         'bounce-slow': 'bounce 2s infinite',
@@ -51,6 +53,13 @@ export default {
       },
       transitionProperty: {
         'height': 'height',
+      },
+      boxShadow: {
+        'card': '0 10px 20px 0 rgba(9,189,255,0.13), 0 1.5px 16px 0 rgba(0,0,0,0.06)',
+        'card-dark': '0 10px 24px 0 rgba(9,189,255,0.18), 0 6px 26px 0 rgba(0,0,0,0.10)',
+        'card-hover': '0 8px 40px 0 rgba(9,189,255,0.32), 0 1.5px 8px 0 rgba(0,0,0,0.10)',
+        'card-hover-dark': '0 8px 48px 0 rgba(9,189,255,0.38), 0 6px 18px 0 rgba(0,0,0,0.18)',
+        'profile': '0 8px 48px 0 rgba(20, 184, 166, 0.22), 0 1.5px 8px 0 rgba(255,127,80,0.10)',
       },
       colors: {
         teal: {

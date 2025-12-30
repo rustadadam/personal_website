@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { ExternalLink, Github, Globe } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { useInView } from 'react-intersection-observer';
+import { SectionHeader } from './ui/SectionHeader';
+import { useScrollAnimation } from '../hooks/useScrollAnimation';
+import { staggerItem, cardHover, buttonTap } from '../utils/animations';
 
 type Project = {
   id: number;
@@ -18,6 +20,17 @@ type Project = {
 const projects: Project[] = [
   {
     id: 0,
+    title: "LumiTube – AI-Powered Safe Video Platform for Kids",
+    description: "Co-founded and built a video platform with AI content filtering and customizable parental controls. Features novel ranking algorithms and analytics to personalize content for family values. Raised funding and pitched at Third Thursday and Sandbox.",
+    image: "/assets/lumitube_logo.png",
+    technologies: ["Flutter", "AI", "Mobile Development", "Analytics"],
+    liveLink: undefined,
+    githubLink: undefined,
+    websiteLink: "https://www.lumitube.org",
+    category: "Systems"
+  },
+  {
+    id: 1,
     title: "SoundScribe Pro – AI Audiobook Studio",
     description: "Launched a production-grade audiobook generation platform used by paying customers. Saves authors about $7,050 per audiobook by automating narration, mastering, and distribution-ready outputs — turning weeks of work into hours.",
     image: "/assets/SoundScribePro.png",
@@ -28,7 +41,7 @@ const projects: Project[] = [
     category: "Systems"
   },
   {
-    id: 1,
+    id: 2,
     title: "SafeSocial – AI-Powered Chrome Extension",
     description: "A Chrome extension that uses real-time in-browser computer vision to filter explicit and adult content from social media feeds. Achieves high accuracy with minimal performance overhead, designed for seamless UX and privacy.",
     image: "/assets/banner.png",
@@ -39,7 +52,7 @@ const projects: Project[] = [
     category: 'Web'
   },
   {
-    id: 2,
+    id: 3,
     title: "Leland Coaching Models",
     description: "Built machine learning models to recommend coach candidates based on profile embeddings and heuristics. Developed ensemble models and an LLM-assisted neural network achieving 89% F1 and 99% recall for Leland Coaching.",
     image: "/assets/ai-neural-network-brain.jpg",
@@ -50,7 +63,7 @@ const projects: Project[] = [
     category: "Machine Learning"
   },
   {
-    id: 3,
+    id: 4,
     title: "Manifold Alignment Research – MASH & SPUD",
     description: "Invented and benchmarked novel manifold alignment algorithms (SPUD, MASH) for cross-domain structure discovery. Published multiple papers and developed robust experiment pipelines.",
     image: "/assets/roasted-potatoes-with-herbs.jpg",
@@ -61,7 +74,7 @@ const projects: Project[] = [
     category: "Machine Learning"
   },
   {
-    id: 4,
+    id: 5,
     title: "Text to Audio Conversion Pipeline",
     description: "Developed an automated pipeline that converts text to audiobooks with a single click of a button. Implemented via AWS and Google Cloud services. Uses several machine learning models.",
     image: "/assets/girl_audiobook.png",
@@ -71,7 +84,7 @@ const projects: Project[] = [
     category: "Web"
   },
   {
-    id: 5,
+    id: 6,
     title: "Client-to-Client Chess Platform",
     description: "A real-time multiplayer chess app built with Java and Websocket, enabling client-to-client gameplay with secure connection handling and move validation. Games persist in a SQL database, allowing users to resume play at anytime even if the network fails.",
     image: "/assets/ches.png",
@@ -81,7 +94,7 @@ const projects: Project[] = [
     category: "Systems"
   },
   {
-    id: 6,
+    id: 7,
     title: "Twin Autoencoders for Embedding Extension",
     description: "Developed and published a method to extend aligned embeddings using twin autoencoders. Applied to graph alignment and data fusion tasks with robust quantitative evaluations.",
     image: "/assets/quantum-chip-technology.jpg",
@@ -95,10 +108,7 @@ const projects: Project[] = [
 
 const Projects: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<'all' | 'Web' | 'Machine Learning' | 'Systems'>('all');
-  const [ref, inView] = useInView({
-    triggerOnce: true,
-    threshold: 0.7, // Show animation later (more of section in view)
-  });
+  const [ref, inView] = useScrollAnimation({ threshold: 0.7 });
   
   const filteredProjects = activeCategory === 'all' 
     ? projects 
@@ -107,48 +117,39 @@ const Projects: React.FC = () => {
   return (
     <section id="projects" className="py-20 bg-gray-50 dark:bg-gray-800">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div 
-          ref={ref}
-          initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-20"
-        >
-          <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-gray-900 dark:text-white mb-4 font-[Poppins,sans-serif]">
-            My Projects
-          </h2>
-          <div className="w-28 h-1 bg-coral-500 dark:bg-coral-400 mx-auto rounded-full mb-10"></div>
-          <p className="text-lg text-gray-700 dark:text-gray-300 max-w-2xl mx-auto mb-10 font-[Inter,sans-serif]">
-            Here’s a selection of projects I’ve built and explored—each one offered new challenges and opportunities to grow as a developer. I hope you find them interesting!
-          </p>
+        <SectionHeader
+          title="My Projects"
+          description="Here's a selection of projects I've built and explored—each one offered new challenges and opportunities to grow as a developer. I hope you find them interesting!"
+          dividerColor="coral"
+          className="mb-20"
+        />
+        <div ref={ref}>
           <div className="flex flex-wrap justify-center gap-4 mb-8">
             {['all', 'Web', 'Machine Learning', 'Systems'].map((category) => (
               <motion.button
                 key={category}
                 whileHover={{ scale: 1.07 }}
-                whileTap={{ scale: 0.97 }}
+                whileTap={buttonTap}
                 onClick={() => setActiveCategory(category as any)}
-                className={`px-7 py-2 rounded-full text-base font-semibold shadow-sm transition duration-300 border-2 focus:outline-none focus:ring-2 focus:ring-coral-400/60 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-gray-900
+                className={`px-7 py-2 rounded-full text-base font-semibold shadow-sm transition duration-300 border-2 focus:outline-none focus:ring-2 focus:ring-coral-400/60 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-gray-900 font-heading
                   ${activeCategory === category
                     ? 'bg-coral-500 text-white border-coral-500 shadow-lg'
                     : 'bg-white dark:bg-gray-900 text-teal-700 dark:text-teal-300 border-teal-300 hover:bg-teal-50 dark:hover:bg-teal-900/40 hover:text-coral-500'}
                 `}
-                style={{ fontFamily: 'Poppins, Inter, sans-serif' }}
               >
                 {category === 'all' ? 'All Projects' : category}
               </motion.button>
             ))}
           </div>
-        </motion.div>
+        </div>
         <div className="flex overflow-x-auto pb-8 space-x-8 scrollbar-thin scrollbar-thumb-teal-200 dark:scrollbar-thumb-teal-900 scrollbar-track-transparent">
           {filteredProjects.map((project, index) => (
             <motion.div
               key={project.id}
-              initial={{ opacity: 0, x: 50 }}
-              animate={inView ? { opacity: 1, x: 0, transition: { duration: 1.0, ease: 'easeOut', delay: index * 0.23 } } : {}}
+              {...staggerItem(index)}
+              animate={inView ? staggerItem(index).animate : staggerItem(index).initial}
               exit={{ opacity: 0, x: 0, transition: { duration: 2, ease: 'easeIn' } }}
-              className="flex-none w-[430px] h-[600px] sm:w-[430px] sm:h-[600px] w-[94vw] h-auto max-w-[98vw] max-h-[90vh] bg-white dark:bg-gray-900 rounded-3xl overflow-hidden border-0 shadow-[0_10px_20px_0_rgba(9,189,255,0.13),0_1.5px_16px_0_rgba(0,0,0,0.06)] dark:shadow-[0_10px_24px_0_rgba(9,189,255,0.18),0_6px_26px_0_rgba(0,0,0,0.10)] transition duration-300 flex flex-col justify-between"
-              style={{ fontFamily: 'Inter, Poppins, sans-serif' }}
+              className="flex-none w-[430px] h-[600px] sm:w-[430px] sm:h-[600px] w-[94vw] h-auto max-w-[98vw] max-h-[90vh] bg-white dark:bg-gray-900 rounded-3xl overflow-hidden border-0 shadow-card dark:shadow-card-dark hover:shadow-card-hover dark:hover:shadow-card-hover-dark transition duration-300 flex flex-col justify-between font-body"
               layout
             >
               <div className="h-64 sm:h-64 h-[48vw] min-h-[180px] max-h-[260px] overflow-hidden rounded-t-3xl flex items-center justify-center bg-gray-100 dark:bg-gray-800">

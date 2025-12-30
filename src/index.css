@@ -4,23 +4,6 @@ body {
   font-family: 'Inter', 'Poppins', sans-serif;
 }
 
-:root {
-  --color-coral-500: #FF6F61;
-  --color-coral-400: #FF8A75;
-  --color-teal-500: #008080;
-  --color-teal-400: #20B2AA;
-}
-
-/* Tailwind overrides for custom palette */
-.bg-coral-500 { background-color: var(--color-coral-500) !important; }
-.bg-coral-400 { background-color: var(--color-coral-400) !important; }
-.text-coral-500 { color: var(--color-coral-500) !important; }
-.text-coral-400 { color: var(--color-coral-400) !important; }
-.bg-teal-500 { background-color: var(--color-teal-500) !important; }
-.bg-teal-400 { background-color: var(--color-teal-400) !important; }
-.text-teal-500 { color: var(--color-teal-500) !important; }
-.text-teal-400 { color: var(--color-teal-400) !important; }
-
 /* Modern scrollbar for horizontal project cards */
 .scrollbar-thin {
   scrollbar-width: thin;
@@ -40,3 +23,22 @@ button, .rounded-full, .rounded-3xl, .shadow-xl, .shadow-2xl {
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Gradient utilities */
+@layer utilities {
+  .gradient-hero {
+    @apply bg-gradient-to-br from-white via-white to-teal-200 dark:from-gray-900 dark:via-gray-800 dark:to-teal-900;
+  }
+
+  .gradient-card-teal {
+    @apply bg-gradient-to-br from-white via-teal-100 to-coral-200 dark:from-gray-900 dark:via-teal-950 dark:to-coral-700;
+  }
+
+  .gradient-card-coral {
+    @apply bg-gradient-to-br from-coral-200 via-white to-teal-100 dark:from-coral-800 dark:via-gray-900 dark:to-teal-950;
+  }
+
+  .gradient-contact-card {
+    @apply bg-gradient-to-br from-white via-teal-50 to-teal-100 dark:from-gray-800 dark:via-teal-900/30 dark:to-teal-900;
+  }
+}
