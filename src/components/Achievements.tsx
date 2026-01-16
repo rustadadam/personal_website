@@ -17,9 +17,9 @@ const achievements: Achievement[] = [
   {
     id: 12,
     date: "Sept 2024 - Present",
-    title: "Co-Founder & Technical Lead at LumiTube",
+    title: "Co-Founder & Technical Lead",
     description:
-      "Co-founded AI-powered video platform for kids with customizable parental controls. Built entire technical stack using Flutter for iOS/Android apps, implementing novel AI filtering and ranking algorithms.",
+      "Co-founded LumiTube: an AI-powered video app for kids with customizable parental controls. Built entire technical stack for iOS/Android apps, implementing novel AI filtering and ranking algorithms.",
     type: "experience",
   },
   {
@@ -47,9 +47,17 @@ const achievements: Achievement[] = [
     type: "education",
   },
   {
+    id: 16,
+    date: "Feb 2026",
+    title: "Publication at ACDSA, Philippines",
+    description:
+      "Published The Generalized Proximity Forest at ACDSA, Philippines; introducing a generalized PF model as a meta-learning framework to extend imputation capabilities to any pre-trained classifier.",
+    type: "award",
+  },
+  {
     id: 14,
     date: "Dec 2025",
-    title: "Academic Publication at ICDM",
+    title: "Publication at ICDM, Washington D.C.",
     description:
       "Published Guided Manifold Alignment with Geometry-Regularized Twin Autoencoders at ICDM. Advanced manifold alignment with geometric regularization techniques.",
     type: "award",
@@ -57,7 +65,7 @@ const achievements: Achievement[] = [
   {
     id: 15,
     date: "Dec 2025",
-    title: "Academic Publication at ICMLA",
+    title: "Publication at ICMLA, Florida",
     description:
       "Published Label-Guided Imputation via Forest-Based Proximities for Improved Time Series Classification at ICMLA. Enhanced time series classification through novel imputation methods.",
     type: "award",
@@ -81,7 +89,7 @@ const achievements: Achievement[] = [
   {
     id: 8,
     date: "Mar 2025",
-    title: "Academic Publication at SampTA",
+    title: "Publication at SampTA, Austria",
     description:
       "Published Enabling Out‑of‑Sample Extension in Semi‑Supervised Manifold Alignment at SampTA. Presented a twin autoencoder approach for real‑world data extension.",
     type: "award",
@@ -97,7 +105,7 @@ const achievements: Achievement[] = [
   {
     id: 5,
     date: "Dec 2024",
-    title: "Academic Publication at ICMLA",
+    title: "Publication at ICMLA, Florida",
     description:
       "Published Graph Integration for Diffusion‑Based Manifold Alignment at ICMLA. Introduced novel techniques for improved cross‑domain data alignment.",
     type: "award",
@@ -105,7 +113,7 @@ const achievements: Achievement[] = [
   {
     id: 6,
     date: "Dec 2024",
-    title: "Academic Publication at IEEE",
+    title: "Publication at IEEE, Washington D.C.",
     description:
       "Published Random Forest‑Supervised Manifold Alignment at IEEE Big Data. Demonstrated enhanced performance of manifold alignment in high‑dimensional settings.",
     type: "award",
