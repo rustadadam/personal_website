@@ -16,7 +16,7 @@ type Achievement = {
 const achievements: Achievement[] = [
   {
     id: 12,
-    date: "Sept 2024 - Present",
+    date: "March 2025 - Present",
     title: "Co-Founder & Technical Lead",
     description:
       "Co-founded LumiTube: an AI-powered video app for kids with customizable parental controls. Built entire technical stack for iOS/Android apps, implementing novel AI filtering and ranking algorithms.",
@@ -43,7 +43,7 @@ const achievements: Achievement[] = [
     date: "June 2021 - Present",
     title: "Bachelors in Computer Science",
     description:
-      "Brigham Young University, GPA: 3.91, Dean's List. Minors in Mathematics and Entrepreneurship.",
+      "Brigham Young University, GPA: 3.92, Dean's List. Minors in Mathematics and Entrepreneurship.",
     type: "education",
   },
   {
