@@ -106,9 +106,7 @@
         Glad you're <em style="font-style:italic;color:var(--gold);">here</em>.
       </h1>
       <p data-reveal data-reveal-delay="320" style="margin:38px auto 0;max-width:60ch;font-size:clamp(16px,1.55vw,21px);line-height:1.7;color:var(--muted);font-weight:300;">
-        I'm Adam. I build software and solve hard problems.
-        I care about getting the hard things right, and about the people I get to build them with.
-        Thanks for stopping by.
+        I'm Adam. I like making things that matter and meeting people who care about the same. Thanks for stopping by.
       </p>
       <div data-reveal data-reveal-delay="500" style="display:flex;gap:16px;flex-wrap:wrap;justify-content:center;margin-top:46px;">
         <a href="#work" style="font-family:'Hanken Grotesk',sans-serif;font-size:15px;font-weight:500;color:var(--bg);background:var(--gold);padding:14px 30px;border-radius:100px;text-decoration:none;transition:transform .35s ease, box-shadow .35s ease;box-shadow:0 8px 30px rgba(230,178,92,0.18);" style-hover="transform:translateY(-2px);box-shadow:0 14px 40px rgba(230,178,92,0.3)">See what I've built</a>
@@ -910,7 +908,7 @@ class Component extends DCLogic {
       const el = document.getElementById('gh-commits');
       if (!el || !data?.total) return;
       const n = data.total;
-      el.textContent = n >= 1000 ? Math.floor(n / 100) * 100 + '+' : n;
+      el.textContent = n.toLocaleString();
     })
     .catch(() => {});
 })();
