@@ -67,7 +67,7 @@
 
     /* Path */
     #path { padding:60px 20px !important; }
-    #path > div:last-child { padding-left:24px !important; }
+    #path > div:last-child { padding-left:34px !important; }
 
     /* Beyond */
     #beyond-grid { grid-template-columns:1fr !important; }
@@ -79,6 +79,12 @@
 
     /* Footer */
     footer { flex-direction:column !important; text-align:center !important; gap:8px !important; padding:24px 20px !important; }
+
+    /* Hero tagline: tighten letter-spacing so all 3 words fit one line */
+    .hero-tag { font-size:10px !important; letter-spacing:.08em !important; }
+
+    /* Stats: force 3 equal columns so nothing drops to a second row */
+    #about-stats { display:grid !important; grid-template-columns:repeat(3,1fr) !important; gap:16px !important; }
   }
 </style>
 </helmet>
@@ -102,7 +108,7 @@
 
     <!-- ===== HERO ===== -->
     <section style="position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:120px clamp(20px,6vw,80px) 90px;">
-      <div data-reveal style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.34em;text-transform:uppercase;color:var(--gold);margin-bottom:34px;">Researcher &nbsp;·&nbsp; Builder &nbsp;·&nbsp; Grateful</div>
+      <div data-reveal class="hero-tag" style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.34em;text-transform:uppercase;color:var(--gold);margin-bottom:34px;">Researcher &nbsp;·&nbsp; Builder &nbsp;·&nbsp; Grateful</div>
       <h1 data-reveal data-reveal-delay="120" style="font-family:'Spectral',serif;font-weight:300;font-size:clamp(38px,7.4vw,104px);line-height:1.04;letter-spacing:-0.015em;margin:0;max-width:16ch;color:var(--text);">
         Glad you're <em style="font-style:italic;color:var(--gold);">here</em>.
       </h1>
@@ -152,7 +158,7 @@
           <p data-reveal data-reveal-delay="280" style="font-size:clamp(15px,1.3vw,18px);line-height:1.75;color:var(--text);margin:0 0 34px;font-weight:400;max-width:54ch;">
             Everything here comes from <em style="font-style:italic;color:var(--gold);">gratitude</em>. The truest thing I can do with it is work hard, stay humble, and try to make people's lives a little better. If that resonates with you, I'd genuinely love to connect.
           </p>
-          <div data-reveal data-reveal-delay="340" style="display:flex;gap:clamp(20px,3vw,44px);flex-wrap:wrap;border-top:1px solid var(--line);padding-top:26px;">
+          <div data-reveal data-reveal-delay="340" id="about-stats" style="display:flex;gap:clamp(20px,3vw,44px);flex-wrap:wrap;border-top:1px solid var(--line);padding-top:26px;">
             <div><div id="gh-commits" style="font-family:'Spectral',serif;font-size:30px;color:var(--gold);line-height:1;">…</div><div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-top:8px;">Total commits</div></div>
             <div><div style="font-family:'Spectral',serif;font-size:30px;color:var(--gold);line-height:1;">6</div><div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-top:8px;">Peer-reviewed papers</div></div>
             <div><div id="yrs-exp" style="font-family:'Spectral',serif;font-size:30px;color:var(--gold);line-height:1;">3</div><div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-top:8px;">Years of experience</div></div>
