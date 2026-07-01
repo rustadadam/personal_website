@@ -54,14 +54,27 @@ The whole page reads as if you're looking at Adam's own source/notebook, not a m
 - **Featured work items don't use fake sequence numbers** (no `01/02/03/04`) — only real role tags (`> co-founder · product`). Numbering implies a sequence; these projects aren't one.
 - **Restraint**: this motif lives in the hero, section kickers, Path, and the 3 secondary work cards' file-path labels. It deliberately does NOT invade "Beyond the work" (kept purely warm serif-italic + prose) — that section is the "friend" register and doesn't need the engineer wink layered on top.
 
-### Motion
+### Motion — "the authored sky"
 
-- **Starfield**: constellation-style canvas animation. Density configurable.
-- **Reveal on scroll**: `data-reveal` elements fade + translate up as they enter the viewport.
+The background is not a random particle web (that's the #1 AI-portfolio tell). It's a three-layer starfield with hand-authored constellations:
+
+- **Three depth layers**: far field (hundreds of tiny cool-white stars, pre-rendered to an offscreen texture — nearly free per frame), mid field (~150 simulated stars with rare, short link lines via spatial-grid lookup — never O(n²)), near field (~16 large warm-gold stars with the strongest mouse/scroll parallax). Depth doubles as a color story: near = warm gold, far = cool white, matching the palette's two poles.
+- **Authored constellations** — each section's sky forms a figure that is *true* for it, assembling from scatter and drawing its lines like a pen stroke as the section scrolls in:
+  - Hero: the **Big Dipper**, pointer stars reaching to **Polaris** — draws once on page load. This is the purpose statement embodied, never printed.
+  - Research: two star clusters easing into **alignment** — manifold alignment, drawn in stars.
+  - Path: a **branch diverging and merging back** — the git-log continued in the sky; its open-ring nodes echo `.log-node`.
+  - Beyond: a **ridgeline under one bright star**.
+  - Connect: **Polaris alone** — the page ends where it was pointing all along.
+  Figures hide themselves when the viewport has no safe margin for them (e.g. the git branch needs ≥140px beside the Path column).
+- **Rare meteor**: one at a time, roughly every 16s, subtle.
+- **Reveal on scroll**: body blocks fade + rise 20px; display headings (`data-reveal-words`) rise word-by-word with a 60ms stagger — the one reveal that reads "designed".
+- **Path git-line draws with scroll**: the timeline's gradient line scaleY-scrubs with section progress.
 - **Photo carousel**: 4 photos, auto-advance every 5.5s, dots indicator, fade + zoom transition.
 - **Parallax**: subtle `data-parallax` on decorative elements.
-- **Scroll palette lerp**: CSS var interpolation tied to scroll position.
-- **Prefers-reduced-motion**: all animation disabled when OS requests it.
+- **Scroll palette lerp**: CSS var interpolation tied to scroll position (accents route through a saturated rose midpoint).
+- **Film grain**: static SVG-noise overlay (~5% opacity) so the sky never reads as a flat gradient. Zero per-frame cost.
+- **Prefers-reduced-motion**: no animation, but not a blank page — a fully-formed static sky renders and re-aligns on scroll.
+- **Performance floor**: pre-rendered textures + star sprites + spatial grid, no per-frame allocations, layout reads batched before writes, DPR capped at 2, rAF paused when the tab is hidden. The sky must hold 60fps.
 
 ---
 

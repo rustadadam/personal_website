@@ -16,7 +16,7 @@
   :root{
     --bg:#0d0b09; --bg2:#16120e; --line:rgba(230,178,92,0.14);
     --text:#f3ece1; --muted:#a89683; --faint:#6f6555;
-    --gold:#e6b25c; --rose:#e0876b; --glow:230,178,92;
+    --gold:#e6b25c; --rose:#e0876b; --glow:230,178,92; --glow2:224,135,107;
   }
   *{box-sizing:border-box;}
   html{scroll-behavior:smooth;}
@@ -40,6 +40,9 @@
 
   /* ── Nav: legible background on all screens ── */
   nav { background:rgba(13,11,9,0.82); -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px); border-bottom:1px solid rgba(230,178,92,0.07); }
+
+  /* ── Film grain: static texture so the sky never reads as a flat gradient ── */
+  .grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.05;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");background-size:180px 180px;}
 
   /* ── Mobile layout ── */
   @media (max-width:700px){
@@ -94,6 +97,9 @@
     /* Hero tagline: tighten letter-spacing so all 3 words fit one line */
     .hero-tag { font-size:10px !important; letter-spacing:.08em !important; }
 
+    /* Work header annotation: desktop-only flourish */
+    .work-annot { display:none !important; }
+
     /* Stats: force 3 equal columns so nothing drops to a second row */
     #about-stats { display:grid !important; grid-template-columns:repeat(3,1fr) !important; gap:16px !important; }
   }
@@ -103,7 +109,8 @@
 
   <canvas ref="{{ canvasRef }}" style="position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;display:block;"></canvas>
 
-  <div style="position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(120% 90% at 50% -10%, rgba(230,178,92,0.10), rgba(13,11,9,0) 45%),radial-gradient(90% 70% at 80% 110%, rgba(224,135,107,0.08), rgba(13,11,9,0) 50%);"></div>
+  <div style="position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(120% 90% at 50% -10%, rgba(var(--glow),0.10), rgba(13,11,9,0) 45%),radial-gradient(90% 70% at 80% 110%, rgba(var(--glow2),0.08), rgba(13,11,9,0) 50%);"></div>
+  <div class="grain"></div>
 
   <nav style="position:fixed;top:0;left:0;right:0;z-index:20;display:flex;align-items:center;justify-content:space-between;padding:22px clamp(20px,5vw,64px);backdrop-filter:blur(2px);">
     <a href="#top" style="font-family:'Spectral',serif;font-size:19px;letter-spacing:.01em;color:var(--text);text-decoration:none;font-weight:500;">Adam&nbsp;Rustad</a>
@@ -120,7 +127,7 @@
     <!-- ===== HERO ===== -->
     <section style="position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:120px clamp(20px,6vw,80px) 90px;">
       <div data-reveal class="hero-tag kicker" style="font-size:14px;margin-bottom:34px;"><b>//</b> <span ref="{{ typeRef }}"></span><span class="caret"></span></div>
-      <h1 data-reveal data-reveal-delay="120" style="font-family:'Spectral',serif;font-weight:300;font-size:clamp(38px,7.4vw,104px);line-height:1.04;letter-spacing:-0.015em;margin:0;max-width:16ch;color:var(--text);">
+      <h1 data-reveal data-reveal-words data-reveal-delay="120" style="font-family:'Spectral',serif;font-weight:300;font-size:clamp(38px,7.4vw,104px);line-height:1.04;letter-spacing:-0.015em;margin:0;max-width:16ch;color:var(--text);">
         Glad you're <em style="font-style:italic;color:var(--gold);">here</em>.
       </h1>
       <p data-reveal data-reveal-delay="320" style="margin:38px auto 0;max-width:60ch;font-size:clamp(16px,1.55vw,21px);line-height:1.7;color:var(--muted);font-weight:300;">
@@ -130,7 +137,7 @@
         <a href="#work" style="font-family:'Hanken Grotesk',sans-serif;font-size:15px;font-weight:500;color:var(--bg);background:var(--gold);padding:14px 30px;border-radius:100px;text-decoration:none;transition:transform .35s ease, box-shadow .35s ease;box-shadow:0 8px 30px rgba(230,178,92,0.18);" style-hover="transform:translateY(-2px);box-shadow:0 14px 40px rgba(230,178,92,0.3)">See what I've built</a>
         <a href="#connect" style="font-family:'Hanken Grotesk',sans-serif;font-size:15px;font-weight:500;color:var(--text);border:1px solid var(--line);padding:14px 30px;border-radius:100px;text-decoration:none;transition:border-color .35s, color .35s;" style-hover="border-color:var(--gold);color:var(--gold)">Let's talk</a>
       </div>
-      <div style="position:absolute;bottom:34px;left:50%;transform:translateX(-50%);width:24px;height:38px;border:1.5px solid var(--faint);border-radius:14px;display:flex;justify-content:center;padding-top:7px;">
+      <div id="scroll-cue" style="position:absolute;bottom:34px;left:50%;transform:translateX(-50%);width:24px;height:38px;border:1.5px solid var(--faint);border-radius:14px;display:flex;justify-content:center;padding-top:7px;">
         <div style="width:3px;height:7px;border-radius:2px;background:var(--gold);animation:ar-scrolldot 1.8s ease-in-out infinite;"></div>
       </div>
     </section>
@@ -159,7 +166,7 @@
         </div>
         <div style="flex:1 1 440px;min-width:300px;">
           <div data-reveal class="kicker" style="margin-bottom:22px;"><b>//</b> about</div>
-          <h2 data-reveal data-reveal-delay="80" style="font-family:'Spectral',serif;font-weight:300;font-size:clamp(30px,4vw,52px);line-height:1.1;letter-spacing:-0.01em;margin:0 0 28px;color:var(--text);">Hi. I'm Adam.</h2>
+          <h2 data-reveal data-reveal-words data-reveal-delay="80" style="font-family:'Spectral',serif;font-weight:300;font-size:clamp(30px,4vw,52px);line-height:1.1;letter-spacing:-0.01em;margin:0 0 28px;color:var(--text);">Hi. I'm Adam.</h2>
           <p data-reveal data-reveal-delay="160" style="font-size:clamp(15px,1.3vw,18px);line-height:1.75;color:var(--muted);margin:0 0 20px;font-weight:300;max-width:54ch;">
             I've taken three paths: founder, researcher, engineer. The same idea is behind all of them: I want to spend my time getting good enough to genuinely help the people around me.
           </p>
@@ -180,10 +187,13 @@
 
     <!-- ===== SELECTED WORK ===== -->
     <section id="work" style="position:relative;padding:clamp(80px,11vh,140px) clamp(20px,6vw,80px) 40px;max-width:1180px;margin:0 auto;">
-      <div data-reveal style="max-width:680px;margin:0 auto 70px;text-align:center;">
-        <div class="kicker" style="margin-bottom:20px;"><b>//</b> selected work</div>
-        <h2 style="font-family:'Spectral',serif;font-weight:300;font-size:clamp(30px,4.6vw,58px);line-height:1.08;letter-spacing:-0.01em;margin:0 0 22px;color:var(--text);">Things I've made, and why they mattered.</h2>
-        <p style="font-size:clamp(15px,1.3vw,18px);line-height:1.7;color:var(--muted);font-weight:300;margin:0;">A researcher and a builder, in roughly equal measure. Each of these taught me something, about the craft and about the people I made it for.</p>
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:28px;flex-wrap:wrap;margin-bottom:70px;">
+        <div style="max-width:640px;">
+          <div data-reveal class="kicker" style="margin-bottom:20px;"><b>//</b> selected work</div>
+          <h2 data-reveal data-reveal-words data-reveal-delay="80" style="font-family:'Spectral',serif;font-weight:300;font-size:clamp(30px,4.6vw,58px);line-height:1.08;letter-spacing:-0.01em;margin:0 0 22px;color:var(--text);">Things I've made, and why they mattered.</h2>
+          <p data-reveal data-reveal-delay="160" style="font-size:clamp(15px,1.3vw,18px);line-height:1.7;color:var(--muted);font-weight:300;margin:0;max-width:56ch;">A researcher and a builder, in roughly equal measure. Each of these taught me something, about the craft and about the people I made it for.</p>
+        </div>
+        <div data-reveal data-reveal-delay="240" class="kicker work-annot" style="font-size:12px;text-align:right;white-space:nowrap;padding-bottom:6px;"><b>$</b> ls work/ · 7 entries</div>
       </div>
 
       <!-- FEATURED 1 — LumiTube -->
@@ -304,10 +314,10 @@
 
     <!-- ===== RESEARCH ===== -->
     <section id="research" style="position:relative;padding:clamp(80px,11vh,140px) clamp(20px,6vw,80px);max-width:1020px;margin:0 auto;">
-      <div data-reveal style="margin-bottom:56px;">
-        <div class="kicker" style="margin-bottom:20px;"><b>//</b> research</div>
-        <h2 style="font-family:'Spectral',serif;font-weight:300;font-size:clamp(30px,4.4vw,54px);line-height:1.08;letter-spacing:-0.01em;margin:0 0 20px;color:var(--text);max-width:18ch;">Six peer-reviewed papers.</h2>
-        <p style="font-size:clamp(15px,1.3vw,18px);line-height:1.7;color:var(--muted);font-weight:300;margin:0;max-width:56ch;">Each paper started with a problem worth solving. The goal was always the same: make something that holds up and helps people.</p>
+      <div style="margin-bottom:56px;">
+        <div data-reveal class="kicker" style="margin-bottom:20px;"><b>//</b> research</div>
+        <h2 data-reveal data-reveal-words data-reveal-delay="80" style="font-family:'Spectral',serif;font-weight:300;font-size:clamp(30px,4.4vw,54px);line-height:1.08;letter-spacing:-0.01em;margin:0 0 20px;color:var(--text);max-width:18ch;">Six peer-reviewed papers.</h2>
+        <p data-reveal data-reveal-delay="160" style="font-size:clamp(15px,1.3vw,18px);line-height:1.7;color:var(--muted);font-weight:300;margin:0;max-width:56ch;">Each paper started with a problem worth solving. The goal was always the same: make something that holds up and helps people.</p>
       </div>
       <div data-reveal data-reveal-delay="100">
         <a href="https://scholar.google.com/citations?user=ajI1Nl8AAAAJ&hl=en" target="_blank" rel="noopener noreferrer" style="display:flex;text-decoration:none;color:inherit;border-top:1px solid var(--line);padding:24px 6px;gap:26px;align-items:baseline;flex-wrap:wrap;transition:padding-left .4s ease, background .4s;" style-hover="padding-left:14px">
@@ -345,14 +355,14 @@
 
     <!-- ===== THE PATH ===== -->
     <section id="path" style="position:relative;padding:clamp(80px,11vh,140px) clamp(20px,6vw,80px);max-width:880px;margin:0 auto;">
-      <div data-reveal style="text-align:center;margin-bottom:64px;">
-        <div class="kicker" style="margin-bottom:20px;"><b>//</b> the path</div>
-        <h2 style="font-family:'Spectral',serif;font-weight:300;font-size:clamp(30px,4.4vw,54px);line-height:1.08;letter-spacing:-0.01em;margin:0 0 20px;color:var(--text);">None of this happened alone.</h2>
-        <p style="font-size:clamp(15px,1.3vw,18px);line-height:1.7;color:var(--muted);font-weight:300;margin:0 auto 8px;max-width:52ch;">A few of the turns that brought me here, each one shaped by someone who took a chance on me.</p>
-        <p class="kicker" style="font-size:13px;margin:0;">git log --reverse --author="adam"</p>
+      <div style="text-align:center;margin-bottom:64px;">
+        <div data-reveal class="kicker" style="margin-bottom:20px;"><b>//</b> the path</div>
+        <h2 data-reveal data-reveal-words data-reveal-delay="80" style="font-family:'Spectral',serif;font-weight:300;font-size:clamp(30px,4.4vw,54px);line-height:1.08;letter-spacing:-0.01em;margin:0 0 20px;color:var(--text);">None of this happened alone.</h2>
+        <p data-reveal data-reveal-delay="160" style="font-size:clamp(15px,1.3vw,18px);line-height:1.7;color:var(--muted);font-weight:300;margin:0 auto 8px;max-width:52ch;">A few of the turns that brought me here, each one shaped by someone who took a chance on me.</p>
+        <p data-reveal data-reveal-delay="220" class="kicker" style="font-size:13px;margin:0;">git log --reverse --author="adam"</p>
       </div>
-      <div style="position:relative;padding-left:34px;">
-        <div style="position:absolute;left:7px;top:6px;bottom:6px;width:1px;background:linear-gradient(180deg, rgba(var(--glow),0.5), var(--line) 80%, transparent);"></div>
+      <div id="path-log" style="position:relative;padding-left:34px;">
+        <div id="path-line" style="position:absolute;left:7px;top:6px;bottom:6px;width:1px;transform-origin:top;transform:scaleY(0);background:linear-gradient(180deg, rgba(var(--glow),0.5), var(--line) 80%, transparent);"></div>
         <div data-reveal style="position:relative;margin-bottom:40px;">
           <div class="log-node"></div>
           <div class="kicker" style="font-size:12.5px;margin-bottom:8px;"><span class="commit-type">job</span><span class="commit-scope">(axo):</span> 2026 — present</div>
@@ -417,8 +427,8 @@
     </section>
 
     <!-- ===== BEYOND THE WORK ===== -->
-    <section style="position:relative;padding:clamp(70px,10vh,120px) clamp(20px,6vw,80px);max-width:1080px;margin:0 auto;">
-      <div data-reveal style="margin-bottom:48px;text-align:center;">
+    <section id="beyond" style="position:relative;padding:clamp(70px,10vh,120px) clamp(20px,6vw,80px);max-width:1080px;margin:0 auto;">
+      <div data-reveal style="margin-bottom:48px;">
         <div class="kicker" style="margin-bottom:18px;"><b>//</b> beyond the work</div>
         <h2 style="font-family:'Spectral',serif;font-weight:300;font-size:clamp(26px,3.6vw,44px);line-height:1.12;margin:0;color:var(--text);">The rest of who I am.</h2>
       </div>
@@ -445,7 +455,7 @@
     <!-- ===== CONNECT ===== -->
     <section id="connect" style="position:relative;padding:clamp(80px,12vh,150px) clamp(20px,6vw,80px) clamp(60px,8vh,90px);max-width:820px;margin:0 auto;text-align:center;">
       <div data-reveal class="kicker" style="margin-bottom:24px;"><b>//</b> let's connect</div>
-      <h2 data-reveal data-reveal-delay="80" style="font-family:'Spectral',serif;font-weight:300;font-size:clamp(32px,5.4vw,68px);line-height:1.06;letter-spacing:-0.015em;margin:0 0 26px;color:var(--text);">You made it to the bottom. Let's be <em style="font-style:italic;color:var(--gold);">friends</em>.</h2>
+      <h2 data-reveal data-reveal-words data-reveal-delay="80" style="font-family:'Spectral',serif;font-weight:300;font-size:clamp(32px,5.4vw,68px);line-height:1.06;letter-spacing:-0.015em;margin:0 0 26px;color:var(--text);">You made it to the bottom. Let's be <em style="font-style:italic;color:var(--gold);">friends</em>.</h2>
       <p data-reveal data-reveal-delay="160" style="font-size:clamp(16px,1.4vw,19px);line-height:1.7;color:var(--muted);font-weight:300;margin:0 auto 42px;max-width:52ch;">Whether you've got a role, a hard problem worth solving, or just want to discuss the best way to cook potatoes, say something. Thanks for reading this far. Genuinely, it means a lot.</p>
       <div data-reveal data-reveal-delay="240" style="display:flex;justify-content:center;margin-bottom:34px;">
         <a href="mailto:rustadadam@gmail.com" style="font-family:'Hanken Grotesk',sans-serif;font-size:16px;font-weight:500;color:var(--bg);background:var(--gold);padding:16px 36px;border-radius:100px;text-decoration:none;transition:transform .35s ease, box-shadow .35s ease;box-shadow:0 10px 36px rgba(var(--glow),0.22);" style-hover="transform:translateY(-2px);box-shadow:0 16px 46px rgba(var(--glow),0.34)">Send me an email →</a>
@@ -492,21 +502,34 @@ class Component extends DCLogic {
 
   componentDidMount(){
     this.reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+    this._t0 = performance.now();
+    this.mouse = {x:0.5,y:0.5};
+    this.scrollY = window.scrollY;
     this.applyPalette();
     this.setupReveals();
     this.setupPhotoCarousel();
     this.setupTypewriter();
-    if(this.reduce) return;
-    this.mouse = {x:0.5,y:0.5};
-    this.glow = {x:innerWidth/2,y:innerHeight/2,tx:innerWidth/2,ty:innerHeight/2};
+    this.collectAnchors();
     this.setupCanvas();
+    if(this.reduce){
+      // no animation, but not a blank sky: one static frame, re-aligned on scroll
+      if(this._pathLine) this._pathLine.style.transform='scaleY(1)';
+      this.renderStatic();
+      this._onScrollStatic = ()=>{
+        this.scrollY = window.scrollY;
+        if(this._rafS) return;
+        this._rafS = requestAnimationFrame(()=>{ this._rafS=0; this.renderStatic(); });
+      };
+      window.addEventListener('scroll', this._onScrollStatic, {passive:true});
+      return;
+    }
     this._parallax = Array.from(this.rootEl.querySelectorAll('[data-parallax]')).map(el=>({el, speed:parseFloat(el.getAttribute('data-speed')||'0.05')}));
     this.bind();
     this._onVis = () => { document.hidden ? cancelAnimationFrame(this._raf) : this.loop(); };
     document.addEventListener('visibilitychange', this._onVis);
     this.loop();
   }
-  componentDidUpdate(){ this.applyPalette(); this.buildStars && this.buildStars(); }
+  componentDidUpdate(){ this.applyPalette(); this.buildStars && this.buildStars(); if(this.reduce) this.renderStatic(); }
   setupPhotoCarousel(){
     this._photoIdx = 0;
     this._photoInterval = setInterval(()=>this.advancePhoto(), 5500);
@@ -568,12 +591,15 @@ class Component extends DCLogic {
 
   componentWillUnmount(){
     cancelAnimationFrame(this._raf);
+    cancelAnimationFrame(this._rafS);
     clearInterval(this._photoInterval);
+    clearInterval(this._revealTimer);
     clearTimeout(this._typeTimer);
     document.removeEventListener('visibilitychange', this._onVis);
     window.removeEventListener('resize', this._onResize);
     window.removeEventListener('mousemove', this._onMove);
     window.removeEventListener('scroll', this._onScroll);
+    this._onScrollStatic && window.removeEventListener('scroll', this._onScrollStatic);
     this._onScrollReveal && window.removeEventListener('scroll', this._onScrollReveal);
     this._onScrollReveal && window.removeEventListener('resize', this._onScrollReveal);
   }
@@ -605,14 +631,14 @@ class Component extends DCLogic {
     r.setProperty('--gold',  hex(c.gold));
     r.setProperty('--rose',  hex(c.rose));
     r.setProperty('--glow',  c.glow.join(','));
+    r.setProperty('--glow2', c.rose.join(','));
     r.setProperty('--line',  'rgba('+c.glow.join(',')+',0.14)');
     this.glowColor = c.glow.join(',');
   }
 
   // called every frame — lerps Warm Cosmos → Cool Nebula as user scrolls
-  tickScrollPalette(){
+  tickScrollPalette(docH){
     if(!this.rootEl) return;
-    const docH = Math.max(document.body.scrollHeight - innerHeight, 1);
     const raw  = Math.min(Math.max(this.scrollY / docH, 0), 1);
     // ease in-out
     const t = raw < 0.5 ? 2*raw*raw : 1-Math.pow(-2*raw+2,2)/2;
@@ -650,14 +676,39 @@ class Component extends DCLogic {
     this._setVarsFromRGB(lerped);
   }
 
+  // display headings rise word by word; punctuation stays glued to its word
+  splitWords(el){
+    const spans=[];
+    const mk=()=>{ const s=document.createElement('span'); s.style.cssText='display:inline-block;opacity:0;transform:translateY(.55em);will-change:opacity,transform;'; spans.push(s); return s; };
+    const nodes=Array.from(el.childNodes);
+    el.textContent='';
+    let lastSpace=true;
+    for(const nd of nodes){
+      if(nd.nodeType===3){
+        for(const part of nd.textContent.split(/(\s+)/)){
+          if(!part) continue;
+          if(/^\s+$/.test(part)){ el.appendChild(document.createTextNode(' ')); lastSpace=true; continue; }
+          if(!lastSpace && spans.length){ spans[spans.length-1].appendChild(document.createTextNode(part)); }
+          else { const s=mk(); s.textContent=part; el.appendChild(s); }
+          lastSpace=false;
+        }
+      } else {
+        if(!lastSpace && spans.length){ spans[spans.length-1].appendChild(nd); }
+        else { const s=mk(); s.appendChild(nd); el.appendChild(s); }
+        lastSpace=false;
+      }
+    }
+    return spans;
+  }
+
   setupReveals(){
     const all = Array.from(this.rootEl.querySelectorAll('[data-reveal]'));
     if(this.reduce){ all.forEach(el=>{el.style.opacity='1';el.style.transform='none';}); return; }
     this._reveals = all.map(el=>{
-      el.style.opacity='0';
-      el.style.willChange='opacity,transform';
+      const words = el.hasAttribute('data-reveal-words') ? this.splitWords(el) : null;
+      if(!words){ el.style.opacity='0'; el.style.willChange='opacity,transform'; }
       const d = parseInt(el.getAttribute('data-reveal-delay')||'0',10);
-      return {el, delay:d, start:null, done:false};
+      return {el, delay:d, start:null, done:false, words};
     });
     this.checkReveals();
     this._onScrollReveal = ()=>this.checkReveals();
@@ -680,20 +731,77 @@ class Component extends DCLogic {
 
   tickReveals(now){
     if(!this._reveals) return;
-    const dur = 1000;
     let anyLeft = false;
     for(const r of this._reveals){
       if(r.done) continue;
       anyLeft = true;
-      if(r.start===null || now < r.start){ r.el.style.opacity='0'; r.el.style.transform='translateY(28px)'; continue; }
-      let p = (now - r.start)/dur; if(p>1) p=1;
+      if(r.words){
+        if(r.start===null || now < r.start) continue;
+        let all = true;
+        for(let i=0;i<r.words.length;i++){
+          const s=r.words[i];
+          let p=(now - r.start - i*60)/700;
+          if(p<=0){ all=false; continue; }
+          if(p>=1){ if(s.style.opacity!=='1'){ s.style.opacity='1'; s.style.transform='none'; s.style.willChange='auto'; } continue; }
+          all=false;
+          const e=1-Math.pow(1-p,3);
+          s.style.opacity=e.toFixed(3);
+          s.style.transform='translateY('+((1-e)*0.55).toFixed(3)+'em)';
+        }
+        if(all) r.done=true;
+        continue;
+      }
+      if(r.start===null || now < r.start){ r.el.style.opacity='0'; r.el.style.transform='translateY(20px)'; continue; }
+      let p = (now - r.start)/900; if(p>1) p=1;
       const e = 1 - Math.pow(1-p, 3); // easeOutCubic
       r.el.style.opacity = e.toFixed(3);
-      r.el.style.transform = 'translateY('+((1-e)*28).toFixed(2)+'px)';
+      r.el.style.transform = 'translateY('+((1-e)*20).toFixed(2)+'px)';
       if(p>=1){ r.el.style.opacity='1'; r.el.style.transform='none'; r.el.style.willChange='auto'; r.done=true; }
     }
     if(!anyLeft) this._reveals = null;
   }
+
+  // ══ SKY — three depth layers + authored constellations ═════════════
+  collectAnchors(){
+    const q = s => this.rootEl.querySelector(s);
+    this._anchors = { hero:q('main > section'), research:q('#research'), path:q('#path'), beyond:q('#beyond'), connect:q('#connect') };
+    this._pathLog   = q('#path-log');
+    this._pathLine  = q('#path-line');
+    this._scrollCue = q('#scroll-cue');
+    const sc = n => Array.from({length:n}, ()=>[(Math.random()-.5)*150, (Math.random()-.5)*110]);
+    // each section's sky holds a figure that is true for it
+    this._figs = [
+      // hero — the Big Dipper, pointer stars reaching to Polaris: how you find your way
+      {id:'dipper', anchor:'hero',
+       pts:[[.06,.76],[.22,.62],[.36,.55],[.50,.50],[.53,.70],[.70,.72],[.68,.52],[.64,.04]],
+       edges:[[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,3],[6,7]],
+       dash:{7:1}, bright:{7:1}, dim:{3:1}, scatter:sc(8)},
+      // research — two clusters easing into alignment: manifold alignment, drawn in stars
+      {id:'align', anchor:'research',
+       edges:[[0,1],[1,2],[2,3],[3,4],[4,0],[5,6],[6,7],[7,8],[8,9],[9,5],[0,5],[2,7],[3,8]],
+       dash:{10:1,11:1,12:1}, scatter:sc(10)},
+      // path — a branch diverging and merging back: the git-log, continued in the sky
+      {id:'git', anchor:'path',
+       pts:[[.30,.06],[.30,.34],[.30,.66],[.30,.94],[.66,.46],[.66,.70]],
+       edges:[[0,1],[1,2],[2,3],[1,4],[4,5],[5,3]], rings:true, scatter:sc(6)},
+      // beyond — a ridgeline under one bright star
+      {id:'ridge', anchor:'beyond',
+       pts:[[.02,.78],[.20,.40],[.34,.60],[.52,.20],[.66,.52],[.84,.34],[.98,.72],[.52,.02]],
+       edges:[[0,1],[1,2],[2,3],[3,4],[4,5],[5,6]], bright:{7:1}, scatter:sc(8)},
+      // connect — Polaris alone: the page ends where it was pointing all along
+      {id:'polaris', anchor:'connect', pts:[[.5,.5]], edges:[], bright:{0:1}, scatter:sc(1)},
+    ];
+    this._alignA = [[.14,.10],[.42,.02],[.60,.20],[.40,.38],[.08,.30]];
+  }
+
+  readAnchors(){
+    const R={};
+    for(const k in this._anchors){ const el=this._anchors[k]; if(el) R[k]=el.getBoundingClientRect(); }
+    return R;
+  }
+
+  cl(v){ return v<0?0:v>1?1:v; }
+  easeOut(v){ v=this.cl(v); return 1-Math.pow(1-v,3); }
 
   setupCanvas(){
     this.ctx = this.canvas.getContext('2d');
@@ -702,139 +810,373 @@ class Component extends DCLogic {
       this.w = innerWidth; this.h = innerHeight;
       this.canvas.width = this.w*this.dpr; this.canvas.height = this.h*this.dpr;
       this.ctx.setTransform(this.dpr,0,0,this.dpr,0,0);
+      this._grid = null;
+      this._buildKey = null;
       this.buildStars();
+      if(this.reduce) this.renderStatic();
     };
     this.buildStars = ()=>{
-      const baseDens = this.props.starfieldDensity || 550;
-      // auto-reduce on mobile so the O(n²) constellation loop stays fast
-      const mobileFactor = this.w < 768 ? 0.25 : this.w < 1100 ? 0.6 : 1;
-      const dens = baseDens * mobileFactor;
-      const n = Math.min(Math.round(dens * (this.w*this.h)/(1440*900)), this.w < 768 ? 120 : 400);
+      const dens = this.props.starfieldDensity || 550;
+      const key = this.w+'x'+this.h+':'+dens;
+      if(this._buildKey===key && this.stars) return; // sc-if toggles re-run this — keep the sky steady
+      this._buildKey = key;
+      const area = (this.w*this.h)/(1440*900);
+      const mob = this.w < 768;
+      // far field: pre-rendered once, nearly free per frame
+      this._farA = this.makeFarTex(Math.round(Math.min(650, dens*area)), false);
+      this._farB = this.makeFarTex(Math.round(Math.min(90,  dens*area*0.15)), true);
+      // mid field: the only individually-simulated layer
+      const nMid = Math.round(Math.min(mob?70:160, dens*0.28*area*(mob?0.55:1)));
       this.stars = [];
-      for(let i=0;i<n;i++){
-        const depth = Math.random();
+      for(let i=0;i<nMid;i++){
+        const d = Math.random();
         this.stars.push({
           x:Math.random(), y:Math.random(),
-          r: 0.4 + depth*1.7,
-          depth: 0.25 + depth*0.95,
-          base: 0.18 + Math.random()*0.6,
-          tw: Math.random()*Math.PI*2,
-          tws: 0.4 + Math.random()*1.2,
-          warm: Math.random()<0.32,
-          // slow drift — screen-widths per second (stars cross screen in 80-250s)
-          dvx: (Math.random()-.5)*.010,
-          dvy: (Math.random()-.5)*.004,
+          r:0.55+d*1.35, depth:0.25+d*0.95,
+          base:0.2+Math.random()*0.55,
+          tw:Math.random()*6.2832, tws:0.4+Math.random()*1.1,
+          warm:Math.random()<0.3,
+          dvx:(Math.random()-.5)*.008, dvy:(Math.random()-.5)*.003,
+        });
+      }
+      // near field: few, large, warm, strongest parallax — the depth cue
+      this.floaters = [];
+      const nNear = mob?9:16;
+      for(let i=0;i<nNear;i++){
+        this.floaters.push({
+          x:Math.random(), y:Math.random(),
+          r:1.5+Math.random()*1.1, depth:0.7+Math.random()*0.5,
+          base:0.26+Math.random()*0.3,
+          tw:Math.random()*6.2832, tws:0.3+Math.random()*0.5,
+          dvx:(Math.random()-.5)*.004, dvy:(Math.random()-.5)*.002,
         });
       }
     };
+    window.addEventListener('resize', this._onResize);
     this._onResize();
   }
 
+  // far layer is palette-agnostic (cool white + faint warm) so it never needs repainting
+  makeFarTex(count,bright){
+    const c = document.createElement('canvas');
+    c.width  = Math.max(1, Math.ceil((this.w+52)*this.dpr));
+    c.height = Math.max(1, Math.ceil(this.h*this.dpr));
+    const x = c.getContext('2d');
+    for(let i=0;i<count;i++){
+      const px=Math.random()*c.width, py=Math.random()*c.height;
+      const r=(bright?0.7+Math.random()*0.9:0.35+Math.random()*0.75)*this.dpr;
+      const a=bright?0.35+Math.random()*0.45:0.10+Math.random()*0.30;
+      x.fillStyle=Math.random()<0.22?'rgba(230,190,130,'+a.toFixed(3)+')':'rgba(235,238,246,'+a.toFixed(3)+')';
+      x.beginPath(); x.arc(px,py,r,0,6.2832); x.fill();
+    }
+    return c;
+  }
+
+  makeSprite(col){
+    const c=document.createElement('canvas'); c.width=64; c.height=64;
+    const x=c.getContext('2d');
+    const g=x.createRadialGradient(32,32,0,32,32,32);
+    g.addColorStop(0,'rgba(255,255,255,1)');
+    g.addColorStop(0.10,'rgba('+col+',0.85)');
+    g.addColorStop(0.30,'rgba('+col+',0.20)');
+    g.addColorStop(1,'rgba('+col+',0)');
+    x.fillStyle=g; x.fillRect(0,0,64,64);
+    return c;
+  }
+
+  renderStatic(){
+    if(!this.ctx || !this._anchors) return;
+    this.drawScene(2.4, 0, this.readAnchors(), true);
+  }
+
   bind(){
-    window.addEventListener('resize', this._onResize);
     this._onMove = e=>{ this.mouse.x = e.clientX/innerWidth; this.mouse.y = e.clientY/innerHeight; };
     window.addEventListener('mousemove', this._onMove, {passive:true});
-    this.scrollY = window.scrollY;
     this._onScroll = ()=>{ this.scrollY = window.scrollY; };
     window.addEventListener('scroll', this._onScroll, {passive:true});
   }
 
-  // ══ CONSTELLATION ═════════════════════════════════════════════════
-  drawConstellation(ctx,t,mx,my,parallaxOn){
-    ctx.clearRect(0,0,this.w,this.h);
-    const w=this.w,h=this.h,gc=this.glowColor||'230,178,92';
-    // threshold based on min dimension so mobile portrait feels right
-    const thresh=Math.min(w,h)*.22;
-    const n=this.stars.length;
-
-    // compute positions
-    const pos=new Array(n);
-    for(let i=0;i<n;i++){
-      const s=this.stars[i];
-      const spx=parallaxOn?mx*30*s.depth:0;
-      // cap scroll parallax so it doesn't throw stars off screen on mobile
-      const scrollOff=Math.min(this.scrollY*.06*s.depth, h*.8);
-      const spy=parallaxOn?(my*30*s.depth-scrollOff):-scrollOff;
-      const driftX=((s.x+s.dvx*t)%1+1)%1;
-      const driftY=((s.y+s.dvy*t)%1+1)%1;
-      pos[i]={
-        x:(driftX*w+spx%w+w)%w,
-        y:(driftY*h+spy%h+h)%h,
-      };
+  // ══ FIGURES — placement, progress, draw ═════════════════════════════
+  alignPts(a){
+    const A=this._alignA, out=[], k=1-a;
+    for(const p of A) out.push([p[0], p[1]*0.42]);
+    // lower cluster starts rotated + offset, settles into a mirror of the upper one
+    const th=k*0.55, co=Math.cos(th), si=Math.sin(th);
+    const cx=0.33, cy=0.80, offx=k*0.30, offy=k*0.08;
+    for(const p of A){
+      const tx=p[0], ty=1-p[1]*0.42;
+      const dx=tx-cx, dy=ty-cy;
+      out.push([cx+dx*co-dy*si+offx, cy+dx*si+dy*co+offy]);
     }
+    return out;
+  }
 
-    // for each star, find up to 3 nearest neighbors and draw a line
-    // uses a simple sorted-distance approach capped at maxLinks per star
-    const maxLinks=3;
-    const drawn=new Uint8Array(n*n); // avoid duplicate lines
-    for(let i=0;i<n;i++){
-      const pi=pos[i];
-      // collect distances to all other stars
-      const dists=[];
-      for(let j=0;j<n;j++){
-        if(i===j) continue;
-        const dx=pi.x-pos[j].x, dy=pi.y-pos[j].y;
-        const d=Math.sqrt(dx*dx+dy*dy);
-        if(d<thresh) dists.push({j,d});
+  figLayout(f,R,w,h){
+    switch(f.id){
+      case 'dipper':{
+        const r=R.hero; if(!r||r.bottom<0) return null;
+        const mob=w<760;
+        const bw=mob? w*0.44 : Math.min(330,w*0.24);
+        return {x: mob? w*0.52 : w*0.06, y:r.top+h*0.11, bw:bw, bh:bw*0.92};
       }
-      // sort ascending, take closest maxLinks
-      dists.sort((a,b)=>a.d-b.d);
-      const top=dists.slice(0,maxLinks);
-      for(const {j,d} of top){
-        const key=Math.min(i,j)*n+Math.max(i,j);
-        if(drawn[key]) continue;
-        drawn[key]=1;
-        // smooth falloff: cubic ease so lines fade gracefully near threshold
-        const norm=d/thresh;
-        const falloff=1-norm*norm*norm;
-        const pulse=.46+.54*Math.sin(t*.38+i*.71);
-        const a=falloff*.18*pulse;
-        ctx.beginPath(); ctx.moveTo(pi.x,pi.y); ctx.lineTo(pos[j].x,pos[j].y);
-        ctx.strokeStyle='rgba('+gc+','+a.toFixed(3)+')';
-        ctx.lineWidth=.6;
+      case 'align':{
+        const r=R.research; if(!r||w<1000) return null;
+        const bw=Math.min(230,w*0.20);
+        return {x:w*0.72, y:r.top+34, bw:bw, bh:250};
+      }
+      case 'git':{
+        const r=R.path; if(!r) return null;
+        const m=w-r.right; if(m<140) return null;
+        const bw=Math.min(140,m*0.6);
+        return {x:r.right+m*0.18, y:r.top+r.height*0.16, bw:bw, bh:Math.min(430,r.height*0.5)};
+      }
+      case 'ridge':{
+        const r=R.beyond; if(!r) return null;
+        const bw=Math.min(620,w*0.7);
+        return {x:(w-bw)/2, y:r.top-150, bw:bw, bh:165};
+      }
+      case 'polaris':{
+        const r=R.connect; if(!r) return null;
+        return {x:w*0.60, y:r.top+h*0.05, bw:10, bh:10};
+      }
+    }
+    return null;
+  }
+
+  figProgress(f,R,staticMode){
+    if(f.id==='dipper'){
+      // page-load moment: assembles once, fades as the hero scrolls away
+      const lt=staticMode? 99 : (performance.now()-this._t0)/1000;
+      return { a:this.easeOut((lt-0.4)/1.5), l:this.cl((lt-1.1)/2.4), alpha:this.cl(1-this.scrollY/(this.h*0.85)) };
+    }
+    const r=R[f.anchor]; if(!r) return null;
+    const vh=this.h;
+    const enter=this.cl((vh-r.top)/(vh*0.7));
+    const exit=this.cl(r.bottom/(vh*0.35));
+    if(staticMode) return { a:enter>0?1:0, l:1, alpha:Math.min(1,exit) };
+    return { a:this.easeOut(enter), l:this.cl((enter-0.3)/0.7), alpha:Math.min(1,exit) };
+  }
+
+  drawFig(ctx,f,L,P,t,gc,mx,my){
+    const pts=f.id==='align'? this.alignPts(P.a) : f.pts;
+    const n=pts.length;
+    const kk=(1-P.a)*(1-P.a);
+    const ox=mx*12, oy=my*9;
+    if(!this._figX){ this._figX=new Float32Array(16); this._figY=new Float32Array(16); }
+    const X=this._figX, Y=this._figY;
+    for(let i=0;i<n;i++){
+      X[i]=L.x+pts[i][0]*L.bw+f.scatter[i][0]*kk+ox;
+      Y[i]=L.y+pts[i][1]*L.bh+f.scatter[i][1]*kk+oy;
+    }
+    // lines draw sequentially, like a pen stroke through the sky
+    const E=f.edges.length;
+    if(E&&P.l>0){
+      ctx.lineWidth=0.9;
+      for(let e=0;e<E;e++){
+        const local=this.cl(P.l*E-e);
+        if(local<=0) break;
+        const ed=f.edges[e];
+        const x1=X[ed[0]], y1=Y[ed[0]];
+        const x2=x1+(X[ed[1]]-x1)*local, y2=y1+(Y[ed[1]]-y1)*local;
+        const dash=f.dash&&f.dash[e];
+        if(dash) ctx.setLineDash([3,6]);
+        ctx.strokeStyle='rgba('+gc+','+(0.30*P.alpha*(dash?0.7:1)).toFixed(3)+')';
+        ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+        if(dash) ctx.setLineDash([]);
+      }
+    }
+    for(let i=0;i<n;i++){
+      const br=f.bright&&f.bright[i], dm=f.dim&&f.dim[i];
+      let a=P.alpha*(0.3+0.7*P.a)*(0.72+0.28*Math.sin(t*1.3+i*1.9));
+      if(f.id==='dipper'&&br) a*=this.cl((P.l-0.86)/0.14); // Polaris waits for the pointer line
+      if(a<=0.01) continue;
+      if(f.rings){
+        // open rings echo the .log-node commit markers
+        ctx.strokeStyle='rgba('+gc+','+(0.8*a).toFixed(3)+')'; ctx.lineWidth=1.3;
+        ctx.beginPath(); ctx.arc(X[i],Y[i],3.6,0,6.2832); ctx.stroke();
+        ctx.fillStyle='rgba('+gc+','+(0.9*a).toFixed(3)+')';
+        ctx.beginPath(); ctx.arc(X[i],Y[i],1.2,0,6.2832); ctx.fill();
+        continue;
+      }
+      const r=br?2.7:dm?1.3:1.9;
+      if(f.id==='polaris'){ ctx.globalAlpha=this.cl(a*0.45); ctx.drawImage(this._spG,X[i]-36,Y[i]-36,72,72); }
+      const sz=r*10;
+      ctx.globalAlpha=this.cl(br?a:a*0.9);
+      ctx.drawImage(br?this._spW:this._spG,X[i]-sz/2,Y[i]-sz/2,sz,sz);
+      ctx.globalAlpha=1;
+      if(br){
+        const gl=(f.id==='polaris'?11:8)+1.6*Math.sin(t*1.7);
+        ctx.strokeStyle='rgba(255,252,244,'+(0.5*a).toFixed(3)+')';
+        ctx.lineWidth=0.8;
+        ctx.beginPath();
+        ctx.moveTo(X[i]-gl,Y[i]); ctx.lineTo(X[i]+gl,Y[i]);
+        ctx.moveTo(X[i],Y[i]-gl); ctx.lineTo(X[i],Y[i]+gl);
         ctx.stroke();
       }
     }
+  }
 
-    // draw stars
+  // ══ SCENE ═══════════════════════════════════════════════════════════
+  drawScene(t,dt,R,staticMode){
+    const ctx=this.ctx, w=this.w, h=this.h;
+    if(!ctx || !this.stars) return;
+    const gc=this.glowColor||'230,178,92';
+    if(this._spGC!==gc){ this._spG=this.makeSprite(gc); this._spGC=gc; if(!this._spW) this._spW=this.makeSprite('244,240,232'); }
+    ctx.clearRect(0,0,w,h);
+    const par=this.props.enableParallax!==false;
+    const mx=par?(this.mouse.x-.5):0, my=par?(this.mouse.y-.5):0;
+
+    // far field: two pre-rendered textures, wrapped vertically, cross-fading shimmer
+    if(this._farA){
+      const drift=staticMode?0:t*1.6;
+      const texW=w+52;
+      let oy=((this.scrollY*0.035+drift)%h+h)%h;
+      const ofx=-26+mx*9;
+      ctx.drawImage(this._farA,ofx,-oy,texW,h);
+      ctx.drawImage(this._farA,ofx,h-oy,texW,h);
+      ctx.globalAlpha=staticMode?0.55:0.35+0.35*Math.sin(t*0.37);
+      oy=((this.scrollY*0.05+drift*1.35)%h+h)%h;
+      ctx.drawImage(this._farB,ofx*1.3,-oy,texW,h);
+      ctx.drawImage(this._farB,ofx*1.3,h-oy,texW,h);
+      ctx.globalAlpha=1;
+    }
+
+    // mid field: positions, then sparse links via spatial grid, then stars
+    const n=this.stars.length;
+    if(!this._px||this._px.length!==n){ this._px=new Float32Array(n); this._py=new Float32Array(n); this._pa=new Float32Array(n); }
     for(let i=0;i<n;i++){
-      const s=this.stars[i],p=pos[i];
-      const a=s.base*(.55+.45*Math.sin(t*s.tws+s.tw));
-      const col=s.warm?gc:'243,236,225';
-      const hr=s.r*4.5;
-      const halo=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,hr);
-      halo.addColorStop(0,'rgba('+col+','+(a*.35)+')');
-      halo.addColorStop(.45,'rgba('+col+','+(a*.10)+')');
-      halo.addColorStop(1,'rgba('+col+',0)');
-      ctx.fillStyle=halo;
-      ctx.fillRect(p.x-hr,p.y-hr,hr*2,hr*2);
-      ctx.beginPath(); ctx.arc(p.x,p.y,s.r,0,Math.PI*2);
-      ctx.fillStyle='rgba('+col+','+a+')';
-      ctx.fill();
+      const s=this.stars[i];
+      const sx=mx*26*s.depth;
+      const sy=my*20*s.depth - this.scrollY*0.07*s.depth;
+      const dX=((s.x+(staticMode?0:s.dvx*t))%1+1)%1;
+      const dY=((s.y+(staticMode?0:s.dvy*t))%1+1)%1;
+      this._px[i]=((dX*w+sx)%w+w)%w;
+      this._py[i]=((dY*h+sy)%h+h)%h;
+      this._pa[i]=s.base*(0.55+0.45*Math.sin(staticMode?s.tw:t*s.tws+s.tw));
+    }
+    const thresh=Math.min(w,h)*0.14, t2=thresh*thresh;
+    const cell=Math.max(48,thresh);
+    const cols=Math.max(1,Math.ceil(w/cell)), rows=Math.max(1,Math.ceil(h/cell));
+    if(!this._grid||this._gcols!==cols||this._grows!==rows){
+      this._grid=Array.from({length:cols*rows},()=>[]); this._gcols=cols; this._grows=rows;
+    } else { for(const b of this._grid) b.length=0; }
+    for(let i=0;i<n;i++){
+      const cx=Math.min(cols-1,(this._px[i]/cell)|0), cy=Math.min(rows-1,(this._py[i]/cell)|0);
+      this._grid[cy*cols+cx].push(i);
+    }
+    ctx.lineWidth=0.6;
+    for(let i=0;i<n;i++){
+      const cx=Math.min(cols-1,(this._px[i]/cell)|0), cy=Math.min(rows-1,(this._py[i]/cell)|0);
+      let b1=-1,d1=t2,b2=-1,d2=t2;
+      for(let gy=Math.max(0,cy-1);gy<=Math.min(rows-1,cy+1);gy++){
+        for(let gx=Math.max(0,cx-1);gx<=Math.min(cols-1,cx+1);gx++){
+          const bkt=this._grid[gy*cols+gx];
+          for(let bi=0;bi<bkt.length;bi++){
+            const j=bkt[bi]; if(j<=i) continue;
+            const dx=this._px[i]-this._px[j], dy=this._py[i]-this._py[j];
+            const d=dx*dx+dy*dy;
+            if(d<d1){ d2=d1;b2=b1; d1=d;b1=j; } else if(d<d2){ d2=d;b2=j; }
+          }
+        }
+      }
+      const pulse=0.5+0.5*Math.sin(staticMode?i:t*0.4+i*0.71);
+      if(b1>=0){
+        const nm=Math.sqrt(d1)/thresh, a=(1-nm*nm*nm)*0.10*pulse;
+        if(a>0.004){ ctx.strokeStyle='rgba('+gc+','+a.toFixed(3)+')'; ctx.beginPath(); ctx.moveTo(this._px[i],this._py[i]); ctx.lineTo(this._px[b1],this._py[b1]); ctx.stroke(); }
+      }
+      if(b2>=0){
+        const nm=Math.sqrt(d2)/thresh, a=(1-nm*nm*nm)*0.10*pulse;
+        if(a>0.004){ ctx.strokeStyle='rgba('+gc+','+a.toFixed(3)+')'; ctx.beginPath(); ctx.moveTo(this._px[i],this._py[i]); ctx.lineTo(this._px[b2],this._py[b2]); ctx.stroke(); }
+      }
+    }
+    for(let i=0;i<n;i++){
+      const s=this.stars[i];
+      const sz=s.r*9;
+      ctx.globalAlpha=this.cl(this._pa[i]);
+      ctx.drawImage(s.warm?this._spG:this._spW, this._px[i]-sz/2, this._py[i]-sz/2, sz, sz);
+    }
+    ctx.globalAlpha=1;
+
+    // near field: warm foreground stars, strongest parallax
+    for(let i=0;i<this.floaters.length;i++){
+      const f=this.floaters[i];
+      const dX=((f.x+(staticMode?0:f.dvx*t))%1+1)%1;
+      const dY=((f.y+(staticMode?0:f.dvy*t))%1+1)%1;
+      const px=((dX*w+mx*46*f.depth)%w+w)%w;
+      const py=((dY*h+my*32*f.depth-this.scrollY*0.16*f.depth)%h+h)%h;
+      const a=f.base*(0.5+0.5*Math.sin(staticMode?f.tw:t*f.tws+f.tw));
+      const sz=f.r*11;
+      ctx.globalAlpha=this.cl(a);
+      ctx.drawImage(this._spG,px-sz/2,py-sz/2,sz,sz);
+    }
+    ctx.globalAlpha=1;
+
+    // one meteor at a time, rarely
+    if(!staticMode){
+      if(this._meteor){
+        const m=this._meteor; m.life+=dt;
+        const fr=m.life/m.dur;
+        if(fr>=1){ this._meteor=null; }
+        else{
+          const hx=m.x+m.vx*m.life, hy=m.y+m.vy*m.life;
+          const tx=hx-m.vx*0.10, ty=hy-m.vy*0.10;
+          const a=Math.sin(Math.PI*fr)*0.45;
+          const g=ctx.createLinearGradient(hx,hy,tx,ty);
+          g.addColorStop(0,'rgba(255,250,240,'+a.toFixed(3)+')');
+          g.addColorStop(1,'rgba(255,250,240,0)');
+          ctx.strokeStyle=g; ctx.lineWidth=1.3;
+          ctx.beginPath(); ctx.moveTo(hx,hy); ctx.lineTo(tx,ty); ctx.stroke();
+        }
+      } else if(t>6 && Math.random()<dt/16){
+        const dir=Math.random()<0.5?1:-1;
+        const sp=(0.6+Math.random()*0.4)*Math.max(w,600);
+        const ang=0.45+Math.random()*0.4;
+        this._meteor={x:Math.random()*w, y:Math.random()*h*0.35, vx:dir*sp*Math.cos(ang), vy:sp*Math.sin(ang), life:0, dur:0.55+Math.random()*0.35};
+      }
+    }
+
+    // authored figures, on top of everything
+    if(this._figs){
+      for(const f of this._figs){
+        const L=this.figLayout(f,R,w,h);
+        if(!L) continue;
+        const P=this.figProgress(f,R,staticMode);
+        if(!P || P.alpha<=0.01 || P.a<=0.005) continue;
+        this.drawFig(ctx,f,L,P,t,gc,mx,my);
+      }
     }
   }
 
   // ══ MAIN LOOP ══════════════════════════════════════════════════════
   loop(){
-    const parallaxOn=this.props.enableParallax!==false;
-    const nowMs=performance.now();
-    const t=nowMs/1000;
-    this.tickReveals(nowMs);
-    this.tickScrollPalette();
-    const ctx=this.ctx;
-    const mx=(this.mouse.x-.5),my=(this.mouse.y-.5);
+    const now=performance.now(), t=now/1000;
+    const dt=Math.min(0.06,(now-(this._pn||now))/1000); this._pn=now;
 
-    this.drawConstellation(ctx,t,mx,my,parallaxOn);
+    // all layout reads first, all writes after — one layout pass per frame
+    const R=this.readAnchors();
+    const par=this.props.enableParallax!==false;
+    const pRects=(par&&this._parallax)? this._parallax.map(p=>p.el.getBoundingClientRect()) : null;
+    const logRect=this._pathLog? this._pathLog.getBoundingClientRect() : null;
+    const docH=Math.max(document.body.scrollHeight-innerHeight,1);
 
-    // element parallax
-    if(parallaxOn&&this._parallax){
-      for(const p of this._parallax){
-        const b=p.el.getBoundingClientRect();
+    this.tickReveals(now);
+    this.tickScrollPalette(docH);
+    this.drawScene(t,dt,R,false);
+
+    if(pRects){
+      for(let i=0;i<pRects.length;i++){
+        const b=pRects[i];
         const center=b.top+b.height/2-this.h/2;
-        p.el.style.transform='translateY('+(-center*p.speed).toFixed(1)+'px)';
+        this._parallax[i].el.style.transform='translateY('+(-center*this._parallax[i].speed).toFixed(1)+'px)';
       }
     }
-
+    if(this._pathLine&&logRect){
+      const p=this.cl((this.h*0.8-logRect.top)/logRect.height);
+      this._pathLine.style.transform='scaleY('+p.toFixed(4)+')';
+    }
+    if(this._scrollCue){
+      this._scrollCue.style.opacity=this.cl(1-this.scrollY/280).toFixed(3);
+    }
     this._raf=requestAnimationFrame(()=>this.loop());
   }
 }
