@@ -25,7 +25,18 @@
   @keyframes ar-rise{from{opacity:0;transform:translateY(26px);}to{opacity:1;transform:translateY(0);}}
   @keyframes ar-breathe{0%,100%{opacity:.5;}50%{opacity:1;}}
   @keyframes ar-scrolldot{0%{transform:translateY(0);opacity:0;}30%{opacity:1;}80%{opacity:1;}100%{transform:translateY(18px);opacity:0;}}
+  @keyframes ar-caret{0%,100%{opacity:0;}50%{opacity:1;}}
   @media (prefers-reduced-motion:reduce){*{animation:none!important;}}
+
+  /* ── Annotated-source motif: comment-style kickers, code tags, git-log nodes ── */
+  .kicker{font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.01em;color:var(--faint);}
+  .kicker b{color:var(--gold);font-weight:500;}
+  .tag-chip{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--muted);background:rgba(var(--glow),0.05);border:1px solid var(--line);border-radius:4px;padding:4px 9px;}
+  .log-node{position:absolute;left:-34px;top:5px;width:15px;height:15px;border-radius:50%;background:var(--bg);border:2px solid var(--gold);box-shadow:0 0 0 5px rgba(var(--glow),0.12);}
+  .commit-type{color:var(--gold);}
+  .commit-scope{color:var(--faint);}
+  .caret{display:inline-block;width:9px;height:1.05em;background:var(--gold);margin-left:2px;vertical-align:-2px;animation:ar-caret 1.1s step-end infinite;}
+  @media (prefers-reduced-motion:reduce){.caret{animation:none;opacity:1;}}
 
   /* ── Nav: legible background on all screens ── */
   nav { background:rgba(13,11,9,0.82); -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px); border-bottom:1px solid rgba(230,178,92,0.07); }
@@ -108,12 +119,12 @@
 
     <!-- ===== HERO ===== -->
     <section style="position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:120px clamp(20px,6vw,80px) 90px;">
-      <div data-reveal class="hero-tag" style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.34em;text-transform:uppercase;color:var(--gold);margin-bottom:34px;">Researcher &nbsp;·&nbsp; Builder &nbsp;·&nbsp; Grateful</div>
+      <div data-reveal class="hero-tag kicker" style="font-size:14px;margin-bottom:34px;"><b>//</b> researcher, builder, grateful<span class="caret"></span></div>
       <h1 data-reveal data-reveal-delay="120" style="font-family:'Spectral',serif;font-weight:300;font-size:clamp(38px,7.4vw,104px);line-height:1.04;letter-spacing:-0.015em;margin:0;max-width:16ch;color:var(--text);">
         Glad you're <em style="font-style:italic;color:var(--gold);">here</em>.
       </h1>
       <p data-reveal data-reveal-delay="320" style="margin:38px auto 0;max-width:60ch;font-size:clamp(16px,1.55vw,21px);line-height:1.7;color:var(--muted);font-weight:300;">
-        I'm Adam. I like making things that matter and meeting people who care about the same. Thanks for stopping by.
+        I'm Adam. I build things, publish research, and occasionally name an algorithm after potatoes. Mostly I'm just glad you clicked through.
       </p>
       <div data-reveal data-reveal-delay="500" style="display:flex;gap:16px;flex-wrap:wrap;justify-content:center;margin-top:46px;">
         <a href="#work" style="font-family:'Hanken Grotesk',sans-serif;font-size:15px;font-weight:500;color:var(--bg);background:var(--gold);padding:14px 30px;border-radius:100px;text-decoration:none;transition:transform .35s ease, box-shadow .35s ease;box-shadow:0 8px 30px rgba(230,178,92,0.18);" style-hover="transform:translateY(-2px);box-shadow:0 14px 40px rgba(230,178,92,0.3)">See what I've built</a>
@@ -147,7 +158,7 @@
           </div>
         </div>
         <div style="flex:1 1 440px;min-width:300px;">
-          <div data-reveal style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:22px;">A little about me</div>
+          <div data-reveal class="kicker" style="margin-bottom:22px;"><b>//</b> about</div>
           <h2 data-reveal data-reveal-delay="80" style="font-family:'Spectral',serif;font-weight:300;font-size:clamp(30px,4vw,52px);line-height:1.1;letter-spacing:-0.01em;margin:0 0 28px;color:var(--text);">Hi. I'm Adam.</h2>
           <p data-reveal data-reveal-delay="160" style="font-size:clamp(15px,1.3vw,18px);line-height:1.75;color:var(--muted);margin:0 0 20px;font-weight:300;max-width:54ch;">
             I've taken three paths: founder, researcher, engineer. The same idea is behind all of them: I want to spend my time getting good enough to genuinely help the people around me.
@@ -170,7 +181,7 @@
     <!-- ===== SELECTED WORK ===== -->
     <section id="work" style="position:relative;padding:clamp(80px,11vh,140px) clamp(20px,6vw,80px) 40px;max-width:1180px;margin:0 auto;">
       <div data-reveal style="max-width:680px;margin:0 auto 70px;text-align:center;">
-        <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;">Selected work</div>
+        <div class="kicker" style="margin-bottom:20px;"><b>//</b> selected work</div>
         <h2 style="font-family:'Spectral',serif;font-weight:300;font-size:clamp(30px,4.6vw,58px);line-height:1.08;letter-spacing:-0.01em;margin:0 0 22px;color:var(--text);">Things I've made, and why they mattered.</h2>
         <p style="font-size:clamp(15px,1.3vw,18px);line-height:1.7;color:var(--muted);font-weight:300;margin:0;">A researcher and a builder, in roughly equal measure. Each of these taught me something, about the craft and about the people I made it for.</p>
       </div>
@@ -183,16 +194,14 @@
           </div>
         </div>
         <div data-reveal data-reveal-delay="120" style="flex:1 1 360px;min-width:300px;">
-          <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;">
-            <span style="color:var(--gold);opacity:0.5;">01</span><span style="width:24px;height:1px;background:var(--line);"></span><span style="color:var(--gold);">Co-founder · Product</span>
-          </div>
+          <div class="kicker" style="margin-bottom:16px;"><b>&gt;</b> co-founder · product</div>
           <h3 style="font-family:'Spectral',serif;font-weight:400;font-size:clamp(26px,3vw,38px);line-height:1.12;margin:0 0 16px;color:var(--text);">LumiTube</h3>
           <p style="font-size:16px;line-height:1.72;color:var(--muted);font-weight:300;margin:0 0 22px;max-width:50ch;">An AI-powered video platform that gives families a safe place to watch. Available now on iOS and Android, with content filtering that customizes to family's values. You should check it out!</p>
           <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px;">
-            <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);border:1px solid var(--line);padding:5px 11px;border-radius:100px;">Flutter</span>
-            <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);border:1px solid var(--line);padding:5px 11px;border-radius:100px;">AI filtering</span>
-            <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);border:1px solid var(--line);padding:5px 11px;border-radius:100px;">Ranking</span>
-            <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);border:1px solid var(--line);padding:5px 11px;border-radius:100px;">Analytics</span>
+            <span class="tag-chip">Flutter</span>
+            <span class="tag-chip">AI filtering</span>
+            <span class="tag-chip">Ranking</span>
+            <span class="tag-chip">Analytics</span>
           </div>
           <a href="https://www.lumitube.org" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:500;color:var(--gold);text-decoration:none;border-bottom:1px solid transparent;transition:border-color .3s;" style-hover="border-color:var(--gold)">Visit lumitube.org →</a>
         </div>
@@ -206,16 +215,14 @@
           </div>
         </div>
         <div data-reveal data-reveal-delay="120" style="flex:1 1 360px;min-width:300px;">
-          <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;">
-            <span style="color:var(--gold);opacity:0.5;">02</span><span style="width:24px;height:1px;background:var(--line);"></span><span style="color:var(--gold);">Founder · Product</span>
-          </div>
+          <div class="kicker" style="margin-bottom:16px;"><b>&gt;</b> founder · product</div>
           <h3 style="font-family:'Spectral',serif;font-weight:400;font-size:clamp(26px,3vw,38px);line-height:1.12;margin:0 0 16px;color:var(--text);">SoundScribe Pro</h3>
-          <p style="font-size:16px;line-height:1.72;color:var(--muted);font-weight:300;margin:0 0 22px;max-width:50ch;">An audiobook studio that gives a story its voice. It automates narration, mastering, and distribution-ready output, turning weeks of work into hours and saving authors about <span style="color:var(--text);">$7,050 a book</span>. I used it for my own books!</p>
+          <p style="font-size:16px;line-height:1.72;color:var(--muted);font-weight:300;margin:0 0 22px;max-width:50ch;">An audiobook studio that gives a story its voice. It automates narration, mastering, and distribution-ready output, turning weeks of work into hours and saving authors about <span style="color:var(--text);">$7,050 a book</span>. I used it on my own book, which felt like the ultimate dogfooding.</p>
           <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px;">
-            <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);border:1px solid var(--line);padding:5px 11px;border-radius:100px;">AWS</span>
-            <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);border:1px solid var(--line);padding:5px 11px;border-radius:100px;">Google Cloud</span>
-            <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);border:1px solid var(--line);padding:5px 11px;border-radius:100px;">Python · NLP</span>
-            <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);border:1px solid var(--line);padding:5px 11px;border-radius:100px;">Stripe</span>
+            <span class="tag-chip">AWS</span>
+            <span class="tag-chip">Google Cloud</span>
+            <span class="tag-chip">Python · NLP</span>
+            <span class="tag-chip">Stripe</span>
           </div>
           <div style="display:flex;gap:24px;flex-wrap:wrap;">
             <a href="https://www.soundscribepro.com" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:500;color:var(--gold);text-decoration:none;border-bottom:1px solid transparent;transition:border-color .3s;" style-hover="border-color:var(--gold)">soundscribepro.com →</a>
@@ -233,15 +240,13 @@
           </div>
         </div>
         <div data-reveal data-reveal-delay="120" style="flex:1 1 360px;min-width:300px;">
-          <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;">
-            <span style="color:var(--gold);opacity:0.5;">03</span><span style="width:24px;height:1px;background:var(--line);"></span><span style="color:var(--gold);">Lead · Computer vision</span>
-          </div>
+          <div class="kicker" style="margin-bottom:16px;"><b>&gt;</b> lead · computer vision</div>
           <h3 style="font-family:'Spectral',serif;font-weight:400;font-size:clamp(26px,3vw,38px);line-height:1.12;margin:0 0 16px;color:var(--text);">SafeSocial</h3>
           <p style="font-size:16px;line-height:1.72;color:var(--muted);font-weight:300;margin:0 0 22px;max-width:50ch;">A Chrome extension that filters explicit content out of social feeds in real time, all in the browser, so nothing personal ever leaves your machine. High accuracy, almost no overhead, and a UX you forget is even there. I led the team that built it.</p>
           <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px;">
-            <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);border:1px solid var(--line);padding:5px 11px;border-radius:100px;">TensorFlow.js</span>
-            <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);border:1px solid var(--line);padding:5px 11px;border-radius:100px;">On-device CV</span>
-            <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);border:1px solid var(--line);padding:5px 11px;border-radius:100px;">Privacy-first</span>
+            <span class="tag-chip">TensorFlow.js</span>
+            <span class="tag-chip">On-device CV</span>
+            <span class="tag-chip">Privacy-first</span>
           </div>
           <div style="display:flex;gap:24px;flex-wrap:wrap;">
             <a href="https://chromewebstore.google.com/detail/safe-social/jdacdndepggbdjbknoncakkgbbhfoccm" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:500;color:var(--gold);text-decoration:none;border-bottom:1px solid transparent;transition:border-color .3s;" style-hover="border-color:var(--gold)">Chrome Web Store →</a>
@@ -260,15 +265,13 @@
           </div>
         </div>
         <div data-reveal data-reveal-delay="120" style="flex:1 1 360px;min-width:300px;">
-          <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;">
-            <span style="color:var(--gold);opacity:0.5;">04</span><span style="width:24px;height:1px;background:var(--line);"></span><span style="color:var(--gold);">Research · Author</span>
-          </div>
+          <div class="kicker" style="margin-bottom:16px;"><b>&gt;</b> research · author</div>
           <h3 style="font-family:'Spectral',serif;font-weight:400;font-size:clamp(26px,3vw,38px);line-height:1.12;margin:0 0 16px;color:var(--text);">Manifold Alignment — MASH &amp; SPUD</h3>
-          <p style="font-size:16px;line-height:1.72;color:var(--muted);font-weight:300;margin:0 0 22px;max-width:50ch;">Algorithms I built and benchmarked for finding shared structure across very different datasets, the kind of problem that shows up everywhere from neuroscience to finance. Published, peer-reviewed, and released with Professor Rhodes as an open-source code so others can build on it.</p>
+          <p style="font-size:16px;line-height:1.72;color:var(--muted);font-weight:300;margin:0 0 22px;max-width:50ch;">Algorithms I built and benchmarked for finding shared structure across very different datasets, the kind of problem that shows up everywhere from neuroscience to finance. Published, peer-reviewed, and released with Professor Rhodes as open-source code so others can build on it. Yes, they're named after potato dishes. No, I will not be taking questions about that.</p>
           <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px;">
-            <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);border:1px solid var(--line);padding:5px 11px;border-radius:100px;">Python</span>
-            <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);border:1px solid var(--line);padding:5px 11px;border-radius:100px;">Manifold learning</span>
-            <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);border:1px solid var(--line);padding:5px 11px;border-radius:100px;">Open source</span>
+            <span class="tag-chip">Python</span>
+            <span class="tag-chip">Manifold learning</span>
+            <span class="tag-chip">Open source</span>
           </div>
           <div style="display:flex;gap:24px;flex-wrap:wrap;">
             <a href="https://github.com/rustadadam/mashspud" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:500;color:var(--gold);text-decoration:none;border-bottom:1px solid transparent;transition:border-color .3s;" style-hover="border-color:var(--gold)">View on GitHub →</a>
@@ -277,21 +280,21 @@
         </div>
       </div>
 
-      <div data-reveal style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:22px;margin-top:clamp(60px,8vh,90px);">
-        <div style="border:1px solid var(--line);border-radius:18px;padding:30px;background:rgba(255,255,255,0.018);transition:transform .4s ease, border-color .4s ease, background .4s;" style-hover="transform:translateY(-4px);border-color:rgba(var(--glow),0.4);background:rgba(255,255,255,0.03)">
-          <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;">Machine learning</div>
+      <div data-reveal style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));border-top:1px solid var(--line);margin-top:clamp(60px,8vh,90px);">
+        <div style="padding:26px 22px;border-bottom:1px solid var(--line);transition:background .3s;" style-hover="background:rgba(255,255,255,0.02)">
+          <div class="kicker" style="font-size:12px;margin-bottom:14px;">~/research/leland.ipynb</div>
           <h4 style="font-family:'Spectral',serif;font-weight:400;font-size:22px;line-height:1.2;margin:0 0 12px;color:var(--text);">Leland Coaching Models</h4>
           <p style="font-size:14.5px;line-height:1.7;color:var(--muted);font-weight:300;margin:0 0 18px;">Talent-matching models blending profile embeddings, ensembles, and an LLM-assisted network — reaching <span style="color:var(--text);">89% F1</span> and <span style="color:var(--text);">99% recall</span>.</p>
           <a href="https://www.joinleland.com/" target="_blank" rel="noopener noreferrer" style="font-size:13.5px;font-weight:500;color:var(--gold);text-decoration:none;border-bottom:1px solid transparent;transition:border-color .3s;" style-hover="border-color:var(--gold)">joinleland.com →</a>
         </div>
-        <div style="border:1px solid var(--line);border-radius:18px;padding:30px;background:rgba(255,255,255,0.018);transition:transform .4s ease, border-color .4s ease, background .4s;" style-hover="transform:translateY(-4px);border-color:rgba(var(--glow),0.4);background:rgba(255,255,255,0.03)">
-          <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;">Research</div>
+        <div style="padding:26px 22px;border-bottom:1px solid var(--line);transition:background .3s;" style-hover="background:rgba(255,255,255,0.02)">
+          <div class="kicker" style="font-size:12px;margin-bottom:14px;">~/research/twin-ae.py</div>
           <h4 style="font-family:'Spectral',serif;font-weight:400;font-size:22px;line-height:1.2;margin:0 0 12px;color:var(--text);">Twin Autoencoders</h4>
           <p style="font-size:14.5px;line-height:1.7;color:var(--muted);font-weight:300;margin:0 0 18px;">A published method for extending aligned embeddings, applied to graph alignment and data fusion, including work with neuroscientists on Alzheimer's.</p>
           <a href="https://github.com/JakeSRhodesLab/TwinAE-MA" target="_blank" rel="noopener noreferrer" style="font-size:13.5px;font-weight:500;color:var(--gold);text-decoration:none;border-bottom:1px solid transparent;transition:border-color .3s;" style-hover="border-color:var(--gold)">View on GitHub →</a>
         </div>
-        <div style="border:1px solid var(--line);border-radius:18px;padding:30px;background:rgba(255,255,255,0.018);transition:transform .4s ease, border-color .4s ease, background .4s;" style-hover="transform:translateY(-4px);border-color:rgba(var(--glow),0.4);background:rgba(255,255,255,0.03)">
-          <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;">Systems</div>
+        <div style="padding:26px 22px;border-bottom:1px solid var(--line);transition:background .3s;" style-hover="background:rgba(255,255,255,0.02)">
+          <div class="kicker" style="font-size:12px;margin-bottom:14px;">~/side-projects/chess.ws</div>
           <h4 style="font-family:'Spectral',serif;font-weight:400;font-size:22px;line-height:1.2;margin:0 0 12px;color:var(--text);">Client-to-Client Chess</h4>
           <p style="font-size:14.5px;line-height:1.7;color:var(--muted);font-weight:300;margin:0 0 18px;">Real-time multiplayer chess over WebSocket with move validation and SQL persistence, so a game survives a dropped connection and picks up right where it left off.</p>
           <a href="https://github.com/rustadadam/chess" target="_blank" rel="noopener noreferrer" style="font-size:13.5px;font-weight:500;color:var(--gold);text-decoration:none;border-bottom:1px solid transparent;transition:border-color .3s;" style-hover="border-color:var(--gold)">View on GitHub →</a>
@@ -302,7 +305,7 @@
     <!-- ===== RESEARCH ===== -->
     <section id="research" style="position:relative;padding:clamp(80px,11vh,140px) clamp(20px,6vw,80px);max-width:1020px;margin:0 auto;">
       <div data-reveal style="margin-bottom:56px;">
-        <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;">Research</div>
+        <div class="kicker" style="margin-bottom:20px;"><b>//</b> research</div>
         <h2 style="font-family:'Spectral',serif;font-weight:300;font-size:clamp(30px,4.4vw,54px);line-height:1.08;letter-spacing:-0.01em;margin:0 0 20px;color:var(--text);max-width:18ch;">Six peer-reviewed papers.</h2>
         <p style="font-size:clamp(15px,1.3vw,18px);line-height:1.7;color:var(--muted);font-weight:300;margin:0;max-width:56ch;">Each paper started with a problem worth solving. The goal was always the same: make something that holds up and helps people.</p>
       </div>
@@ -343,34 +346,35 @@
     <!-- ===== THE PATH ===== -->
     <section id="path" style="position:relative;padding:clamp(80px,11vh,140px) clamp(20px,6vw,80px);max-width:880px;margin:0 auto;">
       <div data-reveal style="text-align:center;margin-bottom:64px;">
-        <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;">The path</div>
+        <div class="kicker" style="margin-bottom:20px;"><b>//</b> the path</div>
         <h2 style="font-family:'Spectral',serif;font-weight:300;font-size:clamp(30px,4.4vw,54px);line-height:1.08;letter-spacing:-0.01em;margin:0 0 20px;color:var(--text);">None of this happened alone.</h2>
-        <p style="font-size:clamp(15px,1.3vw,18px);line-height:1.7;color:var(--muted);font-weight:300;margin:0 auto;max-width:52ch;">A few of the turns that brought me here, each one shaped by someone who took a chance on me.</p>
+        <p style="font-size:clamp(15px,1.3vw,18px);line-height:1.7;color:var(--muted);font-weight:300;margin:0 auto 8px;max-width:52ch;">A few of the turns that brought me here, each one shaped by someone who took a chance on me.</p>
+        <p class="kicker" style="font-size:13px;margin:0;">git log --reverse --author="adam"</p>
       </div>
       <div style="position:relative;padding-left:34px;">
         <div style="position:absolute;left:7px;top:6px;bottom:6px;width:1px;background:linear-gradient(180deg, rgba(var(--glow),0.5), var(--line) 80%, transparent);"></div>
         <div data-reveal style="position:relative;margin-bottom:40px;">
-          <div style="position:absolute;left:-34px;top:6px;width:15px;height:15px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 5px rgba(var(--glow),0.14);"></div>
-          <div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;">2026 — Present</div>
+          <div class="log-node"></div>
+          <div class="kicker" style="font-size:12.5px;margin-bottom:8px;"><span class="commit-type">job</span><span class="commit-scope">(axo):</span> 2026 — present</div>
           <h3 style="font-family:'Spectral',serif;font-weight:500;font-size:21px;margin:0 0 8px;color:var(--text);">Engineer — Axo Ventures</h3>
           <p style="font-size:15px;line-height:1.7;color:var(--muted);font-weight:300;margin:0 0 12px;max-width:58ch;">Joined as the second engineer, building the product from the ground up, a CRM designed specifically for orthotics and prosthetics clinics, where the right software genuinely changes patient outcomes.</p>
           <a href="https://www.axoventures.co/" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.04em;color:var(--muted);text-decoration:none;transition:color .3s;" style-hover="color:var(--gold)">axoventures.co →</a>
         </div>
         <div data-reveal style="position:relative;margin-bottom:40px;">
-          <div style="position:absolute;left:-34px;top:6px;width:15px;height:15px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 5px rgba(var(--glow),0.14);"></div>
-          <div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;">2025 — May 2026</div>
+          <div class="log-node"></div>
+          <div class="kicker" style="font-size:12.5px;margin-bottom:8px;"><span class="commit-type">ship</span><span class="commit-scope">(lumitube):</span> 2025 — may 2026</div>
           <h3 style="font-family:'Spectral',serif;font-weight:500;font-size:21px;margin:0 0 8px;color:var(--text);">Co-Founder &amp; Technical Lead — LumiTube</h3>
           <p style="font-size:15px;line-height:1.7;color:var(--muted);font-weight:300;margin:0;max-width:58ch;">Took an idea to shipping apps on iOS and Android, building the AI filtering, ranking, and parental controls, and learning what it really takes to put something into families' hands.</p>
         </div>
         <div data-reveal style="position:relative;margin-bottom:40px;">
-          <div style="position:absolute;left:-34px;top:6px;width:15px;height:15px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 5px rgba(var(--glow),0.14);"></div>
-          <div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;">Summer 2025</div>
+          <div class="log-node"></div>
+          <div class="kicker" style="font-size:12.5px;margin-bottom:8px;"><span class="commit-type">job</span><span class="commit-scope">(nof1):</span> summer 2025</div>
           <h3 style="font-family:'Spectral',serif;font-weight:500;font-size:21px;margin:0 0 8px;color:var(--text);">AI Engineer Intern — N of 1 AI</h3>
           <p style="font-size:15px;line-height:1.7;color:var(--muted);font-weight:300;margin:0;max-width:58ch;">Built agentic workflows from the ground up, end-to-end pipelines that automated complex tasks and integrated tools for reliable autonomy.</p>
         </div>
         <div data-reveal style="position:relative;margin-bottom:40px;">
-          <div style="position:absolute;left:-34px;top:6px;width:15px;height:15px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 5px rgba(var(--glow),0.14);"></div>
-          <div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;">July 2025</div>
+          <div class="log-node"></div>
+          <div class="kicker" style="font-size:12.5px;margin-bottom:8px;"><span class="commit-type">ship</span><span class="commit-scope">(soundscribe):</span> july 2025</div>
           <h3 style="font-family:'Spectral',serif;font-weight:500;font-size:21px;margin:0 0 8px;color:var(--text);">Launched SoundScribe Pro</h3>
           <p style="font-size:15px;line-height:1.7;color:var(--muted);font-weight:300;margin:0;max-width:58ch;">A full service that takes a manuscript and turns it into a complete audiobook. A dream for hobbyist authors like me!</p>
         </div>
@@ -379,32 +383,32 @@
         </div>
         <sc-if value="{{ showAllPath }}">
           <div data-reveal style="position:relative;margin-bottom:40px;">
-            <div style="position:absolute;left:-34px;top:6px;width:15px;height:15px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 5px rgba(var(--glow),0.14);"></div>
-            <div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;">Sept 2024 — 2026</div>
+            <div class="log-node"></div>
+            <div class="kicker" style="font-size:12.5px;margin-bottom:8px;"><span class="commit-type">join</span><span class="commit-scope">(sandbox):</span> sept 2024 — 2026</div>
             <h3 style="font-family:'Spectral',serif;font-weight:500;font-size:21px;margin:0 0 8px;color:var(--text);">Sandbox Innovator — BYU</h3>
             <p style="font-size:15px;line-height:1.7;color:var(--muted);font-weight:300;margin:0;max-width:58ch;">Accepted into BYU's premier entrepreneurship program. Mentors pushed me to turn ideas into real ventures, and I got to build alongside people who genuinely cared about the work.</p>
           </div>
           <div data-reveal style="position:relative;margin-bottom:40px;">
-            <div style="position:absolute;left:-34px;top:6px;width:15px;height:15px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 5px rgba(var(--glow),0.14);"></div>
-            <div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;">Jan 2024 — 2026</div>
+            <div class="log-node"></div>
+            <div class="kicker" style="font-size:12.5px;margin-bottom:8px;"><span class="commit-type">job</span><span class="commit-scope">(research):</span> jan 2024 — 2026</div>
             <h3 style="font-family:'Spectral',serif;font-weight:500;font-size:21px;margin:0 0 8px;color:var(--text);">ML Research Assistant — BYU</h3>
             <p style="font-size:15px;line-height:1.7;color:var(--muted);font-weight:300;margin:0;max-width:58ch;">Joined a machine-learning research group focused on manifold alignment. Designed experiments, ran analysis, and started publishing.</p>
           </div>
           <div data-reveal style="position:relative;margin-bottom:40px;">
-            <div style="position:absolute;left:-34px;top:6px;width:15px;height:15px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 5px rgba(var(--glow),0.14);"></div>
-            <div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;">Nov 2023 — Feb 2024</div>
+            <div class="log-node"></div>
+            <div class="kicker" style="font-size:12.5px;margin-bottom:8px;"><span class="commit-type">job</span><span class="commit-scope">(allset):</span> nov 2023 — feb 2024</div>
             <h3 style="font-family:'Spectral',serif;font-weight:500;font-size:21px;margin:0 0 8px;color:var(--text);">Research Intern — Allset</h3>
             <p style="font-size:15px;line-height:1.7;color:var(--muted);font-weight:300;margin:0;max-width:58ch;">Developed AI-driven product concepts and worked directly with local businesses to understand problems worth solving.</p>
           </div>
           <div data-reveal style="position:relative;margin-bottom:40px;">
-            <div style="position:absolute;left:-34px;top:6px;width:15px;height:15px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 5px rgba(var(--glow),0.14);"></div>
-            <div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;">2021 — 2023</div>
+            <div class="log-node"></div>
+            <div class="kicker" style="font-size:12.5px;margin-bottom:8px;"><span class="commit-type">serve</span><span class="commit-scope">(mission):</span> 2021 — 2023</div>
             <h3 style="font-family:'Spectral',serif;font-weight:500;font-size:21px;margin:0 0 8px;color:var(--text);">Two Years of Service</h3>
             <p style="font-size:15px;line-height:1.7;color:var(--muted);font-weight:300;margin:0;max-width:58ch;">Volunteered as a missionary, helping lead and organize the efforts of eighty others. Seventy-hour weeks taught me more about people, patience, and gratitude than anything before or since.</p>
           </div>
           <div data-reveal style="position:relative;">
-            <div style="position:absolute;left:-34px;top:6px;width:15px;height:15px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 5px rgba(var(--glow),0.14);"></div>
-            <div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;">2021 — June 2026</div>
+            <div class="log-node"></div>
+            <div class="kicker" style="font-size:12.5px;margin-bottom:8px;"><span class="commit-type">init</span><span class="commit-scope">(byu):</span> 2021 — june 2026</div>
             <h3 style="font-family:'Spectral',serif;font-weight:500;font-size:21px;margin:0 0 8px;color:var(--text);">B.S. Computer Science — Brigham Young University</h3>
             <p style="font-size:15px;line-height:1.7;color:var(--muted);font-weight:300;margin:0;max-width:58ch;">Graduated June 2026. 3.92 GPA, Dean's List, with minors in Mathematics and Entrepreneurship, the foundation under everything else here.</p>
           </div>
@@ -415,7 +419,7 @@
     <!-- ===== BEYOND THE WORK ===== -->
     <section style="position:relative;padding:clamp(70px,10vh,120px) clamp(20px,6vw,80px);max-width:1080px;margin:0 auto;">
       <div data-reveal style="margin-bottom:48px;text-align:center;">
-        <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:18px;">Beyond the work</div>
+        <div class="kicker" style="margin-bottom:18px;"><b>//</b> beyond the work</div>
         <h2 style="font-family:'Spectral',serif;font-weight:300;font-size:clamp(26px,3.6vw,44px);line-height:1.12;margin:0;color:var(--text);">The rest of who I am.</h2>
       </div>
       <div id="beyond-grid" data-reveal data-reveal-delay="100" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:18px;overflow:hidden;">
@@ -440,9 +444,9 @@
 
     <!-- ===== CONNECT ===== -->
     <section id="connect" style="position:relative;padding:clamp(80px,12vh,150px) clamp(20px,6vw,80px) clamp(60px,8vh,90px);max-width:820px;margin:0 auto;text-align:center;">
-      <div data-reveal style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:24px;">Let's connect</div>
-      <h2 data-reveal data-reveal-delay="80" style="font-family:'Spectral',serif;font-weight:300;font-size:clamp(32px,5.4vw,68px);line-height:1.06;letter-spacing:-0.015em;margin:0 0 26px;color:var(--text);">Let's build something <em style="font-style:italic;color:var(--gold);">worth trusting</em>.</h2>
-      <p data-reveal data-reveal-delay="160" style="font-size:clamp(16px,1.4vw,19px);line-height:1.7;color:var(--muted);font-weight:300;margin:0 auto 42px;max-width:52ch;">I'm always glad to meet thoughtful people working on hard, meaningful problems. Whether it's a role, a collaboration, or just a good conversation, reach out. Thanks for reading this far. It genuinely means a lot.</p>
+      <div data-reveal class="kicker" style="margin-bottom:24px;"><b>//</b> let's connect</div>
+      <h2 data-reveal data-reveal-delay="80" style="font-family:'Spectral',serif;font-weight:300;font-size:clamp(32px,5.4vw,68px);line-height:1.06;letter-spacing:-0.015em;margin:0 0 26px;color:var(--text);">You made it to the bottom. Let's be <em style="font-style:italic;color:var(--gold);">friends</em>.</h2>
+      <p data-reveal data-reveal-delay="160" style="font-size:clamp(16px,1.4vw,19px);line-height:1.7;color:var(--muted);font-weight:300;margin:0 auto 42px;max-width:52ch;">Whether you've got a role, a hard problem worth solving, or just want to discuss the best way to cook potatoes, say something. Thanks for reading this far — genuinely, it means a lot.</p>
       <div data-reveal data-reveal-delay="240" style="display:flex;justify-content:center;margin-bottom:34px;">
         <a href="mailto:rustadadam@gmail.com" style="font-family:'Hanken Grotesk',sans-serif;font-size:16px;font-weight:500;color:var(--bg);background:var(--gold);padding:16px 36px;border-radius:100px;text-decoration:none;transition:transform .35s ease, box-shadow .35s ease;box-shadow:0 10px 36px rgba(var(--glow),0.22);" style-hover="transform:translateY(-2px);box-shadow:0 16px 46px rgba(var(--glow),0.34)">Send me an email →</a>
       </div>
@@ -703,39 +707,7 @@ class Component extends DCLogic {
     window.addEventListener('scroll', this._onScroll, {passive:true});
   }
 
-  // ══ ① NEBULA WISPS ════════════════════════════════════════════════
-  drawNebulaWisps(ctx,t){
-    ctx.clearRect(0,0,this.w,this.h);
-    const w=this.w,h=this.h,gc=this.glowColor||'230,178,92';
-    // Defined once: x0,y0 = start (0-1 frac), vx,vy = speed (screen-widths/sec)
-    if(!this._wisps){
-      this._wisps=[
-        {x0:.76,y0:.10,vx: .018,vy: .004,color:gc,           a:.22,rx:.62,ph:0.0,bspd:.034},
-        {x0:.12,y0:.58,vx: .012,vy:-.003,color:'224,135,107',a:.17,rx:.50,ph:1.8,bspd:.026},
-        {x0:.50,y0:.88,vx: .024,vy: .005,color:gc,           a:.14,rx:.46,ph:3.5,bspd:.041},
-        {x0:.28,y0:.24,vx: .010,vy: .003,color:'224,135,107',a:.12,rx:.38,ph:2.2,bspd:.029},
-        {x0:.68,y0:.50,vx: .030,vy:-.004,color:gc,           a:.10,rx:.30,ph:5.0,bspd:.048},
-        {x0:.88,y0:.72,vx: .015,vy: .004,color:'220,160,100',a:.09,rx:.34,ph:4.1,bspd:.022},
-      ];
-    }
-    for(const c of this._wisps){
-      // time-based traversal — wraps so clouds always re-enter from opposite edge
-      const xRange=1+c.rx*2, yRange=1+c.rx;
-      const fx=(((c.x0+c.vx*t)%xRange)+xRange)%xRange - c.rx;
-      const fy=(((c.y0+c.vy*t)%yRange)+yRange)%yRange - c.rx*.5;
-      // gentle breathe on top of traversal
-      const pulse=.82+.18*Math.sin(t*c.bspd*.44+c.ph);
-      const cx=fx*w, cy=fy*h, r=c.rx*w;
-      const g=ctx.createRadialGradient(cx,cy,0,cx,cy,r);
-      g.addColorStop(0,  'rgba('+c.color+','+(c.a*pulse)+')');
-      g.addColorStop(.35,'rgba('+c.color+','+(c.a*.38*pulse)+')');
-      g.addColorStop(.70,'rgba('+c.color+','+(c.a*.10*pulse)+')');
-      g.addColorStop(1,  'rgba('+c.color+',0)');
-      ctx.fillStyle=g; ctx.fillRect(0,0,w,h);
-    }
-  }
-
-  // ══ ② CONSTELLATION ════════════════════════════════════════════════
+  // ══ CONSTELLATION ═════════════════════════════════════════════════
   drawConstellation(ctx,t,mx,my,parallaxOn){
     ctx.clearRect(0,0,this.w,this.h);
     const w=this.w,h=this.h,gc=this.glowColor||'230,178,92';
@@ -810,60 +782,9 @@ class Component extends DCLogic {
     }
   }
 
-  // ══ ③ INK DIFFUSION ═══════════════════════════════════════════════
-  _makeInkBlob(ageFrac){
-    // ageFrac: 0-1 pre-seeds blobs already mid-life so something shows immediately
-    const now=performance.now();
-    const dur=11000+Math.random()*7000;
-    return {
-      x:(.1+Math.random()*.8)*this.w,
-      y:(.1+Math.random()*.8)*this.h,
-      maxR:this.w*.22+Math.random()*this.w*.20,
-      start:now - ageFrac*dur,
-      dur, warm:Math.random()<.55,
-      a:.28+Math.random()*.14,
-    };
-  }
-  drawInkDiffusion(ctx,t){
-    ctx.clearRect(0,0,this.w,this.h);
-    const gc=this.glowColor||'230,178,92';
-    // seed 5 blobs at staggered ages on first call so canvas is full immediately
-    if(!this._ink){
-      this._ink=[];
-      const seeds=[.15,.32,.50,.68,.84];
-      seeds.forEach(age=>this._ink.push(this._makeInkBlob(age)));
-      this._inkNext=performance.now()+3500;
-    }
-    const now=performance.now();
-    if(now>this._inkNext){
-      this._ink.push(this._makeInkBlob(0));
-      this._inkNext=now+3200+Math.random()*2400;
-    }
-    this._ink=this._ink.filter(d=>{
-      const age=(now-d.start)/d.dur; if(age>1||age<0) return false;
-      const r=(1-Math.pow(1-age,.65))*d.maxR;
-      if(r<1) return true;
-      // envelope: fade in quickly, hold, fade out gently
-      let env=1;
-      if(age<.12) env=age/.12;
-      else if(age>.55) env=1-(age-.55)/.45;
-      const a=d.a*env;
-      const c=d.warm?gc:'220,190,155';
-      const g=ctx.createRadialGradient(d.x,d.y,0,d.x,d.y,r);
-      g.addColorStop(0,  'rgba('+c+','+a.toFixed(3)+')');
-      g.addColorStop(.22,'rgba('+c+','+(a*.72).toFixed(3)+')');
-      g.addColorStop(.55,'rgba('+c+','+(a*.28).toFixed(3)+')');
-      g.addColorStop(1,  'rgba('+c+',0)');
-      ctx.fillStyle=g; ctx.fillRect(0,0,this.w,this.h);
-      return true;
-    });
-  }
-
   // ══ MAIN LOOP ══════════════════════════════════════════════════════
   loop(){
-    const intensity={Full:1,Gentle:.5,Still:0}[this.props.motionIntensity||'Full'];
     const parallaxOn=this.props.enableParallax!==false;
-    const bg=this.props.background||'Aurora';
     const nowMs=performance.now();
     const t=nowMs/1000;
     this.tickReveals(nowMs);
@@ -872,22 +793,6 @@ class Component extends DCLogic {
     const mx=(this.mouse.x-.5),my=(this.mouse.y-.5);
 
     this.drawConstellation(ctx,t,mx,my,parallaxOn);
-
-    // Constellation manages its own points — no extra star layer needed
-    if(false){
-      for(const s of this.stars){
-        const spx=parallaxOn?mx*40*s.depth:0;
-        const spy=parallaxOn?(my*40*s.depth-this.scrollY*.12*s.depth):-this.scrollY*.06*s.depth;
-        let x=s.x*this.w+spx;
-        let y=(s.y*this.h+spy)%(this.h+80); if(y<-40)y+=this.h+80;
-        const tw=.55+.45*Math.sin(t*s.tws+s.tw)*intensity;
-        const a=s.base*tw;
-        ctx.beginPath(); ctx.arc(x,y,s.r,0,Math.PI*2);
-        ctx.fillStyle=s.warm?'rgba('+(this.glowColor||'230,178,92')+','+a+')'
-                            :'rgba(243,236,225,'+(a*.9)+')';
-        ctx.fill();
-      }
-    }
 
     // element parallax
     if(parallaxOn&&this._parallax){
@@ -921,6 +826,9 @@ class Component extends DCLogic {
       el.textContent = n.toLocaleString();
     })
     .catch(() => {});
+
+  console.log('%cHey, thanks for popping the hood.', 'color:#e6b25c;font-family:monospace;font-size:14px;');
+  console.log('%cIf you\'re reading this in devtools, we\'d probably get along. rustadadam@gmail.com', 'color:#a89683;font-family:monospace;font-size:12px;');
 })();
 </script>
 </body>
