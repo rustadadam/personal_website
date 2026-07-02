@@ -59,14 +59,16 @@ The whole page reads as if you're looking at Adam's own source/notebook, not a m
 The background is not a random particle web (that's the #1 AI-portfolio tell). It's a three-layer starfield with hand-authored constellations:
 
 - **Three depth layers**: far field (hundreds of tiny cool-white stars, pre-rendered to an offscreen texture — nearly free per frame), mid field (~150 simulated stars with rare, short link lines via spatial-grid lookup — never O(n²)), near field (~16 large warm-gold stars with the strongest mouse/scroll parallax). Depth doubles as a color story: near = warm gold, far = cool white, matching the palette's two poles.
-- **Authored constellations** — each section's sky forms a figure that is *true* for it, assembling from scatter and drawing its lines like a pen stroke as the section scrolls in:
-  - Hero: the **Big Dipper**, pointer stars reaching to **Polaris** — draws once on page load. This is the purpose statement embodied, never printed.
-  - Research: two star clusters easing into **alignment** — manifold alignment, drawn in stars.
-  - Path: a **branch diverging and merging back** — the git-log continued in the sky; its open-ring nodes echo `.log-node`.
+- **Authored constellations** — each section's sky forms a figure that is *true* for it, assembling from scatter and drawing its lines like a pen stroke as the section scrolls in. Purely decorative background — no per-star animation on any figure (a hand that waves or a shape that morphs pulls the eye where the headline should own it):
+  - Hero: **Orion**, tucked low in the corner. Deliberately quiet (55% opacity, small, draws *after* the headline lands) — it must never compete with the headline for the eye.
+  - Research: a **potato outline** — the shape behind the papers (MASH & SPUD are manifold-alignment algorithms named after potato dishes). A quiet callback, not a literal cartoon.
+  - Path: no sky figure — the git-log timeline itself (with its `.log-node` markers) carries the section; the sky stays out of the way.
   - Beyond: a **ridgeline under one bright star**.
-  - Connect: **Polaris alone** — the page ends where it was pointing all along.
-  Figures hide themselves when the viewport has no safe margin for them (e.g. the git branch needs ≥140px beside the Path column).
+  - Connect: **Polaris alone** — the north star closes the page.
+  Every figure has a parallax factor (`par` < 1) so it scrolls *slower than the text* — true background depth. Figures hide themselves when the viewport has no safe margin for them.
+- **Nebulae**: four soft color washes (gold/rose → violet → blue, following the palette journey) anchored at document depths, drifting past at ~⅓ scroll speed. Implemented as GPU-composited divs behind the canvas — painted once as CSS gradients, moved with `translate3d` only, hidden when offscreen, transform writes skipped for sub-pixel moves. Never draw these on the canvas per frame.
 - **Rare meteor**: one at a time, roughly every 16s, subtle.
+- No scroll-velocity or transition effects on the starfield — section-to-section navigation is plain smooth-scroll. Tried a hyperspace-style streak-on-fast-scroll effect and cut it; too much for a page whose personality is warmth and restraint, not spectacle.
 - **Reveal on scroll**: body blocks fade + rise 20px; display headings (`data-reveal-words`) rise word-by-word with a 60ms stagger — the one reveal that reads "designed".
 - **Path git-line draws with scroll**: the timeline's gradient line scaleY-scrubs with section progress.
 - **Photo carousel**: 4 photos, auto-advance every 5.5s, dots indicator, fade + zoom transition.

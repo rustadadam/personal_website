@@ -107,6 +107,7 @@
 </helmet>
 <div ref="{{ rootRef }}" style="position:relative;background:var(--bg);color:var(--text);font-family:'Hanken Grotesk',system-ui,sans-serif;overflow-x:hidden;min-height:100vh;-webkit-font-smoothing:antialiased;">
 
+  <div id="neb-layer" style="position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;"></div>
   <canvas ref="{{ canvasRef }}" style="position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;display:block;"></canvas>
 
   <div style="position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(120% 90% at 50% -10%, rgba(var(--glow),0.10), rgba(13,11,9,0) 45%),radial-gradient(90% 70% at 80% 110%, rgba(var(--glow2),0.08), rgba(13,11,9,0) 50%);"></div>
@@ -515,10 +516,11 @@ class Component extends DCLogic {
       // no animation, but not a blank sky: one static frame, re-aligned on scroll
       if(this._pathLine) this._pathLine.style.transform='scaleY(1)';
       this.renderStatic();
+      this.updateNebulae(2.4,true);
       this._onScrollStatic = ()=>{
         this.scrollY = window.scrollY;
         if(this._rafS) return;
-        this._rafS = requestAnimationFrame(()=>{ this._rafS=0; this.renderStatic(); });
+        this._rafS = requestAnimationFrame(()=>{ this._rafS=0; this.renderStatic(); this.updateNebulae(2.4,true); });
       };
       window.addEventListener('scroll', this._onScrollStatic, {passive:true});
       return;
@@ -768,30 +770,36 @@ class Component extends DCLogic {
     this._pathLog   = q('#path-log');
     this._pathLine  = q('#path-line');
     this._scrollCue = q('#scroll-cue');
+    this._nebLayer  = q('#neb-layer');
     const sc = n => Array.from({length:n}, ()=>[(Math.random()-.5)*150, (Math.random()-.5)*110]);
     // each section's sky holds a figure that is true for it
     this._figs = [
-      // hero — the Big Dipper, pointer stars reaching to Polaris: how you find your way
-      {id:'dipper', anchor:'hero',
-       pts:[[.06,.76],[.22,.62],[.36,.55],[.50,.50],[.53,.70],[.70,.72],[.68,.52],[.64,.04]],
-       edges:[[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,3],[6,7]],
-       dash:{7:1}, bright:{7:1}, dim:{3:1}, scatter:sc(8)},
-      // research — two clusters easing into alignment: manifold alignment, drawn in stars
-      {id:'align', anchor:'research',
-       edges:[[0,1],[1,2],[2,3],[3,4],[4,0],[5,6],[6,7],[7,8],[8,9],[9,5],[0,5],[2,7],[3,8]],
-       dash:{10:1,11:1,12:1}, scatter:sc(10)},
-      // path — a branch diverging and merging back: the git-log, continued in the sky
-      {id:'git', anchor:'path',
-       pts:[[.30,.06],[.30,.34],[.30,.66],[.30,.94],[.66,.46],[.66,.70]],
-       edges:[[0,1],[1,2],[2,3],[1,4],[4,5],[5,3]], rings:true, scatter:sc(6)},
+      // hero — Orion, low and quiet in the corner. Doesn't animate or reach for
+      // attention; am dims it and it waits for the headline to land first, so
+      // the headline — not the sky — is what the eye finds. par<1 = scrolls
+      // slower than the text, keeping it a background thing rather than a prop.
+      // Orion, traced from the IAU chart: head apex between the shoulders
+      // (Betelgeuse/Bellatrix), tight 3-star belt, closed feet (Saiph/Rigel),
+      // club arm rising from Betelgeuse and forking into two prongs,
+      // bow arm running straight from Bellatrix into a curved 4-star bow
+      {id:'orion', anchor:'hero',
+       pts:[[.30,.46],[.55,.50],[.46,.40],[.45,.71],[.475,.715],[.50,.72],[.34,.94],[.635,.90],
+            [.16,.25],[.21,.12],[.31,.07],[.82,.38],[.86,.47],[.83,.56],[.78,.63]],
+       edges:[[0,2],[2,1],[0,3],[3,4],[4,5],[1,5],[3,6],[6,7],[5,7],[0,8],[8,9],[8,10],[1,12],[11,12],[12,13],[13,14]],
+       bright:{0:1,7:1}, dim:{2:1,4:1}, am:0.55, par:0.55, ref:0, scatter:sc(15)},
+      // research — a potato outline: the shape behind the papers (MASH & SPUD
+      // are manifold-alignment algorithms named after potato dishes)
+      {id:'potato', anchor:'research', par:0.8, ref:0.4,
+       pts:[[.50,.04],[.74,.10],[.90,.30],[.86,.55],[.95,.72],[.72,.92],[.46,.98],[.22,.90],[.06,.68],[.10,.42],[.04,.20],[.26,.06]],
+       edges:[[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,8],[8,9],[9,10],[10,11],[11,0]],
+       scatter:sc(12)},
       // beyond — a ridgeline under one bright star
-      {id:'ridge', anchor:'beyond',
+      {id:'ridge', anchor:'beyond', par:0.8, ref:0.35,
        pts:[[.02,.78],[.20,.40],[.34,.60],[.52,.20],[.66,.52],[.84,.34],[.98,.72],[.52,.02]],
        edges:[[0,1],[1,2],[2,3],[3,4],[4,5],[5,6]], bright:{7:1}, scatter:sc(8)},
       // connect — Polaris alone: the page ends where it was pointing all along
-      {id:'polaris', anchor:'connect', pts:[[.5,.5]], edges:[], bright:{0:1}, scatter:sc(1)},
+      {id:'polaris', anchor:'connect', par:0.85, ref:0.3, pts:[[.5,.5]], edges:[], bright:{0:1}, scatter:sc(1)},
     ];
-    this._alignA = [[.14,.10],[.42,.02],[.60,.20],[.40,.38],[.08,.30]];
   }
 
   readAnchors(){
@@ -851,6 +859,7 @@ class Component extends DCLogic {
           dvx:(Math.random()-.5)*.004, dvy:(Math.random()-.5)*.002,
         });
       }
+      this.buildNebulae();
     };
     window.addEventListener('resize', this._onResize);
     this._onResize();
@@ -872,6 +881,56 @@ class Component extends DCLogic {
     return c;
   }
 
+  // nebulae live as GPU-composited divs behind the canvas: painted once as CSS
+  // gradients, then moved with transform only — no per-frame repaint.
+  // s = document depth (fraction of scroll range) where each one drifts past.
+  buildNebulae(){
+    if(!this._nebLayer) return;
+    if(!this._nebs){
+      const gold='230,178,92', rose='224,135,107', blue='143,182,232', violet='167,155,236';
+      const mk=(c1,c2)=>'radial-gradient(closest-side at 35% 45%, rgba('+c1+',0.11), rgba('+c1+',0) 72%),radial-gradient(closest-side at 66% 62%, rgba('+c2+',0.08), rgba('+c2+',0) 70%),radial-gradient(closest-side at 58% 28%, rgba('+c1+',0.06), rgba('+c1+',0) 75%)';
+      this._nebs=[
+        {bg:mk(gold,rose),   s:0.03, x:0.80, sc:1.7, par:0.34},
+        {bg:mk(rose,violet), s:0.30, x:0.12, sc:1.9, par:0.38},
+        {bg:mk(blue,violet), s:0.58, x:0.86, sc:1.8, par:0.32},
+        {bg:mk(blue,violet), s:0.92, x:0.38, sc:2.3, par:0.36},
+      ];
+      for(const nb of this._nebs){
+        const el=document.createElement('div');
+        el.style.cssText='position:absolute;left:0;top:0;pointer-events:none;will-change:transform;background:'+nb.bg+';';
+        this._nebLayer.appendChild(el);
+        nb.el=el;
+      }
+    }
+    for(const nb of this._nebs){
+      nb.dw=Math.round(Math.min(nb.sc*this.w*0.5, 1150));
+      nb.dh=Math.round(nb.dw*0.62);
+      nb.el.style.width=nb.dw+'px';
+      nb.el.style.height=nb.dh+'px';
+      nb.lx=undefined;
+    }
+  }
+
+  updateNebulae(t,staticMode){
+    if(!this._nebs) return;
+    const docH=this._docH||1, h=this.h;
+    for(let i=0;i<this._nebs.length;i++){
+      const nb=this._nebs[i];
+      const x=nb.x*this.w-nb.dw/2+(staticMode?0:Math.sin(t*0.05+i*2.1)*26);
+      const y=h*0.5+(nb.s*docH-this.scrollY)*nb.par-nb.dh/2;
+      // offscreen layers are hidden (not composited); sub-pixel moves are skipped
+      // so an idle page keeps every layer cached
+      if(y>h+40||y+nb.dh<-40){
+        if(!nb.hid){ nb.el.style.visibility='hidden'; nb.hid=true; }
+        continue;
+      }
+      if(nb.hid){ nb.el.style.visibility='visible'; nb.hid=false; }
+      if(nb.lx!==undefined && Math.abs(x-nb.lx)<0.6 && Math.abs(y-nb.ly)<0.6) continue;
+      nb.lx=x; nb.ly=y;
+      nb.el.style.transform='translate3d('+x.toFixed(1)+'px,'+y.toFixed(1)+'px,0)';
+    }
+  }
+
   makeSprite(col){
     const c=document.createElement('canvas'); c.width=64; c.height=64;
     const x=c.getContext('2d');
@@ -886,6 +945,7 @@ class Component extends DCLogic {
 
   renderStatic(){
     if(!this.ctx || !this._anchors) return;
+    this._docH=Math.max(document.body.scrollHeight-innerHeight,1);
     this.drawScene(2.4, 0, this.readAnchors(), true);
   }
 
@@ -897,57 +957,40 @@ class Component extends DCLogic {
   }
 
   // ══ FIGURES — placement, progress, draw ═════════════════════════════
-  alignPts(a){
-    const A=this._alignA, out=[], k=1-a;
-    for(const p of A) out.push([p[0], p[1]*0.42]);
-    // lower cluster starts rotated + offset, settles into a mirror of the upper one
-    const th=k*0.55, co=Math.cos(th), si=Math.sin(th);
-    const cx=0.33, cy=0.80, offx=k*0.30, offy=k*0.08;
-    for(const p of A){
-      const tx=p[0], ty=1-p[1]*0.42;
-      const dx=tx-cx, dy=ty-cy;
-      out.push([cx+dx*co-dy*si+offx, cy+dx*si+dy*co+offy]);
-    }
-    return out;
-  }
-
   figLayout(f,R,w,h){
+    // par<1 makes a figure lag the page scroll — background depth; ref is the
+    // viewport fraction of rect.top where the figure sits exactly at its design spot
+    const lag=(base,r)=>base+(1-(f.par||1))*(h*(f.ref||0)-r.top);
     switch(f.id){
-      case 'dipper':{
+      case 'orion':{
         const r=R.hero; if(!r||r.bottom<0) return null;
         const mob=w<760;
-        const bw=mob? w*0.44 : Math.min(330,w*0.24);
-        return {x: mob? w*0.52 : w*0.06, y:r.top+h*0.11, bw:bw, bh:bw*0.92};
+        const bw=mob? w*0.36 : Math.min(250,w*0.17);
+        return {x: mob? w*0.56 : w*0.055, y:lag(r.top+h*(mob?0.10:0.17),r), bw:bw, bh:bw*1.2};
       }
-      case 'align':{
+      case 'potato':{
         const r=R.research; if(!r||w<1000) return null;
-        const bw=Math.min(230,w*0.20);
-        return {x:w*0.72, y:r.top+34, bw:bw, bh:250};
-      }
-      case 'git':{
-        const r=R.path; if(!r) return null;
-        const m=w-r.right; if(m<140) return null;
-        const bw=Math.min(140,m*0.6);
-        return {x:r.right+m*0.18, y:r.top+r.height*0.16, bw:bw, bh:Math.min(430,r.height*0.5)};
+        const bw=Math.min(200,w*0.17);
+        return {x:w*0.72, y:lag(r.top+34,r), bw:bw, bh:270};
       }
       case 'ridge':{
         const r=R.beyond; if(!r) return null;
         const bw=Math.min(620,w*0.7);
-        return {x:(w-bw)/2, y:r.top-150, bw:bw, bh:165};
+        return {x:(w-bw)/2, y:lag(r.top-150,r), bw:bw, bh:165};
       }
       case 'polaris':{
         const r=R.connect; if(!r) return null;
-        return {x:w*0.60, y:r.top+h*0.05, bw:10, bh:10};
+        return {x:w*0.60, y:lag(r.top+h*0.05,r), bw:10, bh:10};
       }
     }
     return null;
   }
 
   figProgress(f,R,staticMode){
-    if(f.id==='dipper'){
-      // page-load moment: assembles once, fades as the hero scrolls away
+    if(f.id==='orion'){
+      // page-load moment, after the headline lands; fades as the hero scrolls away
       const lt=staticMode? 99 : (performance.now()-this._t0)/1000;
-      return { a:this.easeOut((lt-0.4)/1.5), l:this.cl((lt-1.1)/2.4), alpha:this.cl(1-this.scrollY/(this.h*0.85)) };
+      return { a:this.easeOut((lt-0.9)/1.6), l:this.cl((lt-1.7)/2.6), alpha:this.cl(1-this.scrollY/(this.h*0.85)) };
     }
     const r=R[f.anchor]; if(!r) return null;
     const vh=this.h;
@@ -958,7 +1001,7 @@ class Component extends DCLogic {
   }
 
   drawFig(ctx,f,L,P,t,gc,mx,my){
-    const pts=f.id==='align'? this.alignPts(P.a) : f.pts;
+    const pts=f.pts;
     const n=pts.length;
     const kk=(1-P.a)*(1-P.a);
     const ox=mx*12, oy=my*9;
@@ -968,6 +1011,7 @@ class Component extends DCLogic {
       X[i]=L.x+pts[i][0]*L.bw+f.scatter[i][0]*kk+ox;
       Y[i]=L.y+pts[i][1]*L.bh+f.scatter[i][1]*kk+oy;
     }
+    const am=f.am||1;
     // lines draw sequentially, like a pen stroke through the sky
     const E=f.edges.length;
     if(E&&P.l>0){
@@ -980,24 +1024,15 @@ class Component extends DCLogic {
         const x2=x1+(X[ed[1]]-x1)*local, y2=y1+(Y[ed[1]]-y1)*local;
         const dash=f.dash&&f.dash[e];
         if(dash) ctx.setLineDash([3,6]);
-        ctx.strokeStyle='rgba('+gc+','+(0.30*P.alpha*(dash?0.7:1)).toFixed(3)+')';
+        ctx.strokeStyle='rgba('+gc+','+(0.30*am*P.alpha*(dash?0.7:1)).toFixed(3)+')';
         ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
         if(dash) ctx.setLineDash([]);
       }
     }
     for(let i=0;i<n;i++){
       const br=f.bright&&f.bright[i], dm=f.dim&&f.dim[i];
-      let a=P.alpha*(0.3+0.7*P.a)*(0.72+0.28*Math.sin(t*1.3+i*1.9));
-      if(f.id==='dipper'&&br) a*=this.cl((P.l-0.86)/0.14); // Polaris waits for the pointer line
+      let a=am*P.alpha*(0.3+0.7*P.a)*(0.72+0.28*Math.sin(t*1.3+i*1.9));
       if(a<=0.01) continue;
-      if(f.rings){
-        // open rings echo the .log-node commit markers
-        ctx.strokeStyle='rgba('+gc+','+(0.8*a).toFixed(3)+')'; ctx.lineWidth=1.3;
-        ctx.beginPath(); ctx.arc(X[i],Y[i],3.6,0,6.2832); ctx.stroke();
-        ctx.fillStyle='rgba('+gc+','+(0.9*a).toFixed(3)+')';
-        ctx.beginPath(); ctx.arc(X[i],Y[i],1.2,0,6.2832); ctx.fill();
-        continue;
-      }
       const r=br?2.7:dm?1.3:1.9;
       if(f.id==='polaris'){ ctx.globalAlpha=this.cl(a*0.45); ctx.drawImage(this._spG,X[i]-36,Y[i]-36,72,72); }
       const sz=r*10;
@@ -1158,10 +1193,12 @@ class Component extends DCLogic {
     const pRects=(par&&this._parallax)? this._parallax.map(p=>p.el.getBoundingClientRect()) : null;
     const logRect=this._pathLog? this._pathLog.getBoundingClientRect() : null;
     const docH=Math.max(document.body.scrollHeight-innerHeight,1);
+    this._docH=docH;
 
     this.tickReveals(now);
     this.tickScrollPalette(docH);
     this.drawScene(t,dt,R,false);
+    this.updateNebulae(t,false);
 
     if(pRects){
       for(let i=0;i<pRects.length;i++){
