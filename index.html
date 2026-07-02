@@ -965,8 +965,8 @@ class Component extends DCLogic {
       case 'orion':{
         const r=R.hero; if(!r||r.bottom<0) return null;
         const mob=w<760;
-        const bw=mob? w*0.36 : Math.min(250,w*0.17);
-        return {x: mob? w*0.56 : w*0.055, y:lag(r.top+h*(mob?0.10:0.17),r), bw:bw, bh:bw*1.2};
+        const bw=mob? w*0.50 : Math.min(480,w*0.28);
+        return {x: mob? w*0.38 : w*0.012, y:lag(r.top+h*(mob?0.04:0.08),r), bw:bw, bh:bw*1.2};
       }
       case 'potato':{
         const r=R.research; if(!r||w<1000) return null;
