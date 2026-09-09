@@ -60,7 +60,7 @@ The background is not a random particle web (that's the #1 AI-portfolio tell). I
 
 - **Three depth layers**: far field (hundreds of tiny cool-white stars, pre-rendered to an offscreen texture — nearly free per frame), mid field (~150 simulated stars with rare, short link lines via spatial-grid lookup — never O(n²)), near field (~16 large warm-gold stars with the strongest mouse/scroll parallax). Depth doubles as a color story: near = warm gold, far = cool white, matching the palette's two poles.
 - **Authored constellations** — each section's sky forms a figure that is *true* for it, assembling from scatter and drawing its lines like a pen stroke as the section scrolls in. Purely decorative background — no per-star animation on any figure (a hand that waves or a shape that morphs pulls the eye where the headline should own it):
-  - Hero: **Orion**, tucked low in the corner. Deliberately quiet (55% opacity, small, draws *after* the headline lands) — it must never compete with the headline for the eye.
+  - Hero: no sky figure — just the starfield/nebula background, kept quiet so nothing competes with the headline.
   - Research: a **potato outline** — the shape behind the papers (MASH & SPUD are manifold-alignment algorithms named after potato dishes). A quiet callback, not a literal cartoon.
   - Path: no sky figure — the git-log timeline itself (with its `.log-node` markers) carries the section; the sky stays out of the way.
   - Beyond: a **ridgeline under one bright star**.

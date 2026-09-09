@@ -503,7 +503,6 @@ class Component extends DCLogic {
 
   componentDidMount(){
     this.reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches;
-    this._t0 = performance.now();
     this.mouse = {x:0.5,y:0.5};
     this.scrollY = window.scrollY;
     this.applyPalette();
@@ -774,19 +773,6 @@ class Component extends DCLogic {
     const sc = n => Array.from({length:n}, ()=>[(Math.random()-.5)*150, (Math.random()-.5)*110]);
     // each section's sky holds a figure that is true for it
     this._figs = [
-      // hero — Orion, low and quiet in the corner. Doesn't animate or reach for
-      // attention; am dims it and it waits for the headline to land first, so
-      // the headline — not the sky — is what the eye finds. par<1 = scrolls
-      // slower than the text, keeping it a background thing rather than a prop.
-      // Orion, traced from the IAU chart: head apex between the shoulders
-      // (Betelgeuse/Bellatrix), tight 3-star belt, closed feet (Saiph/Rigel),
-      // club arm rising from Betelgeuse and forking into two prongs,
-      // bow arm running straight from Bellatrix into a curved 4-star bow
-      {id:'orion', anchor:'hero',
-       pts:[[.30,.46],[.55,.50],[.46,.40],[.45,.71],[.475,.715],[.50,.72],[.34,.94],[.635,.90],
-            [.16,.25],[.21,.12],[.31,.07],[.82,.38],[.86,.47],[.83,.56],[.78,.63]],
-       edges:[[0,2],[2,1],[0,3],[3,4],[4,5],[1,5],[3,6],[6,7],[5,7],[0,8],[8,9],[8,10],[1,12],[11,12],[12,13],[13,14]],
-       bright:{0:1,7:1}, dim:{2:1,4:1}, am:0.55, par:0.55, ref:0, scatter:sc(15)},
       // research — a potato outline: the shape behind the papers (MASH & SPUD
       // are manifold-alignment algorithms named after potato dishes)
       {id:'potato', anchor:'research', par:0.8, ref:0.4,
@@ -962,12 +948,6 @@ class Component extends DCLogic {
     // viewport fraction of rect.top where the figure sits exactly at its design spot
     const lag=(base,r)=>base+(1-(f.par||1))*(h*(f.ref||0)-r.top);
     switch(f.id){
-      case 'orion':{
-        const r=R.hero; if(!r||r.bottom<0) return null;
-        const mob=w<760;
-        const bw=mob? w*0.50 : Math.min(480,w*0.28);
-        return {x: mob? w*0.38 : w*0.012, y:lag(r.top+h*(mob?0.04:0.08),r), bw:bw, bh:bw*1.2};
-      }
       case 'potato':{
         const r=R.research; if(!r||w<1000) return null;
         const bw=Math.min(200,w*0.17);
@@ -987,11 +967,6 @@ class Component extends DCLogic {
   }
 
   figProgress(f,R,staticMode){
-    if(f.id==='orion'){
-      // page-load moment, after the headline lands; fades as the hero scrolls away
-      const lt=staticMode? 99 : (performance.now()-this._t0)/1000;
-      return { a:this.easeOut((lt-0.9)/1.6), l:this.cl((lt-1.7)/2.6), alpha:this.cl(1-this.scrollY/(this.h*0.85)) };
-    }
     const r=R[f.anchor]; if(!r) return null;
     const vh=this.h;
     const enter=this.cl((vh-r.top)/(vh*0.7));
