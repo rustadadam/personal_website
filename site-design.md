@@ -27,14 +27,23 @@ The test: would you say this to a sharp person you just met at a conference? If 
 
 ### Palette
 
-Two poles, scroll-interpolated:
+Two poles, scroll-interpolated — **cool at the top, warm at the bottom**:
 
 | Name | Use |
 |---|---|
-| **Warm Cosmos** | Default. Dark amber-warm black `#0d0b09`, gold `#e6b25c`, rose `#e0876b`. |
-| **Cool Nebula** | Reached near the bottom. Shifts to blue-tinted glow. |
+| **Cool Nebula** | The hero. Blue-black `#080a0f`, cold and vast. |
+| **Warm Cosmos** | Reached at Connect. Amber-warm black `#0d0b09`, gold `#e6b25c`, rose `#e0876b`. |
 
-The scroll lerp is intentional — warmth greets you; depth closes the page.
+The direction is load-bearing and was deliberately flipped from warm→cool. Connect is
+the one screen whose job is to make a stranger want to send a warm email; ending the
+page on the coldest palette on the site worked against it. Depth greets you; warmth
+closes the page.
+
+**The accent travels the full distance.** `--gold`/`--rose`/`--glow` run cold at the
+hero and reach full gold at the fire, so the inversion is complete rather than a warm
+accent sitting on a cold sky. A straight lerp between blue and gold washes through grey
+at the midpoint, so each accent follows a quadratic Bézier through a vivid rose-magenta
+control point instead — that control point is load-bearing, don't remove it.
 
 ### Typography
 
@@ -54,29 +63,96 @@ The whole page reads as if you're looking at Adam's own source/notebook, not a m
 - **Featured work items don't use fake sequence numbers** (no `01/02/03/04`) — only real role tags (`> co-founder · product`). Numbering implies a sequence; these projects aren't one.
 - **Restraint**: this motif lives in the hero, section kickers, Path, and the 3 secondary work cards' file-path labels. It deliberately does NOT invade "Beyond the work" (kept purely warm serif-italic + prose) — that section is the "friend" register and doesn't need the engineer wink layered on top.
 
-### Motion — "the authored sky"
+### Motion — "the descent"
 
-The background is not a random particle web (that's the #1 AI-portfolio tell). It's a three-layer starfield with hand-authored constellations:
+The background is one tall photographic plate you travel *down* through as you scroll:
+a cold starfield at the hero, near-flat dark through the reading sections, firelight on
+the ground at Connect. It replaced a three-layer canvas starfield with authored
+constellations — well engineered, but it read as the generic particle-web look this
+document was already trying to avoid. Fidelity on the sites this is measured against
+comes from large soft photographic forms and one dominant light source, not from
+particle count.
 
-- **Three depth layers**: far field (hundreds of tiny cool-white stars, pre-rendered to an offscreen texture — nearly free per frame), mid field (~150 simulated stars with rare, short link lines via spatial-grid lookup — never O(n²)), near field (~16 large warm-gold stars with the strongest mouse/scroll parallax). Depth doubles as a color story: near = warm gold, far = cool white, matching the palette's two poles.
-- **Authored constellations** — each section's sky forms a figure that is *true* for it, assembling from scatter and drawing its lines like a pen stroke as the section scrolls in. Purely decorative background — no per-star animation on any figure (a hand that waves or a shape that morphs pulls the eye where the headline should own it):
-  - Hero: no sky figure — just the starfield/nebula background, kept quiet so nothing competes with the headline.
-  - Research: a **potato outline** — the shape behind the papers (MASH & SPUD are manifold-alignment algorithms named after potato dishes). A quiet callback, not a literal cartoon.
-  - Path: no sky figure — the git-log timeline itself (with its `.log-node` markers) carries the section; the sky stays out of the way.
-  - Beyond: a **ridgeline under one bright star**.
-  - Connect: **Polaris alone** — the north star closes the page.
-  Every figure has a parallax factor (`par` < 1) so it scrolls *slower than the text* — true background depth. Figures hide themselves when the viewport has no safe margin for them.
-- **Nebulae**: four soft color washes (gold/rose → violet → blue, following the palette journey) anchored at document depths, drifting past at ~⅓ scroll speed. Implemented as GPU-composited divs behind the canvas — painted once as CSS gradients, moved with `translate3d` only, hidden when offscreen, transform writes skipped for sub-pixel moves. Never draw these on the canvas per frame.
-- **Rare meteor**: one at a time, roughly every 16s, subtle.
-- No scroll-velocity or transition effects on the starfield — section-to-section navigation is plain smooth-scroll. Tried a hyperspace-style streak-on-fast-scroll effect and cut it; too much for a page whose personality is warmth and restraint, not spectacle.
-- **Reveal on scroll**: body blocks fade + rise 20px; display headings (`data-reveal-words`) rise word-by-word with a 60ms stagger — the one reveal that reads "designed".
-- **Path git-line draws with scroll**: the timeline's gradient line scaleY-scrubs with section progress.
-- **Photo carousel**: 4 photos, auto-advance every 5.5s, dots indicator, fade + zoom transition.
-- **Parallax**: subtle `data-parallax` on decorative elements.
-- **Scroll palette lerp**: CSS var interpolation tied to scroll position (accents route through a saturated rose midpoint).
-- **Film grain**: static SVG-noise overlay (~5% opacity) so the sky never reads as a flat gradient. Zero per-frame cost.
-- **Prefers-reduced-motion**: no animation, but not a blank page — a fully-formed static sky renders and re-aligns on scroll.
-- **Performance floor**: pre-rendered textures + star sprites + spatial grid, no per-frame allocations, layout reads batched before writes, DPR capped at 2, rAF paused when the tab is hidden. The sky must hold 60fps.
+**The rule everything else hangs on: imagery lives at the two ENDS of the plate.** The
+middle ~55% stays near-flat dark. This was established empirically — four rounds of
+composites showed that a photograph left visible behind the reading sections either
+washes out body copy or has to be graded down until it is functionally black. Sites
+that appear to run photography the full page length are in fact running it in the hero
+only. Do not brighten the middle of the plate.
+
+- **Three parallax speeds.** The plate pans at 0.10, a far ridge at ~0.22, a near
+  treeline at ~0.38. One image panning is a pan; three speeds read as travel through
+  space. The silhouettes are ground-level objects, so they stay below the fold until
+  ~70% / ~85% of the page and rise into frame as you approach the fire — the hero is
+  pure sky.
+- **Every layer needs its own source photo.** The first build cut the mid band, the
+  floor band *and* the ridge silhouette all from the same fog photograph, so the same
+  ridges appeared at three depths and crossfaded into themselves — the stars→fog
+  transition looked great precisely because it was the only one between genuinely
+  different content. Ridge, treeline and plate now come from three different photos,
+  and the floor carries **no landform at all** (a smooth warm wash — ground haze beside
+  a fire). If a transition ever reads muddy, check for a repeated source first.
+- **Silhouettes are ground, not bands.** Two separate seams came out of treating them
+  as strips. Their *top* edge is ~50% opaque where the crop cuts through solid forest,
+  so the build ramps alpha out over the top (ridge 75%, treeline 42%) — which doubles
+  as aerial haze. Their *bottom* edge is worse: once a band rises above the viewport
+  floor its hard bottom draws a rule across the page. So each element runs 2.4 viewports
+  tall with the image anchored at the top and a second background layer, offset to start
+  exactly where the image ends, carrying that band's own bottom-row colour down off
+  screen. Do **not** use `background-color` for this — it paints behind the image too,
+  tinting the ramped-transparent sky and re-introducing a seam at the element's top.
+- **Embers** rise from the fire toward the sky you already scrolled past. They live in
+  *document* space, not viewport space, so they hold their place in the scene. The
+  inversion is what makes this physically true: the fire is below you. ~190 of them,
+  born tight over the flame and fanned outward by a per-ember `drift` scaled by how far
+  they have climbed, so it reads as a plume rather than a curtain. Reuses the old
+  starfield's `makeSprite()` — it was already the right soft warm spark.
+- **The fire** is a 9s loop at the foot of the document, `mix-blend-mode: screen` so it
+  contributes light rather than a rectangle of footage, masked to an oval at 0.88
+  opacity. It sits **below the footer rule**: pushed any higher its bright core lands on
+  the social-links row and takes that text under 4.5:1. An earlier pass hid the flames
+  almost entirely below the fold, which made the fire look frozen — it has to be visibly
+  burning, just not behind copy.
+- **Set `loop` and `muted` as JS properties, never as HTML attributes.** The dc-runtime
+  renders the markup through React, which drops bare HTML boolean attributes — `<video
+  muted loop playsinline>` arrives in the DOM with `loop` and `muted` both **false**
+  (only `playsinline` survives). Two bugs came from this: the clip played once and froze
+  on its last frame, and because the element was not actually muted, browser autoplay
+  policy would refuse to start it at all for most visitors. `setupFire()` sets
+  `v.loop/muted/defaultMuted/playsInline` directly and keeps an `ended` handler as a
+  fallback. If you ever add another element that relies on a bare boolean attribute,
+  assume it will be dropped and set the property in JS.
+- **The glow is a sibling of `#fire`, never a child.** `#fire` clips its overflow to
+  contain the video; a glow inside it gets clipped into a rectangle with hard sides.
+  Outside, it also spills up to light the ground between the viewer and the treeline,
+  which would otherwise be a dead black slab. The CSS glow renders with or without the
+  clip, so the page is finished if the video never loads.
+- **The floor glow peaks AT the plate's bottom edge.** A radial sized to its own strip
+  centres its hotspot *inside* that strip, so the light rose and then fell back to black
+  before the plate ended — a hard band under the fire. The build generates the radial at
+  double height and keeps the top half, so the brightest row lands on the last row of
+  the plate and the warmth only ever ramps upward into the blue-black.
+- **The brightest star in the source is removed.** One star sat far above the rest and
+  read as a focal point competing with the headline. `tools/build-bg-assets.sh` finds the
+  largest bright blob automatically and clone-stamps neighbouring sky over it. A median
+  or blur is the wrong tool here: it takes out the core but not the halo, because over
+  any window wide enough the halo *is* the local background, and it leaves a smooth grey
+  smudge. Clone-stamping keeps star density and grain intact.
+- **Warmth comes from hue, not luminance.** Every time the warm floor got brighter,
+  body copy at Connect dropped below 4.5:1. A dark amber still reads warm. Verified by
+  hiding all copy, screenshotting the bare background and measuring each text run
+  against what sits behind it: 33 AA failures on the old site, 32 now, zero elements
+  that passed before and fail now. The remaining failures are the deliberately faint
+  monospace kickers and tags, and predate this work.
+- **Reveal on scroll**, **Path git-line scrub**, **photo carousel**, `data-parallax`,
+  and **film grain** are unchanged from the previous design.
+- **Prefers-reduced-motion**: no animation and no video, but not a blank scene — the
+  plate and silhouettes still sit at the right depth and re-align on scroll, and embers
+  render as a still scatter.
+- **Performance floor**: transform-only layer writes with a sub-pixel skip guard,
+  offscreen embers cost nothing, no per-frame allocations, layout reads batched before
+  writes, DPR capped at 2, rAF paused when hidden. Measured 60fps flat while scrolling
+  (p95 frame time 16.7ms) with zero heap growth over 400 frames.
 
 ---
 
@@ -119,7 +195,28 @@ Close on warmth + capability together. The final paragraph thanks the reader for
 
 | File | Purpose |
 |---|---|
-| `index.html` | Deployed entry point — always keep in sync with dc.html |
-| `Adam Rustad.dc.html` | Canonical source (Claude Design authoring format) |
+| `index.html` | The deployed site. Hand-authored; this is the only source. |
 | `support.js` | dc-runtime bundle — do not modify |
-| `public/assets/` | All images: profile.jpg, photo-grad.jpg, photo-outdoors.jpg, photo-icecream.jpg, project assets |
+| `tools/build-bg-assets.sh` | Regenerates the sky plate + silhouettes from their Unsplash sources |
+| `tools/build-fire-video.sh` | Encodes the campfire loop (watermark removal, shadow crush, crossfade loop) |
+| `public/assets/` | All images and video |
+
+> `src/` holds a Vite + React app that is **not** deployed — `index.html` has no
+> `#root` and no module entry, so nothing in `src/` is bundled. Don't edit it expecting
+> the site to change.
+
+## Background asset credits
+
+Derived assets are built by `tools/build-bg-assets.sh` from Unsplash sources
+(Unsplash License — commercial use, no attribution required; credited anyway). Only
+`images.unsplash.com/photo-*` IDs are used; `plus.unsplash.com/premium_photo-*` are
+paid and must never be used.
+
+| Asset | Source |
+|---|---|
+| sky plate, hero band | `photo-1788237860001-e2c9466c604a` (starfield) |
+| sky plate, mid + floor; `ridge.webp` | `photo-1545717603-7eee1b49c4f3` (B&W fog ridges) |
+| `treeline.webp` | `photo-1662556224729-9424e2bfa76c` (pine treeline at dusk) |
+| `fire-loop.webm` / `.mp4` | AI-generated clip supplied by Adam; source kept out of `public/` |
+
+The fog source is greyscale, which is why it duotones cleanly to either palette pole.

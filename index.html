@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./support.js"></script>
 <link rel="preload" as="image" href="assets/profile.webp">
+<link rel="preload" as="image" href="assets/sky-plate.webp" media="(min-width:701px)">
+<link rel="preload" as="image" href="assets/sky-plate-sm.webp" media="(max-width:700px)">
 </head>
 <body>
 <x-dc>
@@ -43,6 +45,36 @@
 
   /* ── Film grain: static texture so the sky never reads as a flat gradient ── */
   .grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.05;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");background-size:180px 180px;}
+
+  /* ── The descent: one tall plate + two silhouette bands, three parallax speeds ──
+     The plate carries imagery only at its two ends; the middle stays near-flat
+     dark so body copy keeps contrast. The linear-gradient under the image is the
+     placeholder — if the plate hasn't decoded the page still reads cold-at-top,
+     warm-at-the-floor instead of flashing black. */
+  #bg-wrap{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+  #sky-plate,#ridge,#treeline{position:absolute;left:0;top:0;width:100%;will-change:transform;background-repeat:no-repeat;}
+  #sky-plate{
+    background-image:url("assets/sky-plate-sm.webp"),linear-gradient(180deg,#070910 0%,#0a0b10 18%,#0c0d11 40%,#141319 62%,#2b2013 84%,#4a341a 100%);
+    background-size:cover,100% 100%;background-position:50% 0,50% 0;
+  }
+  @media (min-width:701px){
+    #sky-plate{background-image:url("assets/sky-plate.webp"),linear-gradient(180deg,#070910 0%,#0a0b10 18%,#0c0d11 40%,#141319 62%,#2b2013 84%,#4a341a 100%);}
+  }
+  /* both background layers are sized in buildLayers(); these are the fallbacks */
+  #ridge{background-image:url("assets/ridge.webp");background-position:50% 0;}
+  #treeline{background-image:url("assets/treeline.webp");background-position:50% 0;}
+
+  /* ── The fire: CSS glow always, clip crossfades in over it when it arrives ── */
+  #fire{position:absolute;left:0;right:0;bottom:0;height:min(72vh,640px);pointer-events:none;overflow:hidden;}
+  #fire-glow{position:absolute;left:0;right:0;bottom:0;height:min(112vh,1000px);pointer-events:none;
+    background:radial-gradient(closest-side at 50% 92%, rgba(var(--glow),0.18), rgba(var(--glow),0.065) 42%, rgba(226,138,54,0) 74%);
+    animation:ar-fireBreathe 7.5s ease-in-out infinite;}
+  #fire-video{position:absolute;left:50%;bottom:-12%;width:min(1300px,155%);transform:translateX(-50%);
+    opacity:0;transition:opacity 1.4s ease;mix-blend-mode:screen;
+    -webkit-mask-image:radial-gradient(56% 58% at 50% 82%,#000 30%,transparent 76%);
+            mask-image:radial-gradient(56% 58% at 50% 82%,#000 30%,transparent 76%);}
+  @keyframes ar-fireBreathe{0%,100%{opacity:.80;}50%{opacity:1;}}
+  @media (prefers-reduced-motion:reduce){#fire-glow{animation:none;opacity:.92;}#fire-video{display:none;}}
 
   /* ── Mobile layout ── */
   @media (max-width:700px){
@@ -100,6 +132,10 @@
     /* Work header annotation: desktop-only flourish */
     .work-annot { display:none !important; }
 
+    /* Background: skip the clip entirely on mobile (data + iOS autoplay refusal) */
+    #fire-video{ display:none !important; }
+    #fire{ height:min(56vh,440px) !important; }
+
     /* Stats: force 3 equal columns so nothing drops to a second row */
     #about-stats { display:grid !important; grid-template-columns:repeat(3,1fr) !important; gap:16px !important; }
   }
@@ -107,10 +143,25 @@
 </helmet>
 <div ref="{{ rootRef }}" style="position:relative;background:var(--bg);color:var(--text);font-family:'Hanken Grotesk',system-ui,sans-serif;overflow-x:hidden;min-height:100vh;-webkit-font-smoothing:antialiased;">
 
-  <div id="neb-layer" style="position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;"></div>
+  <!-- ══ THE DESCENT: sky plate + ridge + treeline, three parallax speeds ══ -->
+  <div id="bg-wrap">
+    <div id="sky-plate"></div>
+    <div id="ridge"></div>
+    <div id="treeline"></div>
+  </div>
+  <!-- The fire sits at the foot of the document, so it scrolls with the page
+       rather than following the viewport. Glow is CSS; the clip is optional.
+       Deliberately before the canvas so embers draw in front of the glow, and
+       deliberately z-index:auto so the clip's `screen` blend reaches the page
+       behind it instead of being isolated into a black rectangle. -->
+  <div id="fire-glow"></div>
+  <div id="fire">
+    <video id="fire-video" muted loop playsinline preload="none" poster="assets/fire-poster.webp" aria-hidden="true" tabindex="-1"></video>
+  </div>
+
   <canvas ref="{{ canvasRef }}" style="position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;display:block;"></canvas>
 
-  <div style="position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(120% 90% at 50% -10%, rgba(var(--glow),0.10), rgba(13,11,9,0) 45%),radial-gradient(90% 70% at 80% 110%, rgba(var(--glow2),0.08), rgba(13,11,9,0) 50%);"></div>
+  <div style="position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(120% 90% at 50% -10%, rgba(var(--glow),0.09), rgba(10,11,14,0) 45%),radial-gradient(90% 70% at 50% 118%, rgba(var(--glow2),0.06), rgba(10,11,14,0) 52%);"></div>
   <div class="grain"></div>
 
   <nav style="position:fixed;top:0;left:0;right:0;z-index:20;display:flex;align-items:center;justify-content:space-between;padding:22px clamp(20px,5vw,64px);backdrop-filter:blur(2px);">
@@ -477,7 +528,7 @@
   </main>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:&quot;100vh&quot;},&quot;palette&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Warm Cosmos&quot;,&quot;Cool Nebula&quot;,&quot;Golden Dawn&quot;],&quot;default&quot;:&quot;Warm Cosmos&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;motionIntensity&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Full&quot;,&quot;Gentle&quot;,&quot;Still&quot;],&quot;default&quot;:&quot;Full&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;starfieldDensity&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:550,&quot;min&quot;:40,&quot;max&quot;:800,&quot;step&quot;:10,&quot;tsType&quot;:&quot;number&quot;},&quot;enableParallax&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:&quot;100vh&quot;},&quot;palette&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Warm Cosmos&quot;,&quot;Cool Nebula&quot;,&quot;Golden Dawn&quot;],&quot;default&quot;:&quot;Warm Cosmos&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;emberDensity&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:190,&quot;min&quot;:0,&quot;max&quot;:400,&quot;step&quot;:10,&quot;tsType&quot;:&quot;number&quot;},&quot;enableParallax&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
 class Component extends DCLogic {
   renderVals(){
     if(!this._dots) this._dots=[null,null,null,null];
@@ -511,15 +562,16 @@ class Component extends DCLogic {
     this.setupTypewriter();
     this.collectAnchors();
     this.setupCanvas();
+    this.setupFire();
     if(this.reduce){
-      // no animation, but not a blank sky: one static frame, re-aligned on scroll
+      // no animation, but not a blank scene: the plate and silhouettes still sit
+      // at the right depth and re-align on scroll; embers render as a still scatter
       if(this._pathLine) this._pathLine.style.transform='scaleY(1)';
       this.renderStatic();
-      this.updateNebulae(2.4,true);
       this._onScrollStatic = ()=>{
         this.scrollY = window.scrollY;
         if(this._rafS) return;
-        this._rafS = requestAnimationFrame(()=>{ this._rafS=0; this.renderStatic(); this.updateNebulae(2.4,true); });
+        this._rafS = requestAnimationFrame(()=>{ this._rafS=0; this.renderStatic(); });
       };
       window.addEventListener('scroll', this._onScrollStatic, {passive:true});
       return;
@@ -530,7 +582,7 @@ class Component extends DCLogic {
     document.addEventListener('visibilitychange', this._onVis);
     this.loop();
   }
-  componentDidUpdate(){ this.applyPalette(); this.buildStars && this.buildStars(); if(this.reduce) this.renderStatic(); }
+  componentDidUpdate(){ this.applyPalette(); this._docBottom=document.body.scrollHeight; if(this.reduce) this.renderStatic(); }
   setupPhotoCarousel(){
     this._photoIdx = 0;
     this._photoInterval = setInterval(()=>this.advancePhoto(), 5500);
@@ -637,32 +689,28 @@ class Component extends DCLogic {
     this.glowColor = c.glow.join(',');
   }
 
-  // called every frame — lerps Warm Cosmos → Cool Nebula as user scrolls
+  // called every frame — lerps Cool Nebula → Warm Cosmos as the user descends.
+  // Reversed from the original warm→cool: Connect is the screen that has to make
+  // a stranger want to send a warm email, so the page must end warmest, not coldest.
   tickScrollPalette(docH){
     if(!this.rootEl) return;
     const raw  = Math.min(Math.max(this.scrollY / docH, 0), 1);
     // ease in-out
     const t = raw < 0.5 ? 2*raw*raw : 1-Math.pow(-2*raw+2,2)/2;
     const sets = this._palettes();
-    const A = sets['Warm Cosmos'], B = sets['Cool Nebula'];
+    const A = sets['Cool Nebula'], B = sets['Warm Cosmos'];
 
     // straight linear lerp for neutrals (bg, text, muted, faint)
     const lp  = (a,b,k)=>Math.round(a[k]+(b[k]-a[k])*t);
     const lp3 = (a,b)=>[lp(a,b,0),lp(a,b,1),lp(a,b,2)];
 
-    // quadratic Bézier lerp for accent colors — routes through a vivid
-    // saturated midpoint so they never pass through desaturated grey
+    // Accents travel the full distance, cold to gold — a straight lerp between them
+    // would wash through grey at the midpoint, so route each one along a quadratic
+    // Bézier through a vivid rose-magenta control point instead.
     // P(t) = (1-t)²·P0 + 2t(1-t)·Mid + t²·P1
-    const bez3 = (P0,Mid,P1)=>[
-      Math.round((1-t)*(1-t)*P0[0] + 2*t*(1-t)*Mid[0] + t*t*P1[0]),
-      Math.round((1-t)*(1-t)*P0[1] + 2*t*(1-t)*Mid[1] + t*t*P1[1]),
-      Math.round((1-t)*(1-t)*P0[2] + 2*t*(1-t)*Mid[2] + t*t*P1[2]),
-    ];
-
-    // midpoints: vivid rose-violet keeps saturation high between amber & blue
-    const goldMid = [224, 110, 180];  // rose-magenta
-    const roseMid = [210,  90, 190];  // violet-pink
-    const glowMid = [220, 110, 175];  // same hue family as goldMid
+    const bez3=(P0,Mid,P1)=>[0,1,2].map(i=>Math.round(
+      (1-t)*(1-t)*P0[i] + 2*t*(1-t)*Mid[i] + t*t*P1[i]));
+    const goldMid=[224,110,180], roseMid=[210,90,190], glowMid=[220,110,175];
 
     const lerped = {
       bg:   lp3(A.bg,   B.bg),
@@ -762,40 +810,138 @@ class Component extends DCLogic {
     if(!anyLeft) this._reveals = null;
   }
 
-  // ══ SKY — three depth layers + authored constellations ═════════════
+  // ══ BACKGROUND — "the descent" ══════════════════════════════════════
+  // One tall photographic plate you travel down through: a cold starfield at the
+  // hero, near-flat dark through the reading sections, firelight on the ground at
+  // Connect. The plate, a far ridge and a near treeline pan at three different
+  // speeds — one image panning is just a pan; three speeds read as travel through
+  // space. Embers rise off the fire toward the sky you already scrolled past.
+  //
+  // Load-bearing rule: imagery lives at the two ENDS of the plate. The middle
+  // ~55% stays near-flat dark or body copy loses contrast. See site-design.md.
   collectAnchors(){
     const q = s => this.rootEl.querySelector(s);
-    this._anchors = { hero:q('main > section'), research:q('#research'), path:q('#path'), beyond:q('#beyond'), connect:q('#connect') };
     this._pathLog   = q('#path-log');
     this._pathLine  = q('#path-line');
     this._scrollCue = q('#scroll-cue');
-    this._nebLayer  = q('#neb-layer');
-    const sc = n => Array.from({length:n}, ()=>[(Math.random()-.5)*150, (Math.random()-.5)*110]);
-    // each section's sky holds a figure that is true for it
-    this._figs = [
-      // research — a potato outline: the shape behind the papers (MASH & SPUD
-      // are manifold-alignment algorithms named after potato dishes)
-      {id:'potato', anchor:'research', par:0.8, ref:0.4,
-       pts:[[.50,.04],[.74,.10],[.90,.30],[.86,.55],[.95,.72],[.72,.92],[.46,.98],[.22,.90],[.06,.68],[.10,.42],[.04,.20],[.26,.06]],
-       edges:[[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,8],[8,9],[9,10],[10,11],[11,0]],
-       scatter:sc(12)},
-      // beyond — a ridgeline under one bright star
-      {id:'ridge', anchor:'beyond', par:0.8, ref:0.35,
-       pts:[[.02,.78],[.20,.40],[.34,.60],[.52,.20],[.66,.52],[.84,.34],[.98,.72],[.52,.02]],
-       edges:[[0,1],[1,2],[2,3],[3,4],[4,5],[5,6]], bright:{7:1}, scatter:sc(8)},
-      // connect — Polaris alone: the page ends where it was pointing all along
-      {id:'polaris', anchor:'connect', par:0.85, ref:0.3, pts:[[.5,.5]], edges:[], bright:{0:1}, scatter:sc(1)},
-    ];
-  }
-
-  readAnchors(){
-    const R={};
-    for(const k in this._anchors){ const el=this._anchors[k]; if(el) R[k]=el.getBoundingClientRect(); }
-    return R;
+    this._skyEl     = q('#sky-plate');
+    this._ridgeEl   = q('#ridge');
+    this._treeEl    = q('#treeline');
+    this._fireEl    = q('#fire');
+    this._video     = q('#fire-video');
   }
 
   cl(v){ return v<0?0:v>1?1:v; }
-  easeOut(v){ v=this.cl(v); return 1-Math.pow(1-v,3); }
+
+  // ── layer geometry ──────────────────────────────────────────────────
+  // Each silhouette rests at the bottom of the viewport when scroll progress
+  // reaches its anchor `d`, and travels at `k`·vh — nearer layers travel more.
+  // Both sit below the fold until ~70% / ~85% of the page, so the hero stays
+  // pure sky and the ground only rises as you approach the fire.
+  buildLayers(){
+    if(!this._skyEl) return;
+    const vw=this.w, vh=this.h;
+    // plate is 1400×3600; keep it tall enough that the pan never runs dry
+    this._plateH = Math.round(Math.max(vw*(3600/1400), vh*1.9));
+    this._skyEl.style.height = this._plateH+'px';
+    // _ridgeH/_treeH are the *drawn* band heights and drive placement; the element
+    // itself runs far past the viewport so its solid bottom is never on screen.
+    // `auto <H>px` keeps the image's aspect, and both bands are wide enough at that
+    // height to span any viewport, so they crop from the centre rather than gapping.
+    this._ridgeH = Math.round(Math.max(vh*0.22, vw*(240/1600)));
+    this._treeH  = Math.round(Math.max(vh*0.30, vw*(300/1600)));
+    // layer 1 = the silhouette image, layer 2 = its solid ground starting exactly
+    // where the image ends (matched to each band's own bottom row)
+    const ground=(el,url,H,fill)=>{
+      if(!el) return;
+      const eh=Math.round(H+vh*2.4);
+      el.style.height=eh+'px';
+      el.style.backgroundImage='url("'+url+'"), linear-gradient('+fill+','+fill+')';
+      el.style.backgroundSize='auto '+H+'px, 100% '+(eh-H)+'px';
+      el.style.backgroundPosition='50% 0, 0 '+H+'px';
+      el.style.backgroundRepeat='no-repeat, no-repeat';
+    };
+    ground(this._ridgeEl,'assets/ridge.webp',   this._ridgeH,'rgba(10,11,18,0.459)');
+    ground(this._treeEl, 'assets/treeline.webp',this._treeH, 'rgb(7,5,4)');
+    this._lastT = {};
+  }
+
+  updateLayers(prog){
+    const vh=this.h, L=this._lastT||(this._lastT={});
+    // sub-pixel moves are skipped so an idle page keeps every layer cached
+    const wr=(el,key,y)=>{
+      if(!el) return;
+      if(L[key]!==undefined && Math.abs(y-L[key])<0.5) return;
+      L[key]=y;
+      el.style.transform='translate3d(0,'+y.toFixed(1)+'px,0)';
+    };
+    wr(this._skyEl,  'sky',  -prog*(this._plateH-vh));
+    wr(this._ridgeEl,'ridge', (vh-this._ridgeH) + (0.82-prog)*vh*1.8);
+    wr(this._treeEl, 'tree',  (vh-this._treeH)  + (0.96-prog)*vh*2.2);
+  }
+
+  // ── embers ──────────────────────────────────────────────────────────
+  // Particles live in document space near the page bottom, so they keep their
+  // place in the scene rather than the viewport: the fire is below you and its
+  // sparks drift up the page. Reuses makeSprite() — the old starfield's sprite
+  // is exactly the right soft warm spark.
+  buildEmbers(){
+    const mob=this.w<768;
+    const n=Math.round((this.props.emberDensity!=null?this.props.emberDensity:190)*(mob?0.42:1));
+    this._emberSpan=this.h*4.2;
+    if(this._embers && this._embers.length===n) return;
+    this._embers=[];
+    const docBottom=this._docBottom||this.h;
+    for(let i=0;i<n;i++){ const e={}; this._resetEmber(e,docBottom); e.life=Math.random()*e.max; this._embers.push(e); }
+  }
+
+  _resetEmber(e,docBottom){
+    // born tight over the fire, then fanned out by `drift` as they climb — a plume,
+    // not a curtain. Lifetime and rise speed carry them well past one screen.
+    e.x     = 0.5+(Math.random()-0.5)*0.10;
+    e.docY  = docBottom-Math.random()*this.h*0.14;
+    e.vy    = 26+Math.random()*94;
+    e.drift = (Math.random()-0.5)*0.50;      // lateral fan, as a fraction of viewport width
+    e.r     = 0.30+Math.random()*0.80;
+    e.a     = 0.30+Math.random()*0.52;
+    e.life  = 0;
+    e.max   = 6.5+Math.random()*9.0;
+    e.wob   = Math.random()*6.2832;
+    e.wobs  = 0.25+Math.random()*0.55;
+    e.wobA  = 7+Math.random()*22;
+    e.depth = 0.4+Math.random()*0.8;
+  }
+
+  drawEmbers(t,dt,staticMode){
+    const ctx=this.ctx, w=this.w, h=this.h;
+    if(!ctx) return;
+    ctx.clearRect(0,0,w,h);
+    if(!this._embers || !this._embers.length) return;
+    const gc=this.glowColor||'230,178,92';
+    if(this._spGC!==gc){ this._spG=this.makeSprite(gc); this._spGC=gc; }
+    const docBottom=this._docBottom||h, top=docBottom-this._emberSpan;
+    const par=this.props.enableParallax!==false;
+    const mx=par?(this.mouse.x-.5)*18:0;
+    for(let i=0;i<this._embers.length;i++){
+      const e=this._embers[i];
+      if(!staticMode){
+        e.docY-=e.vy*dt; e.life+=dt;
+        if(e.life>=e.max || e.docY<top){ this._resetEmber(e,docBottom); continue; }
+      }
+      const y=e.docY-this.scrollY;
+      if(y<-60||y>h+60) continue;                       // offscreen embers cost nothing
+      const k=e.life/e.max;
+      const a=(k<0.09 ? k/0.09 : Math.pow(1-(k-0.09)/0.91,1.5))*e.a;  // flare on leaving the fire, then a long fade
+      if(a<=0.002) continue;
+      // spread grows with how far it has risen, and the wobble opens up with it
+      const sp=k*k;
+      const x=(e.x+e.drift*sp)*w + Math.sin(t*e.wobs+e.wob)*e.wobA*(0.35+sp*2.2) + mx*e.depth;
+      const sz=e.r*(1+k*0.5)*7;
+      ctx.globalAlpha=this.cl(a);
+      ctx.drawImage(this._spG,x-sz/2,y-sz/2,sz,sz);
+    }
+    ctx.globalAlpha=1;
+  }
 
   setupCanvas(){
     this.ctx = this.canvas.getContext('2d');
@@ -804,117 +950,14 @@ class Component extends DCLogic {
       this.w = innerWidth; this.h = innerHeight;
       this.canvas.width = this.w*this.dpr; this.canvas.height = this.h*this.dpr;
       this.ctx.setTransform(this.dpr,0,0,this.dpr,0,0);
-      this._grid = null;
-      this._buildKey = null;
-      this.buildStars();
+      this._docBottom = document.body.scrollHeight;
+      this.buildLayers();
+      this._embers = null;
+      this.buildEmbers();
       if(this.reduce) this.renderStatic();
-    };
-    this.buildStars = ()=>{
-      const dens = this.props.starfieldDensity || 550;
-      const key = this.w+'x'+this.h+':'+dens;
-      if(this._buildKey===key && this.stars) return; // sc-if toggles re-run this — keep the sky steady
-      this._buildKey = key;
-      const area = (this.w*this.h)/(1440*900);
-      const mob = this.w < 768;
-      // far field: pre-rendered once, nearly free per frame
-      this._farA = this.makeFarTex(Math.round(Math.min(650, dens*area)), false);
-      this._farB = this.makeFarTex(Math.round(Math.min(90,  dens*area*0.15)), true);
-      // mid field: the only individually-simulated layer
-      const nMid = Math.round(Math.min(mob?70:160, dens*0.28*area*(mob?0.55:1)));
-      this.stars = [];
-      for(let i=0;i<nMid;i++){
-        const d = Math.random();
-        this.stars.push({
-          x:Math.random(), y:Math.random(),
-          r:0.55+d*1.35, depth:0.25+d*0.95,
-          base:0.2+Math.random()*0.55,
-          tw:Math.random()*6.2832, tws:0.4+Math.random()*1.1,
-          warm:Math.random()<0.3,
-          dvx:(Math.random()-.5)*.008, dvy:(Math.random()-.5)*.003,
-        });
-      }
-      // near field: few, large, warm, strongest parallax — the depth cue
-      this.floaters = [];
-      const nNear = mob?9:16;
-      for(let i=0;i<nNear;i++){
-        this.floaters.push({
-          x:Math.random(), y:Math.random(),
-          r:1.5+Math.random()*1.1, depth:0.7+Math.random()*0.5,
-          base:0.26+Math.random()*0.3,
-          tw:Math.random()*6.2832, tws:0.3+Math.random()*0.5,
-          dvx:(Math.random()-.5)*.004, dvy:(Math.random()-.5)*.002,
-        });
-      }
-      this.buildNebulae();
     };
     window.addEventListener('resize', this._onResize);
     this._onResize();
-  }
-
-  // far layer is palette-agnostic (cool white + faint warm) so it never needs repainting
-  makeFarTex(count,bright){
-    const c = document.createElement('canvas');
-    c.width  = Math.max(1, Math.ceil((this.w+52)*this.dpr));
-    c.height = Math.max(1, Math.ceil(this.h*this.dpr));
-    const x = c.getContext('2d');
-    for(let i=0;i<count;i++){
-      const px=Math.random()*c.width, py=Math.random()*c.height;
-      const r=(bright?0.7+Math.random()*0.9:0.35+Math.random()*0.75)*this.dpr;
-      const a=bright?0.35+Math.random()*0.45:0.10+Math.random()*0.30;
-      x.fillStyle=Math.random()<0.22?'rgba(230,190,130,'+a.toFixed(3)+')':'rgba(235,238,246,'+a.toFixed(3)+')';
-      x.beginPath(); x.arc(px,py,r,0,6.2832); x.fill();
-    }
-    return c;
-  }
-
-  // nebulae live as GPU-composited divs behind the canvas: painted once as CSS
-  // gradients, then moved with transform only — no per-frame repaint.
-  // s = document depth (fraction of scroll range) where each one drifts past.
-  buildNebulae(){
-    if(!this._nebLayer) return;
-    if(!this._nebs){
-      const gold='230,178,92', rose='224,135,107', blue='143,182,232', violet='167,155,236';
-      const mk=(c1,c2)=>'radial-gradient(closest-side at 35% 45%, rgba('+c1+',0.11), rgba('+c1+',0) 72%),radial-gradient(closest-side at 66% 62%, rgba('+c2+',0.08), rgba('+c2+',0) 70%),radial-gradient(closest-side at 58% 28%, rgba('+c1+',0.06), rgba('+c1+',0) 75%)';
-      this._nebs=[
-        {bg:mk(gold,rose),   s:0.03, x:0.80, sc:1.7, par:0.34},
-        {bg:mk(rose,violet), s:0.30, x:0.12, sc:1.9, par:0.38},
-        {bg:mk(blue,violet), s:0.58, x:0.86, sc:1.8, par:0.32},
-        {bg:mk(blue,violet), s:0.92, x:0.38, sc:2.3, par:0.36},
-      ];
-      for(const nb of this._nebs){
-        const el=document.createElement('div');
-        el.style.cssText='position:absolute;left:0;top:0;pointer-events:none;will-change:transform;background:'+nb.bg+';';
-        this._nebLayer.appendChild(el);
-        nb.el=el;
-      }
-    }
-    for(const nb of this._nebs){
-      nb.dw=Math.round(Math.min(nb.sc*this.w*0.5, 1150));
-      nb.dh=Math.round(nb.dw*0.62);
-      nb.el.style.width=nb.dw+'px';
-      nb.el.style.height=nb.dh+'px';
-      nb.lx=undefined;
-    }
-  }
-
-  updateNebulae(t,staticMode){
-    if(!this._nebs) return;
-    const docH=this._docH||1, h=this.h;
-    for(let i=0;i<this._nebs.length;i++){
-      const nb=this._nebs[i];
-      const x=nb.x*this.w-nb.dw/2+(staticMode?0:Math.sin(t*0.05+i*2.1)*26);
-      const y=h*0.5+(nb.s*docH-this.scrollY)*nb.par-nb.dh/2;
-      // offscreen layers are hidden (not composited); sub-pixel moves are skipped
-      // so an idle page keeps every layer cached
-      if(y>h+40||y+nb.dh<-40){
-        if(!nb.hid){ nb.el.style.visibility='hidden'; nb.hid=true; }
-        continue;
-      }
-      if(nb.hid){ nb.el.style.visibility='visible'; nb.hid=false; }
-      if(nb.lx!==undefined && Math.abs(x-nb.lx)<0.6 && Math.abs(y-nb.ly)<0.6) continue;
-      nb.lx=x; nb.ly=y;
-      nb.el.style.transform='translate3d('+x.toFixed(1)+'px,'+y.toFixed(1)+'px,0)';
-    }
   }
 
   makeSprite(col){
@@ -929,10 +972,46 @@ class Component extends DCLogic {
     return c;
   }
 
+  // ── the fire ────────────────────────────────────────────────────────
+  // The glow renders from CSS alone, so the page is finished with or without
+  // footage. The clip is fetched only as Connect comes into range and crossfades
+  // in over the glow; if it never loads, nothing looks missing.
+  setupFire(){
+    const v=this._video;
+    if(!v) return;
+    // The dc-runtime renders this markup through React, which drops bare HTML boolean
+    // attributes: `loop` and `muted` never reach the element (both read false in the
+    // DOM even though the tag carries them; only `playsinline` survives). That made the
+    // clip play once and freeze on its last frame, and an unmuted video is refused
+    // autoplay by browser policy outright — so set them as properties instead.
+    v.loop = true; v.muted = true; v.defaultMuted = true; v.playsInline = true;
+    if(this.reduce || innerWidth<=700) return;
+    this._armVideo = ()=>{
+      if(this._videoArmed) return;
+      this._videoArmed=true;
+      const src = v.canPlayType('video/webm') ? 'assets/fire-loop.webm' : 'assets/fire-loop.mp4';
+      v.addEventListener('canplay', ()=>{
+        const p=v.play();
+        if(p && p.catch) p.catch(()=>{});   // autoplay refused (iOS Low Power) — poster + glow stand in
+        v.style.opacity='0.88';   // light, not footage: the fire suggests itself
+      }, {once:true});
+      // belt and braces: if `loop` is ever dropped again, the fire must not freeze
+      v.addEventListener('ended', ()=>{
+        v.currentTime=0;
+        const p=v.play(); if(p && p.catch) p.catch(()=>{});
+      });
+      v.src=src; v.load();
+    };
+  }
+
   renderStatic(){
-    if(!this.ctx || !this._anchors) return;
-    this._docH=Math.max(document.body.scrollHeight-innerHeight,1);
-    this.drawScene(2.4, 0, this.readAnchors(), true);
+    if(!this.ctx) return;
+    this._docBottom=document.body.scrollHeight;
+    const docH=Math.max(document.body.scrollHeight-innerHeight,1);
+    this._docH=docH;
+    const prog=this.cl(this.scrollY/docH);
+    this.updateLayers(prog);
+    this.drawEmbers(2.4,0,true);
   }
 
   bind(){
@@ -942,238 +1021,28 @@ class Component extends DCLogic {
     window.addEventListener('scroll', this._onScroll, {passive:true});
   }
 
-  // ══ FIGURES — placement, progress, draw ═════════════════════════════
-  figLayout(f,R,w,h){
-    // par<1 makes a figure lag the page scroll — background depth; ref is the
-    // viewport fraction of rect.top where the figure sits exactly at its design spot
-    const lag=(base,r)=>base+(1-(f.par||1))*(h*(f.ref||0)-r.top);
-    switch(f.id){
-      case 'potato':{
-        const r=R.research; if(!r||w<1000) return null;
-        const bw=Math.min(200,w*0.17);
-        return {x:w*0.72, y:lag(r.top+34,r), bw:bw, bh:270};
-      }
-      case 'ridge':{
-        const r=R.beyond; if(!r) return null;
-        const bw=Math.min(620,w*0.7);
-        return {x:(w-bw)/2, y:lag(r.top-150,r), bw:bw, bh:165};
-      }
-      case 'polaris':{
-        const r=R.connect; if(!r) return null;
-        return {x:w*0.60, y:lag(r.top+h*0.05,r), bw:10, bh:10};
-      }
-    }
-    return null;
-  }
-
-  figProgress(f,R,staticMode){
-    const r=R[f.anchor]; if(!r) return null;
-    const vh=this.h;
-    const enter=this.cl((vh-r.top)/(vh*0.7));
-    const exit=this.cl(r.bottom/(vh*0.35));
-    if(staticMode) return { a:enter>0?1:0, l:1, alpha:Math.min(1,exit) };
-    return { a:this.easeOut(enter), l:this.cl((enter-0.3)/0.7), alpha:Math.min(1,exit) };
-  }
-
-  drawFig(ctx,f,L,P,t,gc,mx,my){
-    const pts=f.pts;
-    const n=pts.length;
-    const kk=(1-P.a)*(1-P.a);
-    const ox=mx*12, oy=my*9;
-    if(!this._figX){ this._figX=new Float32Array(16); this._figY=new Float32Array(16); }
-    const X=this._figX, Y=this._figY;
-    for(let i=0;i<n;i++){
-      X[i]=L.x+pts[i][0]*L.bw+f.scatter[i][0]*kk+ox;
-      Y[i]=L.y+pts[i][1]*L.bh+f.scatter[i][1]*kk+oy;
-    }
-    const am=f.am||1;
-    // lines draw sequentially, like a pen stroke through the sky
-    const E=f.edges.length;
-    if(E&&P.l>0){
-      ctx.lineWidth=0.9;
-      for(let e=0;e<E;e++){
-        const local=this.cl(P.l*E-e);
-        if(local<=0) break;
-        const ed=f.edges[e];
-        const x1=X[ed[0]], y1=Y[ed[0]];
-        const x2=x1+(X[ed[1]]-x1)*local, y2=y1+(Y[ed[1]]-y1)*local;
-        const dash=f.dash&&f.dash[e];
-        if(dash) ctx.setLineDash([3,6]);
-        ctx.strokeStyle='rgba('+gc+','+(0.30*am*P.alpha*(dash?0.7:1)).toFixed(3)+')';
-        ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
-        if(dash) ctx.setLineDash([]);
-      }
-    }
-    for(let i=0;i<n;i++){
-      const br=f.bright&&f.bright[i], dm=f.dim&&f.dim[i];
-      let a=am*P.alpha*(0.3+0.7*P.a)*(0.72+0.28*Math.sin(t*1.3+i*1.9));
-      if(a<=0.01) continue;
-      const r=br?2.7:dm?1.3:1.9;
-      if(f.id==='polaris'){ ctx.globalAlpha=this.cl(a*0.45); ctx.drawImage(this._spG,X[i]-36,Y[i]-36,72,72); }
-      const sz=r*10;
-      ctx.globalAlpha=this.cl(br?a:a*0.9);
-      ctx.drawImage(br?this._spW:this._spG,X[i]-sz/2,Y[i]-sz/2,sz,sz);
-      ctx.globalAlpha=1;
-      if(br){
-        const gl=(f.id==='polaris'?11:8)+1.6*Math.sin(t*1.7);
-        ctx.strokeStyle='rgba(255,252,244,'+(0.5*a).toFixed(3)+')';
-        ctx.lineWidth=0.8;
-        ctx.beginPath();
-        ctx.moveTo(X[i]-gl,Y[i]); ctx.lineTo(X[i]+gl,Y[i]);
-        ctx.moveTo(X[i],Y[i]-gl); ctx.lineTo(X[i],Y[i]+gl);
-        ctx.stroke();
-      }
-    }
-  }
-
-  // ══ SCENE ═══════════════════════════════════════════════════════════
-  drawScene(t,dt,R,staticMode){
-    const ctx=this.ctx, w=this.w, h=this.h;
-    if(!ctx || !this.stars) return;
-    const gc=this.glowColor||'230,178,92';
-    if(this._spGC!==gc){ this._spG=this.makeSprite(gc); this._spGC=gc; if(!this._spW) this._spW=this.makeSprite('244,240,232'); }
-    ctx.clearRect(0,0,w,h);
-    const par=this.props.enableParallax!==false;
-    const mx=par?(this.mouse.x-.5):0, my=par?(this.mouse.y-.5):0;
-
-    // far field: two pre-rendered textures, wrapped vertically, cross-fading shimmer
-    if(this._farA){
-      const drift=staticMode?0:t*1.6;
-      const texW=w+52;
-      let oy=((this.scrollY*0.035+drift)%h+h)%h;
-      const ofx=-26+mx*9;
-      ctx.drawImage(this._farA,ofx,-oy,texW,h);
-      ctx.drawImage(this._farA,ofx,h-oy,texW,h);
-      ctx.globalAlpha=staticMode?0.55:0.35+0.35*Math.sin(t*0.37);
-      oy=((this.scrollY*0.05+drift*1.35)%h+h)%h;
-      ctx.drawImage(this._farB,ofx*1.3,-oy,texW,h);
-      ctx.drawImage(this._farB,ofx*1.3,h-oy,texW,h);
-      ctx.globalAlpha=1;
-    }
-
-    // mid field: positions, then sparse links via spatial grid, then stars
-    const n=this.stars.length;
-    if(!this._px||this._px.length!==n){ this._px=new Float32Array(n); this._py=new Float32Array(n); this._pa=new Float32Array(n); }
-    for(let i=0;i<n;i++){
-      const s=this.stars[i];
-      const sx=mx*26*s.depth;
-      const sy=my*20*s.depth - this.scrollY*0.07*s.depth;
-      const dX=((s.x+(staticMode?0:s.dvx*t))%1+1)%1;
-      const dY=((s.y+(staticMode?0:s.dvy*t))%1+1)%1;
-      this._px[i]=((dX*w+sx)%w+w)%w;
-      this._py[i]=((dY*h+sy)%h+h)%h;
-      this._pa[i]=s.base*(0.55+0.45*Math.sin(staticMode?s.tw:t*s.tws+s.tw));
-    }
-    const thresh=Math.min(w,h)*0.14, t2=thresh*thresh;
-    const cell=Math.max(48,thresh);
-    const cols=Math.max(1,Math.ceil(w/cell)), rows=Math.max(1,Math.ceil(h/cell));
-    if(!this._grid||this._gcols!==cols||this._grows!==rows){
-      this._grid=Array.from({length:cols*rows},()=>[]); this._gcols=cols; this._grows=rows;
-    } else { for(const b of this._grid) b.length=0; }
-    for(let i=0;i<n;i++){
-      const cx=Math.min(cols-1,(this._px[i]/cell)|0), cy=Math.min(rows-1,(this._py[i]/cell)|0);
-      this._grid[cy*cols+cx].push(i);
-    }
-    ctx.lineWidth=0.6;
-    for(let i=0;i<n;i++){
-      const cx=Math.min(cols-1,(this._px[i]/cell)|0), cy=Math.min(rows-1,(this._py[i]/cell)|0);
-      let b1=-1,d1=t2,b2=-1,d2=t2;
-      for(let gy=Math.max(0,cy-1);gy<=Math.min(rows-1,cy+1);gy++){
-        for(let gx=Math.max(0,cx-1);gx<=Math.min(cols-1,cx+1);gx++){
-          const bkt=this._grid[gy*cols+gx];
-          for(let bi=0;bi<bkt.length;bi++){
-            const j=bkt[bi]; if(j<=i) continue;
-            const dx=this._px[i]-this._px[j], dy=this._py[i]-this._py[j];
-            const d=dx*dx+dy*dy;
-            if(d<d1){ d2=d1;b2=b1; d1=d;b1=j; } else if(d<d2){ d2=d;b2=j; }
-          }
-        }
-      }
-      const pulse=0.5+0.5*Math.sin(staticMode?i:t*0.4+i*0.71);
-      if(b1>=0){
-        const nm=Math.sqrt(d1)/thresh, a=(1-nm*nm*nm)*0.10*pulse;
-        if(a>0.004){ ctx.strokeStyle='rgba('+gc+','+a.toFixed(3)+')'; ctx.beginPath(); ctx.moveTo(this._px[i],this._py[i]); ctx.lineTo(this._px[b1],this._py[b1]); ctx.stroke(); }
-      }
-      if(b2>=0){
-        const nm=Math.sqrt(d2)/thresh, a=(1-nm*nm*nm)*0.10*pulse;
-        if(a>0.004){ ctx.strokeStyle='rgba('+gc+','+a.toFixed(3)+')'; ctx.beginPath(); ctx.moveTo(this._px[i],this._py[i]); ctx.lineTo(this._px[b2],this._py[b2]); ctx.stroke(); }
-      }
-    }
-    for(let i=0;i<n;i++){
-      const s=this.stars[i];
-      const sz=s.r*9;
-      ctx.globalAlpha=this.cl(this._pa[i]);
-      ctx.drawImage(s.warm?this._spG:this._spW, this._px[i]-sz/2, this._py[i]-sz/2, sz, sz);
-    }
-    ctx.globalAlpha=1;
-
-    // near field: warm foreground stars, strongest parallax
-    for(let i=0;i<this.floaters.length;i++){
-      const f=this.floaters[i];
-      const dX=((f.x+(staticMode?0:f.dvx*t))%1+1)%1;
-      const dY=((f.y+(staticMode?0:f.dvy*t))%1+1)%1;
-      const px=((dX*w+mx*46*f.depth)%w+w)%w;
-      const py=((dY*h+my*32*f.depth-this.scrollY*0.16*f.depth)%h+h)%h;
-      const a=f.base*(0.5+0.5*Math.sin(staticMode?f.tw:t*f.tws+f.tw));
-      const sz=f.r*11;
-      ctx.globalAlpha=this.cl(a);
-      ctx.drawImage(this._spG,px-sz/2,py-sz/2,sz,sz);
-    }
-    ctx.globalAlpha=1;
-
-    // one meteor at a time, rarely
-    if(!staticMode){
-      if(this._meteor){
-        const m=this._meteor; m.life+=dt;
-        const fr=m.life/m.dur;
-        if(fr>=1){ this._meteor=null; }
-        else{
-          const hx=m.x+m.vx*m.life, hy=m.y+m.vy*m.life;
-          const tx=hx-m.vx*0.10, ty=hy-m.vy*0.10;
-          const a=Math.sin(Math.PI*fr)*0.45;
-          const g=ctx.createLinearGradient(hx,hy,tx,ty);
-          g.addColorStop(0,'rgba(255,250,240,'+a.toFixed(3)+')');
-          g.addColorStop(1,'rgba(255,250,240,0)');
-          ctx.strokeStyle=g; ctx.lineWidth=1.3;
-          ctx.beginPath(); ctx.moveTo(hx,hy); ctx.lineTo(tx,ty); ctx.stroke();
-        }
-      } else if(t>6 && Math.random()<dt/16){
-        const dir=Math.random()<0.5?1:-1;
-        const sp=(0.6+Math.random()*0.4)*Math.max(w,600);
-        const ang=0.45+Math.random()*0.4;
-        this._meteor={x:Math.random()*w, y:Math.random()*h*0.35, vx:dir*sp*Math.cos(ang), vy:sp*Math.sin(ang), life:0, dur:0.55+Math.random()*0.35};
-      }
-    }
-
-    // authored figures, on top of everything
-    if(this._figs){
-      for(const f of this._figs){
-        const L=this.figLayout(f,R,w,h);
-        if(!L) continue;
-        const P=this.figProgress(f,R,staticMode);
-        if(!P || P.alpha<=0.01 || P.a<=0.005) continue;
-        this.drawFig(ctx,f,L,P,t,gc,mx,my);
-      }
-    }
-  }
-
   // ══ MAIN LOOP ══════════════════════════════════════════════════════
   loop(){
     const now=performance.now(), t=now/1000;
     const dt=Math.min(0.06,(now-(this._pn||now))/1000); this._pn=now;
 
     // all layout reads first, all writes after — one layout pass per frame
-    const R=this.readAnchors();
     const par=this.props.enableParallax!==false;
     const pRects=(par&&this._parallax)? this._parallax.map(p=>p.el.getBoundingClientRect()) : null;
     const logRect=this._pathLog? this._pathLog.getBoundingClientRect() : null;
-    const docH=Math.max(document.body.scrollHeight-innerHeight,1);
+    const scrollH=document.body.scrollHeight;
+    const docH=Math.max(scrollH-innerHeight,1);
     this._docH=docH;
+    if(this._docBottom!==scrollH){ this._docBottom=scrollH; }   // show-more toggles change page height
+    const prog=this.cl(this.scrollY/docH);
 
     this.tickReveals(now);
     this.tickScrollPalette(docH);
-    this.drawScene(t,dt,R,false);
-    this.updateNebulae(t,false);
+    this.updateLayers(prog);
+    this.drawEmbers(t,dt,false);
+
+    // arm the fire clip once Connect is within ~1.5 screens — no DOM read needed
+    if(this._armVideo && !this._videoArmed && (docH-this.scrollY) < this.h*1.5) this._armVideo();
 
     if(pRects){
       for(let i=0;i<pRects.length;i++){
