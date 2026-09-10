@@ -528,7 +528,7 @@
   </main>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:&quot;100vh&quot;},&quot;palette&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Warm Cosmos&quot;,&quot;Cool Nebula&quot;,&quot;Golden Dawn&quot;],&quot;default&quot;:&quot;Warm Cosmos&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;emberDensity&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:240,&quot;min&quot;:0,&quot;max&quot;:400,&quot;step&quot;:10,&quot;tsType&quot;:&quot;number&quot;},&quot;enableParallax&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:&quot;100vh&quot;},&quot;palette&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Warm Cosmos&quot;,&quot;Cool Nebula&quot;,&quot;Golden Dawn&quot;],&quot;default&quot;:&quot;Warm Cosmos&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;emberDensity&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:480,&quot;min&quot;:0,&quot;max&quot;:900,&quot;step&quot;:10,&quot;tsType&quot;:&quot;number&quot;},&quot;enableParallax&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
 class Component extends DCLogic {
   renderVals(){
     if(!this._dots) this._dots=[null,null,null,null];
@@ -887,7 +887,7 @@ class Component extends DCLogic {
   // is exactly the right soft warm spark.
   buildEmbers(){
     const mob=this.w<768;
-    const n=Math.round((this.props.emberDensity!=null?this.props.emberDensity:240)*(mob?0.42:1));
+    const n=Math.round((this.props.emberDensity!=null?this.props.emberDensity:480)*(mob?0.42:1));
     if(this._embers && this._embers.length===n) return;
     this._embers=[];
     for(let i=0;i<n;i++) this._embers.push({});
@@ -939,7 +939,7 @@ class Component extends DCLogic {
     e.x     = 0.5+(Math.random()-0.5)*(atFire ? 0.12+frac*0.55 : 1.15);
     e.xoff  = 0;
     // a handful of genuine sparks among the dull ash
-    e.bright= Math.random()<0.09;
+    e.bright= Math.random()<0.08;
     // launch speed; drag below bleeds most of it off as the ember cools
     e.vy    = Math.random()<0.17 ? -(5+Math.random()*18) : 34+Math.random()*106;
     e.max   = 22+Math.random()*28;
@@ -954,15 +954,20 @@ class Component extends DCLogic {
     e.wobA  = 8+Math.random()*30;
     e.depth = 0.4+Math.random()*0.8;
     // where this ember starts on the heat ramp, and how fast it reddens as it ages
-    e.heat  = e.bright ? Math.random()*0.14 : 0.08+Math.random()*0.50;
-    e.cool  = 0.45+Math.random()*0.85;
+    e.heat  = e.bright ? Math.random()*0.14 : 0.28+Math.random()*0.60;
+    e.cool  = 0.62+Math.random()*0.95;
     // tumbling ash shows brighter and duller faces as it turns
     e.fl    = Math.random()*6.2832;
     e.fls   = 0.7+Math.random()*2.2;
-    // slight vertical loll, so nothing tracks a perfectly straight line
-    e.bob   = Math.random()*6.2832;
-    e.bobs  = 0.12+Math.random()*0.38;
-    e.bobA  = 3+Math.random()*13;
+    // Turbulence, applied to the ember's *velocity* rather than nudging its position:
+    // two incommensurate sines so a single ember surges, stalls and sinks back instead
+    // of tracking one rate. High up, where the drag term has bled most of the lift
+    // away, the gust dominates and the ash genuinely hovers.
+    e.ga    = 18+Math.random()*72;           // gust strength, px/s
+    e.gs    = 0.22+Math.random()*0.50;
+    e.gp    = Math.random()*6.2832;
+    e.gs2   = e.gs*(1.7+Math.random()*0.9);  // second, faster beat against the first
+    e.gp2   = Math.random()*6.2832;
     // it has been gliding for as long as it has been alight — without this, embers
     // born aloft appear in a narrow column and only fan out lower down
     e.xoff  = e.lat*e.life;
@@ -1007,7 +1012,8 @@ class Component extends DCLogic {
         // and hangs lazily once it is high. This deceleration is most of what makes it
         // read as ash rather than as particles on a conveyor.
         const kv=e.life/e.max;
-        e.docY -= e.vy*(0.16+0.84*Math.pow(1-kv,1.7))*dt;
+        const gust=Math.sin(t*e.gs+e.gp)+0.55*Math.sin(t*e.gs2+e.gp2);
+        e.docY -= (e.vy*(0.16+0.84*Math.pow(1-kv,1.7)) + gust*e.ga)*dt;
         e.xoff += e.lat*dt;
         e.life += dt;
         y=e.docY-this.scrollY;
@@ -1015,8 +1021,7 @@ class Component extends DCLogic {
         // by a scroll upward — the population always belongs to the screen you're on
         if(e.life>=e.max || y<-h*0.6 || y>h*1.9){ this._resetEmber(e); continue; }
       }
-      const yy=y+Math.sin(t*e.bobs+e.bob)*e.bobA;
-      if(yy<-60||yy>h+60) continue;                     // offscreen embers cost nothing
+      if(y<-60||y>h+60) continue;                       // offscreen embers cost nothing
       const k=e.life/e.max;
       let a=(k<0.06 ? k/0.06 : Math.pow(1-(k-0.06)/0.94,1.6))*e.a*gate;  // flare on lifting off, then a long fade
       a*=0.70+0.30*Math.sin(t*e.fls+e.fl);              // tumbling, not a steady dot
@@ -1027,7 +1032,7 @@ class Component extends DCLogic {
       const sz=e.r*(1+k*0.5)*7;
       const img=this._spr[(this.cl(e.heat+k*e.cool)*4.999)|0];
       ctx.globalAlpha=this.cl(a);
-      ctx.drawImage(img,x-sz/2,yy-sz/2,sz,sz);
+      ctx.drawImage(img,x-sz/2,y-sz/2,sz,sz);
     }
     ctx.globalAlpha=1;
   }

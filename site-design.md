@@ -115,12 +115,19 @@ only. Do not brighten the middle of the plate.
   to a dead red, indexed by the ember's starting heat *plus* how far it has cooled, so a
   spark leaves the fire pale and reddens on the way up. Brightness carries a slow sine,
   so tumbling ash shows brighter and duller faces, and about one in eleven is a genuine
-  bright spark rather than dull ash. Roughly one in six is spent enough to **sink**
-  instead of rise. Measured live: hue spans 24°-44°, alpha runs p50 16 to a max of ~190.
+  bright spark rather than dull ash. The ramp is weighted hard toward the cool end —
+  about three-quarters of ember-frames land on the reddest sprite, because a fire throws
+  far more dull ash than live sparks; the handful of hot ones are what sell it. Measured
+  live: hue spans 14°-45°, alpha runs p50 19 to a max of ~180.
 - **Buoyancy bleeds off as ash cools.** Effective climb is
   `vy · (0.16 + 0.84·(1-k)^1.7)`, so an ember drives hard just above the flame and hangs
   lazily once it is high. This deceleration is most of what separates ash from particles
   riding a conveyor — don't flatten it back to a constant velocity.
+- **No ember holds a steady rate.** Two incommensurate sines are added to its *velocity*
+  (not nudged onto its position, which does not accumulate), so it surges, stalls and
+  sinks back. 98% reverse direction at least once, spending a median quarter of their
+  life descending, with rates swinging roughly -55 to +129 px/s. High up, where drag has
+  bled most of the lift away, the gust dominates and the ash genuinely hovers.
 - **Just under half are born already aloft**, at up to a screen above the spawn edge,
   with `life`, horizontal spread and accumulated glide all set to match where they start.
   Without this the top of the screen stays empty: everything is either freshly lit at the
@@ -132,9 +139,10 @@ only. Do not brighten the middle of the plate.
   is also what fans the plume with height — which is why there is no separate spread
   term any more.
 - **They are deliberately lazy.** ~34-140 px/s at launch falling to a fraction of that,
-  with a 22-50s lifetime, wandering on a slow sine rather than flickering. ~240 of them.
+  with a 22-50s lifetime.
   Rise height and laziness trade against each other — making them faster to "rise
   higher" loses the hot-ash feel; extend the lifetime or seed more aloft instead.
+  ~480 of them, and they hold 60fps at that count (p95 16.8ms across three runs).
   Reuses the old starfield's `makeSprite()` — already the right soft warm spark.
   The sprite ramp is rebuilt on a *quantised* colour key: the palette lerps every frame,
   and keying it on the exact colour would repaint five canvases most frames for nothing.
