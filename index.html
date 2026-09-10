@@ -528,7 +528,7 @@
   </main>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:&quot;100vh&quot;},&quot;palette&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Warm Cosmos&quot;,&quot;Cool Nebula&quot;,&quot;Golden Dawn&quot;],&quot;default&quot;:&quot;Warm Cosmos&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;emberDensity&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:190,&quot;min&quot;:0,&quot;max&quot;:400,&quot;step&quot;:10,&quot;tsType&quot;:&quot;number&quot;},&quot;enableParallax&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:&quot;100vh&quot;},&quot;palette&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Warm Cosmos&quot;,&quot;Cool Nebula&quot;,&quot;Golden Dawn&quot;],&quot;default&quot;:&quot;Warm Cosmos&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;emberDensity&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:240,&quot;min&quot;:0,&quot;max&quot;:400,&quot;step&quot;:10,&quot;tsType&quot;:&quot;number&quot;},&quot;enableParallax&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
 class Component extends DCLogic {
   renderVals(){
     if(!this._dots) this._dots=[null,null,null,null];
@@ -887,29 +887,100 @@ class Component extends DCLogic {
   // is exactly the right soft warm spark.
   buildEmbers(){
     const mob=this.w<768;
-    const n=Math.round((this.props.emberDensity!=null?this.props.emberDensity:190)*(mob?0.42:1));
-    this._emberSpan=this.h*4.2;
+    const n=Math.round((this.props.emberDensity!=null?this.props.emberDensity:240)*(mob?0.42:1));
     if(this._embers && this._embers.length===n) return;
     this._embers=[];
-    const docBottom=this._docBottom||this.h;
-    for(let i=0;i<n;i++){ const e={}; this._resetEmber(e,docBottom); e.life=Math.random()*e.max; this._embers.push(e); }
+    for(let i=0;i<n;i++) this._embers.push({});
+    this._seedEmbers(this.reduce);
   }
 
-  _resetEmber(e,docBottom){
-    // born tight over the fire, then fanned out by `drift` as they climb — a plume,
-    // not a curtain. Lifetime and rise speed carry them well past one screen.
-    e.x     = 0.5+(Math.random()-0.5)*0.10;
-    e.docY  = docBottom-Math.random()*this.h*0.14;
-    e.vy    = 26+Math.random()*94;
-    e.drift = (Math.random()-0.5)*0.50;      // lateral fan, as a fraction of viewport width
-    e.r     = 0.30+Math.random()*0.80;
-    e.a     = 0.30+Math.random()*0.52;
-    e.life  = 0;
-    e.max   = 6.5+Math.random()*9.0;
+  // Seeds the whole population relative to wherever the page is *now*. Reduced motion
+  // needs this on every static repaint: with no animation the embers never travel, so
+  // seeding them once at load left them stranded far above the viewport as soon as the
+  // reader scrolled.
+  _seedEmbers(staticFill){
+    if(!this._embers) return;
+    const h=this.h;
+    for(let i=0;i<this._embers.length;i++){
+      const e=this._embers[i];
+      this._resetEmber(e);
+      if(staticFill){
+        // scatter across the view rather than winding each one back along its own
+        // (much longer) flight path, which would put most of them off-screen
+        e.life = e.max*(0.05+Math.random()*0.55);
+        e.docY -= Math.random()*h*1.25;
+        e.xoff  = e.lat*e.life;
+      } else {
+        // start mid-flight so the ash is already established rather than every ember
+        // igniting on the same frame
+        e.life = Math.random()*e.max;
+        // ~0.45 approximates the drag-averaged climb; sinkers would wind off the bottom
+        e.docY -= Math.max(e.vy,0)*e.life*0.45;
+        e.xoff  = e.lat*e.life;
+      }
+    }
+  }
+
+  _resetEmber(e){
+    const h=this.h, docBottom=this._docBottom||h;
+    // Ash is lifted off the fire below and carried up past you, so embers are born at
+    // the lower edge of what you can see. Within about a screen of the page foot that
+    // edge IS the fire, so the same rule tightens them into a plume over the flame;
+    // higher up the page they drift in broadly from the bottom of the screen.
+    const atFire = (docBottom-(this.scrollY+h)) < h*0.9;
+    const base   = Math.min(docBottom, this.scrollY+h);
+    // Just under half start already aloft rather than at the edge — ash that went up
+    // before you got here. Without this the top of the screen stays empty, because
+    // everything is either freshly lit at the bottom or burnt out before it climbs.
+    const frac = Math.random()<0.46 ? Math.random() : 0;
+    e.docY  = base + Math.random()*h*0.10 - frac*h*1.15;
+    // ash born aloft is born already spread: a tight column at the flame, wider the
+    // higher it starts
+    e.x     = 0.5+(Math.random()-0.5)*(atFire ? 0.12+frac*0.55 : 1.15);
+    e.xoff  = 0;
+    // a handful of genuine sparks among the dull ash
+    e.bright= Math.random()<0.09;
+    // launch speed; drag below bleeds most of it off as the ember cools
+    e.vy    = Math.random()<0.17 ? -(5+Math.random()*18) : 34+Math.random()*106;
+    e.max   = 22+Math.random()*28;
+    e.life  = frac*e.max*0.45;                // born aloft means born part-cooled
+    e.r     = e.bright ? 0.75+Math.random()*0.85 : 0.26+Math.random()*0.62;
+    e.a     = e.bright ? 0.72+Math.random()*0.28 : 0.20+Math.random()*0.38;
+    // sideways glide as its own velocity: roughly a quarter visibly float off to one
+    // side, and integrating it is also what fans the plume out with height
+    e.lat   = (Math.random()-0.5)*(Math.random()<0.28 ? 36 : 9);
     e.wob   = Math.random()*6.2832;
-    e.wobs  = 0.25+Math.random()*0.55;
-    e.wobA  = 7+Math.random()*22;
+    e.wobs  = 0.10+Math.random()*0.26;       // slow wander, not a flicker
+    e.wobA  = 8+Math.random()*30;
     e.depth = 0.4+Math.random()*0.8;
+    // where this ember starts on the heat ramp, and how fast it reddens as it ages
+    e.heat  = e.bright ? Math.random()*0.14 : 0.08+Math.random()*0.50;
+    e.cool  = 0.45+Math.random()*0.85;
+    // tumbling ash shows brighter and duller faces as it turns
+    e.fl    = Math.random()*6.2832;
+    e.fls   = 0.7+Math.random()*2.2;
+    // slight vertical loll, so nothing tracks a perfectly straight line
+    e.bob   = Math.random()*6.2832;
+    e.bobs  = 0.12+Math.random()*0.38;
+    e.bobA  = 3+Math.random()*13;
+    // it has been gliding for as long as it has been alight — without this, embers
+    // born aloft appear in a narrow column and only fan out lower down
+    e.xoff  = e.lat*e.life;
+  }
+
+  // Five sprites from white-hot through the palette's own glow to a dead red. An
+  // ember's tone is its own starting heat plus how far it has cooled, so a fresh
+  // spark leaves the fire pale and reddens on the way up.
+  _emberSprites(gc){
+    const g=(gc||'230,178,92').split(',').map(Number);
+    const hot=[255,241,208], cold=[188,66,24];
+    const mix=(a,b,u)=>[Math.round(a[0]+(b[0]-a[0])*u),Math.round(a[1]+(b[1]-a[1])*u),Math.round(a[2]+(b[2]-a[2])*u)];
+    const out=[];
+    for(let i=0;i<5;i++){
+      const u=i/4;
+      out.push(this.makeSprite((u<0.5 ? mix(hot,g,u*2) : mix(g,cold,(u-0.5)*2)).join(',')));
+    }
+    return out;
   }
 
   drawEmbers(t,dt,staticMode){
@@ -917,28 +988,46 @@ class Component extends DCLogic {
     if(!ctx) return;
     ctx.clearRect(0,0,w,h);
     if(!this._embers || !this._embers.length) return;
+    // nothing rises while you are still up among the stars; it ramps in as the sky
+    // gives way to the fog so the first embers don't simply pop into existence
+    const gate=this.cl(((this._prog||0)-0.28)/0.18);
+    if(gate<=0) return;
     const gc=this.glowColor||'230,178,92';
-    if(this._spGC!==gc){ this._spG=this.makeSprite(gc); this._spGC=gc; }
-    const docBottom=this._docBottom||h, top=docBottom-this._emberSpan;
+    // The palette lerps continuously, so keying the ramp on the exact colour would
+    // repaint five canvases most frames for no visible difference. Quantise it.
+    const key=gc.split(',').map(v=>(+v)>>3).join(',');
+    if(this._sprKey!==key){ this._spr=this._emberSprites(gc); this._sprKey=key; }
     const par=this.props.enableParallax!==false;
     const mx=par?(this.mouse.x-.5)*18:0;
     for(let i=0;i<this._embers.length;i++){
       const e=this._embers[i];
+      let y=e.docY-this.scrollY;
       if(!staticMode){
-        e.docY-=e.vy*dt; e.life+=dt;
-        if(e.life>=e.max || e.docY<top){ this._resetEmber(e,docBottom); continue; }
+        // Buoyancy bleeds off as the ash cools: it climbs hard just above the flame
+        // and hangs lazily once it is high. This deceleration is most of what makes it
+        // read as ash rather than as particles on a conveyor.
+        const kv=e.life/e.max;
+        e.docY -= e.vy*(0.16+0.84*Math.pow(1-kv,1.7))*dt;
+        e.xoff += e.lat*dt;
+        e.life += dt;
+        y=e.docY-this.scrollY;
+        // recycled once burnt out, once well clear of the top, or once left far below
+        // by a scroll upward — the population always belongs to the screen you're on
+        if(e.life>=e.max || y<-h*0.6 || y>h*1.9){ this._resetEmber(e); continue; }
       }
-      const y=e.docY-this.scrollY;
-      if(y<-60||y>h+60) continue;                       // offscreen embers cost nothing
+      const yy=y+Math.sin(t*e.bobs+e.bob)*e.bobA;
+      if(yy<-60||yy>h+60) continue;                     // offscreen embers cost nothing
       const k=e.life/e.max;
-      const a=(k<0.09 ? k/0.09 : Math.pow(1-(k-0.09)/0.91,1.5))*e.a;  // flare on leaving the fire, then a long fade
+      let a=(k<0.06 ? k/0.06 : Math.pow(1-(k-0.06)/0.94,1.6))*e.a*gate;  // flare on lifting off, then a long fade
+      a*=0.70+0.30*Math.sin(t*e.fls+e.fl);              // tumbling, not a steady dot
       if(a<=0.002) continue;
-      // spread grows with how far it has risen, and the wobble opens up with it
-      const sp=k*k;
-      const x=(e.x+e.drift*sp)*w + Math.sin(t*e.wobs+e.wob)*e.wobA*(0.35+sp*2.2) + mx*e.depth;
+      // the wobble opens up with height; the fan itself now comes from e.lat
+      const sp=k*k*0.8;
+      const x=e.x*w + e.xoff + Math.sin(t*e.wobs+e.wob)*e.wobA*(0.35+sp*2.2) + mx*e.depth;
       const sz=e.r*(1+k*0.5)*7;
+      const img=this._spr[(this.cl(e.heat+k*e.cool)*4.999)|0];
       ctx.globalAlpha=this.cl(a);
-      ctx.drawImage(this._spG,x-sz/2,y-sz/2,sz,sz);
+      ctx.drawImage(img,x-sz/2,yy-sz/2,sz,sz);
     }
     ctx.globalAlpha=1;
   }
@@ -1010,7 +1099,9 @@ class Component extends DCLogic {
     const docH=Math.max(document.body.scrollHeight-innerHeight,1);
     this._docH=docH;
     const prog=this.cl(this.scrollY/docH);
+    this._prog=prog;
     this.updateLayers(prog);
+    this._seedEmbers(true);
     this.drawEmbers(2.4,0,true);
   }
 
@@ -1036,6 +1127,7 @@ class Component extends DCLogic {
     if(this._docBottom!==scrollH){ this._docBottom=scrollH; }   // show-more toggles change page height
     const prog=this.cl(this.scrollY/docH);
 
+    this._prog=prog;
     this.tickReveals(now);
     this.tickScrollPalette(docH);
     this.updateLayers(prog);
@@ -1076,11 +1168,10 @@ class Component extends DCLogic {
     .then(r => r.ok ? r.json() : null)
     .then(data => {
       const el = document.getElementById('gh-commits');
-      if (!el || !data?.total) return;
-      const n = data.total;
-      el.textContent = n.toLocaleString();
+      if (!el || typeof data?.total !== 'number') return;
+      el.textContent = data.total.toLocaleString();
     })
-    .catch(() => {});
+    .catch(err => console.error('gh-commits fetch failed:', err));
 
   console.log('%cHey, thanks for popping the hood.', 'color:#e6b25c;font-family:monospace;font-size:14px;');
   console.log('%cIf you\'re reading this in devtools, we\'d probably get along. rustadadam@gmail.com', 'color:#a89683;font-family:monospace;font-size:12px;');

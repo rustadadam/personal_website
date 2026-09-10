@@ -101,12 +101,44 @@ only. Do not brighten the middle of the plate.
   exactly where the image ends, carrying that band's own bottom-row colour down off
   screen. Do **not** use `background-color` for this — it paints behind the image too,
   tinting the ramped-transparent sky and re-introducing a seam at the element's top.
-- **Embers** rise from the fire toward the sky you already scrolled past. They live in
-  *document* space, not viewport space, so they hold their place in the scene. The
-  inversion is what makes this physically true: the fire is below you. ~190 of them,
-  born tight over the flame and fanned outward by a per-ember `drift` scaled by how far
-  they have climbed, so it reads as a plume rather than a curtain. Reuses the old
-  starfield's `makeSprite()` — it was already the right soft warm spark.
+- **Embers** are ash lifted off the fire and carried up past you, so they are born at
+  the **lower edge of what you can see**, not at the fire's own position. Within about a
+  screen of the page foot that edge *is* the fire, so the same rule tightens them into a
+  plume over the flame; higher up they drift in broadly from the bottom of the screen.
+  They live in *document* space, so they hold their place in the scene while you scroll,
+  but are recycled once burnt out or once well clear of the viewport — the population
+  always belongs to the screen you are on. A `gate` keyed to scroll progress keeps them
+  out of the hero entirely and ramps them in from ~28%: nothing rises while you are
+  still up among the stars.
+- **Variation is what keeps them from reading as a particle system.** All per-ember,
+  all cheap. Tone runs a five-sprite ramp from white-hot through the palette's own glow
+  to a dead red, indexed by the ember's starting heat *plus* how far it has cooled, so a
+  spark leaves the fire pale and reddens on the way up. Brightness carries a slow sine,
+  so tumbling ash shows brighter and duller faces, and about one in eleven is a genuine
+  bright spark rather than dull ash. Roughly one in six is spent enough to **sink**
+  instead of rise. Measured live: hue spans 24°-44°, alpha runs p50 16 to a max of ~190.
+- **Buoyancy bleeds off as ash cools.** Effective climb is
+  `vy · (0.16 + 0.84·(1-k)^1.7)`, so an ember drives hard just above the flame and hangs
+  lazily once it is high. This deceleration is most of what separates ash from particles
+  riding a conveyor — don't flatten it back to a constant velocity.
+- **Just under half are born already aloft**, at up to a screen above the spawn edge,
+  with `life`, horizontal spread and accumulated glide all set to match where they start.
+  Without this the top of the screen stays empty: everything is either freshly lit at the
+  bottom or burnt out before it climbs. The two easy mistakes here are giving an
+  aloft-born ember `life = 0` (it appears white-hot at altitude) and leaving its `xoff`
+  at zero (the plume stays a narrow column up high and only fans out lower down).
+- **Sideways glide is its own velocity** (`e.lat`, integrated into `e.xoff`), not a
+  function of height. About a quarter visibly float off to one side, and integrating it
+  is also what fans the plume with height — which is why there is no separate spread
+  term any more.
+- **They are deliberately lazy.** ~34-140 px/s at launch falling to a fraction of that,
+  with a 22-50s lifetime, wandering on a slow sine rather than flickering. ~240 of them.
+  Rise height and laziness trade against each other — making them faster to "rise
+  higher" loses the hot-ash feel; extend the lifetime or seed more aloft instead.
+  Reuses the old starfield's `makeSprite()` — already the right soft warm spark.
+  The sprite ramp is rebuilt on a *quantised* colour key: the palette lerps every frame,
+  and keying it on the exact colour would repaint five canvases most frames for nothing.
+
 - **The fire** is a 9s loop at the foot of the document, `mix-blend-mode: screen` so it
   contributes light rather than a rectangle of footage, masked to an oval at 0.88
   opacity. It sits **below the footer rule**: pushed any higher its bright core lands on

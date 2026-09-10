@@ -1,4 +1,4 @@
-exports.handler = async () => {
+export const handler = async () => {
   const TOKEN = process.env.GH_TOKEN;
   if (!TOKEN) return { statusCode: 500, body: JSON.stringify({ error: 'GH_TOKEN not configured' }) };
 
@@ -27,9 +27,17 @@ exports.handler = async () => {
       body: JSON.stringify({ query: GQL, variables: { login: LOGIN, from, to } }),
     });
     const d = await r.json();
+    if (!r.ok || d.errors) {
+      console.error(`github-stats: query for ${y} failed (status ${r.status})`, JSON.stringify(d.errors || d));
+      return null;
+    }
     const c = d?.data?.user?.contributionsCollection;
     return c ? c.totalCommitContributions + c.restrictedContributionsCount : 0;
   }));
+
+  if (counts.some(c => c === null)) {
+    return { statusCode: 502, body: JSON.stringify({ error: 'One or more GitHub queries failed; see function logs' }) };
+  }
 
   const total = counts.reduce((a, b) => a + b, 0);
   return {
