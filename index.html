@@ -576,13 +576,16 @@ class Component extends DCLogic {
       window.addEventListener('scroll', this._onScrollStatic, {passive:true});
       return;
     }
-    this._parallax = Array.from(this.rootEl.querySelectorAll('[data-parallax]')).map(el=>({el, speed:parseFloat(el.getAttribute('data-speed')||'0.05')}));
+    this._parallax = Array.from(this.rootEl.querySelectorAll('[data-parallax]')).map(el=>({el, speed:parseFloat(el.getAttribute('data-speed')||'0.05'), base:0}));
+    this.measureAnchors();
     this.bind();
     this._onVis = () => { document.hidden ? cancelAnimationFrame(this._raf) : this.loop(); };
     document.addEventListener('visibilitychange', this._onVis);
     this.loop();
   }
-  componentDidUpdate(){ this.applyPalette(); this._docBottom=document.body.scrollHeight; if(this.reduce) this.renderStatic(); }
+  // A show-more toggle changes page height and moves every anchor below it, so the
+  // cached geometry is re-read here rather than probed for every frame.
+  componentDidUpdate(){ this.applyPalette(); this.measureAnchors(); if(this.reduce) this.renderStatic(); }
   setupPhotoCarousel(){
     this._photoIdx = 0;
     this._photoInterval = setInterval(()=>this.advancePhoto(), 5500);
@@ -649,6 +652,7 @@ class Component extends DCLogic {
     clearInterval(this._revealTimer);
     clearTimeout(this._typeTimer);
     document.removeEventListener('visibilitychange', this._onVis);
+    this._ro && this._ro.disconnect();
     window.removeEventListener('resize', this._onResize);
     window.removeEventListener('mousemove', this._onMove);
     window.removeEventListener('scroll', this._onScroll);
@@ -674,6 +678,12 @@ class Component extends DCLogic {
   }
 
   _setVarsFromRGB(c){
+    // Every var() consumer on the page — borders, glows, both full-bleed radial
+    // overlays — re-rasterises when these change, so skip frames where the lerp
+    // rounded to the same colour it already wrote.
+    const vk=c.bg.join()+c.bg2.join()+c.text.join()+c.muted.join()+c.faint.join()+c.gold.join()+c.rose.join()+c.glow.join();
+    if(this._varKey===vk) return;
+    this._varKey=vk;
     const r=this.rootEl.style;
     const hex=([a,b,d])=>'#'+[a,b,d].map(v=>v.toString(16).padStart(2,'0')).join('');
     r.setProperty('--bg',    hex(c.bg));
@@ -760,7 +770,10 @@ class Component extends DCLogic {
       return {el, delay:d, start:null, done:false, words};
     });
     this.checkReveals();
-    this._onScrollReveal = ()=>this.checkReveals();
+    // A rect sweep per scroll *event* forced a synchronous layout several times a
+    // frame; flag it instead and sweep once, batched with the loop's other reads.
+    this._revealDirty = true;
+    this._onScrollReveal = ()=>{ this._revealDirty = true; };
     window.addEventListener('scroll', this._onScrollReveal, {passive:true});
     window.addEventListener('resize', this._onScrollReveal, {passive:true});
     // wall-clock safety net: resolves reveals even when rAF is throttled/paused
@@ -833,6 +846,27 @@ class Component extends DCLogic {
 
   cl(v){ return v<0?0:v>1?1:v; }
 
+  // Document-space geometry for the scroll-driven bits. Read once here rather than
+  // every frame: getBoundingClientRect() inside the loop forced a synchronous layout
+  // of the whole page each frame, and reading the rect of an element we then
+  // transform also fed our own offset back into the next frame's measurement.
+  measureAnchors(){
+    const sy = window.scrollY;
+    if(this._parallax) for(const p of this._parallax){
+      const prev = p.el.style.transform;
+      p.el.style.transform = 'none';
+      const b = p.el.getBoundingClientRect();
+      p.base = b.top + sy + b.height/2;   // centre of the element in document space
+      p.last = undefined;                 // geometry moved: the skip guard must not hold
+      p.el.style.transform = prev;
+    }
+    if(this._pathLog){
+      const b = this._pathLog.getBoundingClientRect();
+      this._logTop = b.top + sy; this._logH = b.height || 1; this._lineLast = undefined;
+    }
+    this._docBottom = document.body.scrollHeight;
+  }
+
   // ── layer geometry ──────────────────────────────────────────────────
   // Each silhouette rests at the bottom of the viewport when scroll progress
   // reaches its anchor `d`, and travels at `k`·vh — nearer layers travel more.
@@ -864,9 +898,55 @@ class Component extends DCLogic {
     ground(this._ridgeEl,'assets/ridge.webp',   this._ridgeH,'rgba(10,11,18,0.459)');
     ground(this._treeEl, 'assets/treeline.webp',this._treeH, 'rgb(7,5,4)');
     this._lastT = {};
+    this.writeLayerTimelines();
+  }
+
+  // ── who drives the layers ───────────────────────────────────────────
+  // All three layer positions are linear in scroll progress, which is exactly what a
+  // scroll-driven animation expresses — so where the browser supports one, hand them
+  // over and let the compositor run them. The motion is identical (same endpoints, same
+  // linear ramp); what changes is that it no longer shares a thread with the embers,
+  // the reveals and the palette. A busy main thread could make the background slip
+  // against text that was scrolling on the compositor, and that mismatch is what read
+  // as lag. rAF stays the path for reduced motion (where `*{animation:none}` applies)
+  // and for browsers without scroll timelines.
+  scrollDriven(){
+    if(this._sd===undefined){
+      this._sd = !this.reduce && !!(window.CSS && CSS.supports && CSS.supports('animation-timeline','scroll()'));
+    }
+    return this._sd;
+  }
+
+  // Endpoints are absolute pixels, so they are rewritten whenever geometry changes.
+  // `scroll(root block)` spans the document's own scroll range, so it tracks a page
+  // that grows — a show-more toggle needs no re-measure here.
+  writeLayerTimelines(){
+    if(!this.scrollDriven()) return;
+    const vh=this.h;
+    const f=n=>n.toFixed(1);
+    const sky0=0,            sky1=-(this._plateH-vh);
+    const rg0=(vh-this._ridgeH)+0.82*vh*1.8,  rg1=(vh-this._ridgeH)+(0.82-1)*vh*1.8;
+    const tr0=(vh-this._treeH)+0.96*vh*2.2,   tr1=(vh-this._treeH)+(0.96-1)*vh*2.2;
+    if(!this._layerStyle){
+      this._layerStyle=document.createElement('style');
+      document.head.appendChild(this._layerStyle);
+    }
+    const pan=(name,a,b)=>'@keyframes '+name+'{from{transform:translate3d(0,'+f(a)+'px,0);}to{transform:translate3d(0,'+f(b)+'px,0);}}';
+    // the `animation` shorthand resets animation-timeline, so the timeline is declared
+    // after it, never before
+    const drive=(sel,name)=>sel+'{animation:'+name+' linear both;animation-timeline:scroll(root block);}';
+    this._layerStyle.textContent=[
+      pan('ar-sky-pan',  sky0, sky1),
+      pan('ar-ridge-pan',rg0,  rg1),
+      pan('ar-tree-pan', tr0,  tr1),
+      drive('#sky-plate','ar-sky-pan'),
+      drive('#ridge',    'ar-ridge-pan'),
+      drive('#treeline', 'ar-tree-pan'),
+    ].join('\n');
   }
 
   updateLayers(prog){
+    if(this.scrollDriven()) return;              // the compositor owns them
     const vh=this.h, L=this._lastT||(this._lastT={});
     // sub-pixel moves are skipped so an idle page keeps every layer cached
     const wr=(el,key,y)=>{
@@ -1040,18 +1120,24 @@ class Component extends DCLogic {
   setupCanvas(){
     this.ctx = this.canvas.getContext('2d');
     this._onResize = ()=>{
-      this.dpr = Math.min(2, window.devicePixelRatio||1);
+      // Embers are soft radial sprites — 1.5x is indistinguishable from 2x and the
+      // per-frame canvas texture upload is main-thread commit time, so it is halved.
+      this.dpr = Math.min(1.5, window.devicePixelRatio||1);
       this.w = innerWidth; this.h = innerHeight;
-      this.canvas.width = this.w*this.dpr; this.canvas.height = this.h*this.dpr;
+      this.canvas.width = Math.round(this.w*this.dpr); this.canvas.height = Math.round(this.h*this.dpr);
       this.ctx.setTransform(this.dpr,0,0,this.dpr,0,0);
-      this._docBottom = document.body.scrollHeight;
       this.buildLayers();
       this._embers = null;
       this.buildEmbers();
+      this.measureAnchors();
       if(this.reduce) this.renderStatic();
     };
     window.addEventListener('resize', this._onResize);
     this._onResize();
+    if(window.ResizeObserver){
+      this._ro = new ResizeObserver(()=>{ this.measureAnchors(); if(this.reduce) this.renderStatic(); });
+      this._ro.observe(document.body);
+    }
   }
 
   makeSprite(col){
@@ -1101,7 +1187,7 @@ class Component extends DCLogic {
   renderStatic(){
     if(!this.ctx) return;
     this._docBottom=document.body.scrollHeight;
-    const docH=Math.max(document.body.scrollHeight-innerHeight,1);
+    const docH=Math.max(this._docBottom-this.h,1);
     this._docH=docH;
     const prog=this.cl(this.scrollY/docH);
     this._prog=prog;
@@ -1113,7 +1199,8 @@ class Component extends DCLogic {
   bind(){
     this._onMove = e=>{ this.mouse.x = e.clientX/innerWidth; this.mouse.y = e.clientY/innerHeight; };
     window.addEventListener('mousemove', this._onMove, {passive:true});
-    this._onScroll = ()=>{ this.scrollY = window.scrollY; };
+    this.scrollY = window.scrollY;
+    this._onScroll = ()=>{ this.scrollY = window.scrollY; this._revealDirty = true; };
     window.addEventListener('scroll', this._onScroll, {passive:true});
   }
 
@@ -1122,17 +1209,16 @@ class Component extends DCLogic {
     const now=performance.now(), t=now/1000;
     const dt=Math.min(0.06,(now-(this._pn||now))/1000); this._pn=now;
 
-    // all layout reads first, all writes after — one layout pass per frame
+    // No layout reads in here at all: geometry comes from measureAnchors(), which runs
+    // on mount, on resize and on any state change that can move things.
     const par=this.props.enableParallax!==false;
-    const pRects=(par&&this._parallax)? this._parallax.map(p=>p.el.getBoundingClientRect()) : null;
-    const logRect=this._pathLog? this._pathLog.getBoundingClientRect() : null;
-    const scrollH=document.body.scrollHeight;
-    const docH=Math.max(scrollH-innerHeight,1);
+    const docH=Math.max((this._docBottom||this.h)-this.h,1);
     this._docH=docH;
-    if(this._docBottom!==scrollH){ this._docBottom=scrollH; }   // show-more toggles change page height
-    const prog=this.cl(this.scrollY/docH);
+    const sy = this.scrollY;
+    const prog=this.cl(sy/docH);
 
     this._prog=prog;
+    if(this._revealDirty){ this._revealDirty=false; this.checkReveals(); }
     this.tickReveals(now);
     this.tickScrollPalette(docH);
     this.updateLayers(prog);
@@ -1141,19 +1227,31 @@ class Component extends DCLogic {
     // arm the fire clip once Connect is within ~1.5 screens — no DOM read needed
     if(this._armVideo && !this._videoArmed && (docH-this.scrollY) < this.h*1.5) this._armVideo();
 
-    if(pRects){
-      for(let i=0;i<pRects.length;i++){
-        const b=pRects[i];
-        const center=b.top+b.height/2-this.h/2;
-        this._parallax[i].el.style.transform='translateY('+(-center*this._parallax[i].speed).toFixed(1)+'px)';
+    // Same sub-pixel skip guard the background layers use: an idle page should write
+    // no styles at all, or it pays a style recalc and a compositor commit every frame
+    // for a scene that is not moving.
+    if(par&&this._parallax){
+      for(let i=0;i<this._parallax.length;i++){
+        const p=this._parallax[i];
+        const y=-(p.base-sy-this.h/2)*p.speed;    // distance from viewport centre
+        if(p.last!==undefined && Math.abs(y-p.last)<0.5) continue;
+        p.last=y;
+        p.el.style.transform='translate3d(0,'+y.toFixed(1)+'px,0)';
       }
     }
-    if(this._pathLine&&logRect){
-      const p=this.cl((this.h*0.8-logRect.top)/logRect.height);
-      this._pathLine.style.transform='scaleY('+p.toFixed(4)+')';
+    if(this._pathLine&&this._logTop!==undefined){
+      const p=this.cl((this.h*0.8-(this._logTop-sy))/this._logH);
+      if(this._lineLast===undefined || Math.abs(p-this._lineLast)>=0.0005){
+        this._lineLast=p;
+        this._pathLine.style.transform='scaleY('+p.toFixed(4)+')';
+      }
     }
     if(this._scrollCue){
-      this._scrollCue.style.opacity=this.cl(1-this.scrollY/280).toFixed(3);
+      const o=this.cl(1-this.scrollY/280);
+      if(this._cueLast===undefined || Math.abs(o-this._cueLast)>=0.004){
+        this._cueLast=o;
+        this._scrollCue.style.opacity=o.toFixed(3);
+      }
     }
     this._raf=requestAnimationFrame(()=>this.loop());
   }

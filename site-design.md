@@ -190,9 +190,64 @@ only. Do not brighten the middle of the plate.
   plate and silhouettes still sit at the right depth and re-align on scroll, and embers
   render as a still scatter.
 - **Performance floor**: transform-only layer writes with a sub-pixel skip guard,
-  offscreen embers cost nothing, no per-frame allocations, layout reads batched before
-  writes, DPR capped at 2, rAF paused when hidden. Measured 60fps flat while scrolling
-  (p95 frame time 16.7ms) with zero heap growth over 400 frames.
+  offscreen embers cost nothing, no per-frame allocations, rAF paused when hidden.
+  Four rules were added after the scroll was measured at a flat 30fps (p50 33.3ms) in
+  a throttled profile — the frame budget was going to *rendering*, not to JS, which
+  accounted for under 4% of wall time:
+  - **The loop performs no layout reads at all.** `getBoundingClientRect()` and
+    `document.body.scrollHeight` inside the loop each forced a synchronous layout of
+    the whole page every frame. Document-space geometry is measured in
+    `measureAnchors()` — on mount, on resize, on any state change, and from a
+    `ResizeObserver` on `<body>` so late web-font layout cannot leave it stale. It was
+    stale height that silently skewed every scroll-progress read by ~1%.
+  - **Never read the rect of an element you are about to transform.** `data-parallax`
+    measured a rect that already contained its own offset, feeding the previous frame's
+    transform back into the next frame's input. Effective travel was `s/(1+s)`, ~4.5%
+    short of each element's declared `data-speed`.
+  - **CSS custom properties are written only when the lerped colour actually rounds to
+    something new.** Every `var()` consumer re-rasterises when the palette changes, and
+    both full-bleed radial overlays are painted from `--glow` — so a per-frame write
+    repainted the whole viewport for a change too small to see.
+  - **The ember canvas caps DPR at 1.5, not 2.** Embers are soft radial sprites, so 2x
+    buys nothing visible, and the per-frame canvas texture upload is main-thread commit
+    time: 917ms → 520ms across a 5s scroll.
+
+  Measured after: p50 frame time 16.7ms (60fps), commit time down 43%, and down ~60%
+  from the original once the layers moved to the compositor. Caveat for anyone
+  re-running this: the profile was taken in headless Chromium with software
+  rasterisation, so absolute milliseconds are pessimistic and run-to-run raster totals
+  vary by 20%+. Trust the ratios and the ranking of causes, not the absolute numbers,
+  and confirm the feel on real hardware.
+- **The three layers are driven by the compositor, not by rAF.** All three positions
+  are linear in scroll progress, which is exactly what a scroll-driven animation
+  expresses, so `writeLayerTimelines()` emits two-keyframe `@keyframes` with absolute
+  pixel endpoints and hands them to `animation-timeline: scroll(root block)`.
+  `updateLayers()` returns immediately when that is live. The motion is identical —
+  verified pixel-exact against the rAF version at seven scroll positions — but it no
+  longer shares a thread with the embers, the reveals and the palette, so a busy main
+  thread cannot make the background slip against text that is scrolling on the
+  compositor. That mismatch is what read as lag.
+  - Endpoints are absolute pixels, so `writeLayerTimelines()` is called from
+    `buildLayers()` and re-runs on resize. The timeline itself spans the document's own
+    scroll range, so a show-more toggle needs no re-measure.
+  - The `animation` shorthand resets `animation-timeline`, so the timeline is always
+    declared *after* it.
+  - rAF stays the path for reduced motion (where `*{animation:none!important}` would
+    kill the animation anyway) and for browsers without scroll timelines. All three
+    paths were verified to produce identical layer positions.
+- **Do not freeze the plate to save raster.** It was measured as a diagnostic, not
+  proposed as a fix: the plate *is* the descent. Frozen, Connect sits against the hero's
+  starfield instead of firelit ground, and the closing copy loses its contrast.
+- **The plate is still the largest raster cost, and that is inherent to the asset.**
+  `#sky-plate` is a 1400x3600 webp upscaled to cover a viewport-width element ~3700px
+  tall — ~21 megapixels at DPR 2, far past the max texture size, so it is tiled and the
+  tiles are rasterised as the pan exposes them. Freezing it drops total raster ~37% and
+  swapping the image for its placeholder gradient ~45%, so it is roughly 40% of raster
+  during a scroll. This is now compositor-side rather than main-thread, so it costs
+  smoothness far less than it did. If it ever needs to come down further: this doc
+  already says imagery lives at the two ENDS of the plate, so the middle could be the
+  gradient alone with two short image bands top and bottom, each small enough to raster
+  once into a single texture and then only composite.
 
 ---
 
